@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1 class="page-header">Edit user</h1>
+	
+	{{ form_start(editForm) }}
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Username</label>
+		<div class="col-sm-10">
+			<p class="form-control-static">{{ user.username }}</p>
+		</div>
+	</div>
+	
+	{{ form_widget(editForm) }}
+	{{ form_end(editForm) }}
+	
+	<h3>Change password</h3>
+	
+	{{ form_start(passwordForm) }}
+	{{ form_widget(passwordForm) }}
+	{{ form_end(passwordForm) }}
+	
+{% endblock %}

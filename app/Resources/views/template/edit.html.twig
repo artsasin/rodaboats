@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1 class="page-header">Template {{ template.name }} - {{ template.language }}</h1>
+	
+	<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+		<div class="btn-group">
+			<a title="Bold (Ctrl/Cmd+B)" data-edit="bold" class="btn btn-default btn-info"><i class="fa fa-bold"></i></a>
+			<a title="Italic (Ctrl/Cmd+I)" data-edit="italic" class="btn btn-default btn-info"><i class="fa fa-italic"></i></a>
+			<a title="Strikethrough" data-edit="strikethrough" class="btn btn-default"><i class="fa fa-strikethrough"></i></a>
+			<a title="Underline (Ctrl/Cmd+U)" data-edit="underline" class="btn btn-default btn-info"><i class="fa fa-underline"></i></a>
+		</div>
+		
+		<div class="btn-group">
+			<a title="Hyperlink" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i class="fa fa-link"></i></a>
+			<div class="dropdown-menu input-append">
+				<input type="text" data-edit="createLink" placeholder="URL">
+				<button type="button" class="btn">Add</button>
+			</div>
+		</div>
+		
+		<div class="btn-group">
+			<a title="Remove Hyperlink" data-edit="unlink" class="btn btn-default"><i class="fa fa-unlink"></i></a>
+		</div>
+	</div>
+	
+	{{ form_start(form) }}
+	
+		<div id="editor" class="editor">
+			{{ template.content|raw }}
+		</div>
+		
+		{{ form_widget(form) }}
+	{{ form_end(form) }}
+	
+	
+	
+{% endblock %}
+
+{% block javascripts %}
+
+	<script src="{{ asset('js/jquery.hotkeys.js') }}"></script>
+	<script src="{{ asset('js/bootstrap-wysiwyg.min.js') }}"></script>
+	
+	<script type="text/javascript">
+	
+		$(function() {
+			$('#editor').wysiwyg();
+			
+			$('form').on('submit', function(e) {
+			
+				var html = $('#editor').cleanHtml();
+				$('input[name="form[content]"]').val(html);
+			});
+		});
+	</script>
+	
+{% endblock %}

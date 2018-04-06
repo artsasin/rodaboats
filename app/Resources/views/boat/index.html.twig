@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1 class="page-header">Boats</h1>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th></td>
+						<th>Boat</th>
+						<th>Location</th>
+						<th>Registration</th>
+						<th>Tracker</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for boat in boats %}
+						<tr>
+							<td class="col-sm-1">{{ include('boat/status.html.twig', { 'boat': boat }) }}</td>
+							<td>
+								<a href="{{ path('viewboat', { 'id': boat.id }) }}">
+									{{ boat.name }}<br/>
+									<small>{{ boat.hin }}</small>
+								</a>
+							</td>
+							<td>
+								{{ boat.location is empty ? "" : boat.location.name }}
+							</td>
+							<td>{{ boat.registration }}</td>
+							<td>{{ boat.trackerName }}<br/>
+								<small>{{ boat.trackerImei }}</small>
+							</td>
+							<td>
+								<a href="{{ path('viewboat', { 'id': boat.id }) }}">View</a> | 
+								<a href="{{ path('editboat', { 'id': boat.id }) }}">Edit</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

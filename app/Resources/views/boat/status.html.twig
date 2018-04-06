@@ -1,0 +1,9 @@
+{% if boat.status is constant('STATUS_ACTIVE', boat) %}
+	<span class="label label-success">Active</span>
+{% endif %}
+{% if boat.status is constant('STATUS_INACTIVE', boat) %}
+	<span class="label label-danger">Inactive</span>
+{% endif %}
+{% if boat.status is constant('STATUS_DELETED', boat) %}
+	<span class="label label-default">Deleted</span>
+{% endif %}

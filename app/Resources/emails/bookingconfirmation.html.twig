@@ -1,0 +1,69 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+
+<h1>Booking confirmation</h1>
+
+<div class="form-group">
+	<label class="col-sm-5 control-label">Boat</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">
+			{{ booking.boat is empty ? "" : booking.boat.name }}
+		</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Date and time</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.date|date('l j M Y') }} {{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Location</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.location is empty ? "" : booking.location.name }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Number of people</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.numberOfPeople }}</p>
+	</div>
+</div>
+
+<h3>Your information</h3>
+
+<div class="form-group">
+	<label class="col-sm-5 control-label">Name</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.lesseeName }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Email</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.lesseeEmail }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Phone</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.lesseePhone }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Lanuage</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ booking.language }}</p>
+	</div>
+</div>
+
+{% if not template is empty %}
+
+<h3>Information</h3>
+
+{{ template.content|raw }}
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,51 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+      db_user_provider:
+        entity:
+          class: AppBundle:User
+          property: username
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            form_login:
+                login_path: /auth/login
+                check_path: /auth/login_check
+                default_target_path: /
+            provider: db_user_provider
+            
+            logout:
+                path: /auth/logout
+                target: /auth/login
+                
+    access_control:
+        # Secure everything except the login page.
+        - { path: ^/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        
+        
+        # Detailed role based authorizations.
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/report, roles: ROLE_ADMIN }
+        - { path: ^/booking/[\d]*/log, roles: ROLE_ADMIN }
+
+        # Secure everything else.
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

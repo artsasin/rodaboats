@@ -1,0 +1,172 @@
+/*
+ * Base structure
+ */
+
+
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+@media print {
+	
+	body {
+		padding-top: 0px;
+		font-size: 12px;
+	}
+	
+	.page-header {
+		margin-top: 0px;
+	}
+}
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+   position: fixed;
+   top: 51px;
+   bottom: 0;
+   left: 0;
+   z-index: 1000;
+   display: block;
+   padding: 20px;
+   overflow-x: hidden;
+   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+   background-color: #f5f5f5;
+   border-right: 1px solid #eee;
+ }
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.page-header-menu
+{
+    float: right;
+    margin-left: 15px;
+    line-height: 36px;
+}
+.page-header-fixed
+{
+	background-color: #f5f5f5;
+	border-bottom: 1px solid #eee;
+	position: fixed;
+	top: 51px;
+}
+.page-header-fixed h1
+{
+	width: 100%;
+}
+.page-header-fixed .nav
+{
+	
+}
+.header-nav
+{
+	float: right;
+	margin-left: 10px;
+}
+
+/*
+ * Calendar
+ */
+.calendar td.slot
+{
+	position: relative;
+	padding: 0px 8px;
+	border-left: 1px solid #ddd;
+}
+.calendar td.available:hover
+{
+	background: #ddd;
+}
+.calendar-item
+{
+	position: absolute;
+	border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    background: #d9edf7;
+    padding: 15px;
+    z-index: 10;
+    overflow: hidden;
+}
+.calendar-book
+{
+	visibility: hidden;
+}
+.calendar td:hover .calendar-book
+{
+	visibility: visible;
+}
+
+/* 
+ * Compact Bootstrap forms
+ */
+.form-compact .form-group 
+{
+    margin-bottom: 0;
+}
+
+.counter 
+{
+	text-align: center;
+}
+.counter .lead
+{
+	font-size: 24px;
+}
+.counter small
+{
+	font-weight: normal;
+	font-size: 14px;
+	color: #777;
+}
+
+.editor {
+    background-color: white;
+    border: 1px solid rgb(204, 204, 204);
+    border-collapse: separate;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.075) inset;
+    box-sizing: content-box;
+    height: 250px;
+    max-height: 250px;
+    outline: medium none;
+    overflow: scroll;
+    padding: 4px;
+    margin: 10px 0;
+}

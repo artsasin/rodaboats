@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1 class="page-header">
+		<span class="header-nav">
+			<a href="{{ path('addbooking') }}" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> booking</a>
+		</span>
+		
+		<span class="header-nav">
+			<div class="dropdown">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			    Filter
+			    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			    <li><a href="{{ path('booking', { 'filter': 'today' }) }}">Today</a></li>
+			    <li><a href="{{ path('booking', { 'filter': 'active' }) }}">Active</a></li>
+			    <li><a href="{{ path('booking', { 'filter': 'unprocessed' }) }}">Unprocessed</a></li>
+			    <li role="separator" class="divider"></li>
+			    <li><a href="{{ path('booking') }}">All</a></li>
+			  </ul>
+			</div>
+			
+		</span>
+		
+	Bookings</h1>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Customer</th>
+						<th>Boat</th>
+						<th>Date</th>
+						<th>Type</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for booking in bookings %}
+						<tr>
+							<td class="col-sm-1">{{ include('booking/status.html.twig', { 'booking': booking }) }}</td>
+							<td>
+								<a href="{{ path('viewbooking', { 'id': booking.id }) }}">{{ booking.lesseeName }}<br/>
+								<small>{{ booking.lesseeEmail }}</small></a>
+							</td>
+							<td>{{ booking.boat.name }}<br/>
+								<small>{{ booking.boat.location is empty ? "" : booking.boat.location.name }}</small>
+							</td>
+							<td>{{ booking.date|date('l j M Y') }}<br/>
+								<small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>
+							</td>
+							<td>{{ booking.getTypeName }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			
+			<nav>
+				<ul class="pagination pagination-lg">
+					<li class="{{ page > 0 ? "" : "disabled" }}">
+						<a href="#" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					{% for i in 0..pages %}
+						<li><a href="{{ path('booking', { 'filter': filter, 'page': i} ) }}">{{ (i + 1) }}</a></li>
+					{% endfor %}
+					<li class="{{ page + 1 < pages ? "" : "disabled" }}">
+						<a href="{{ path('booking', { 'filter': filter, 'page': (pages - 1)} ) }}" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+{% endblock %}

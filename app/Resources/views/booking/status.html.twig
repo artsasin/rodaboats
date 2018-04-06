@@ -1,0 +1,12 @@
+{% if booking.status is constant('STATUS_CONFIRMED', booking) %}
+	<span class="label label-success">Confirmed</span>
+{% endif %}
+{% if booking.status is constant('STATUS_CANCELLED', booking) %}
+	<span class="label label-danger">Cancelled</span>
+{% endif %}
+{% if booking.status is constant('STATUS_DELIVERED', booking) %}
+	<span class="label label-primary">Delivered</span>
+{% endif %}
+{% if booking.status is constant('STATUS_CLOSED', booking) %}
+	<span class="label label-default">Closed</span>
+{% endif %}

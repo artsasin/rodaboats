@@ -1,0 +1,476 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Table(name="boat_prices")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\BoatPriceRepository")
+ */
+class BoatPrice
+{
+
+	/**
+	 * @ORM\Column(type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
+
+	/**
+	 * @ORM\Column(type="date")
+	 * @Assert\NotBlank()
+	 */
+	private $start;
+
+	/**
+	 * @ORM\Column(type="date")
+	 * @Assert\NotBlank()
+	 */
+	private $end;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Boat", inversedBy="prices")
+	 * @ORM\JoinColumn(name="boat_id", referencedColumnName="id")
+	 */
+	protected $boat;
+
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $petrol1hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $petrol2hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $petrol4hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $petrol8hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $deposit;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $rent1hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $rent2hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $rent4hour;
+	
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $rent8hour;
+	
+	/**
+	 * @ORM\Column(type="float", nullable=true)
+	 */
+	private $rentWeek;
+	
+	/**
+	 * @ORM\Column(type="float", nullable=true)
+	 */
+	private $fishing;
+	
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set start
+     *
+     * @param \DateTime $start
+     *
+     * @return BoatPrice
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
+    /**
+     * Get start
+     *
+     * @return \DateTime
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * Set end
+     *
+     * @param \DateTime $end
+     *
+     * @return BoatPrice
+     */
+    public function setEnd($end)
+    {
+        $this->end = $end;
+
+        return $this;
+    }
+
+    /**
+     * Get end
+     *
+     * @return \DateTime
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * Set petrol
+     *
+     * @param float $petrol
+     *
+     * @return BoatPrice
+     */
+    public function setPetrol($petrol)
+    {
+        $this->petrol = $petrol;
+
+        return $this;
+    }
+
+    /**
+     * Get petrol
+     *
+     * @return float
+     */
+    public function getPetrol()
+    {
+        return $this->petrol;
+    }
+
+    /**
+     * Set deposit
+     *
+     * @param float $deposit
+     *
+     * @return BoatPrice
+     */
+    public function setDeposit($deposit)
+    {
+        $this->deposit = $deposit;
+
+        return $this;
+    }
+
+    /**
+     * Get deposit
+     *
+     * @return float
+     */
+    public function getDeposit()
+    {
+        return $this->deposit;
+    }
+
+
+    /**
+     * Set boat
+     *
+     * @param \AppBundle\Entity\Boat $boat
+     *
+     * @return BoatPrice
+     */
+    public function setBoat(\AppBundle\Entity\Boat $boat = null)
+    {
+        $this->boat = $boat;
+
+        return $this;
+    }
+
+    /**
+     * Get boat
+     *
+     * @return \AppBundle\Entity\Boat
+     */
+    public function getBoat()
+    {
+        return $this->boat;
+    }
+
+    /**
+     * Set petrolCost
+     *
+     * @param float $petrolCost
+     *
+     * @return BoatPrice
+     */
+    public function setPetrolCost($petrolCost)
+    {
+        $this->petrolCost = $petrolCost;
+
+        return $this;
+    }
+
+    /**
+     * Get petrolCost
+     *
+     * @return float
+     */
+    public function getPetrolCost()
+    {
+        return $this->petrolCost;
+    }
+
+    /**
+     * Set rent2hour
+     *
+     * @param float $rent2hour
+     *
+     * @return BoatPrice
+     */
+    public function setRent2hour($rent2hour)
+    {
+        $this->rent2hour = $rent2hour;
+
+        return $this;
+    }
+
+    /**
+     * Get rent2hour
+     *
+     * @return float
+     */
+    public function getRent2hour()
+    {
+        return $this->rent2hour;
+    }
+
+    /**
+     * Set rent4hour
+     *
+     * @param float $rent4hour
+     *
+     * @return BoatPrice
+     */
+    public function setRent4hour($rent4hour)
+    {
+        $this->rent4hour = $rent4hour;
+
+        return $this;
+    }
+
+    /**
+     * Get rent4hour
+     *
+     * @return float
+     */
+    public function getRent4hour()
+    {
+        return $this->rent4hour;
+    }
+
+    /**
+     * Set rent8hour
+     *
+     * @param float $rent8hour
+     *
+     * @return BoatPrice
+     */
+    public function setRent8hour($rent8hour)
+    {
+        $this->rent8hour = $rent8hour;
+
+        return $this;
+    }
+
+    /**
+     * Get rent8hour
+     *
+     * @return float
+     */
+    public function getRent8hour()
+    {
+        return $this->rent8hour;
+    }
+
+    /**
+     * Set rentWeek
+     *
+     * @param float $rentWeek
+     *
+     * @return BoatPrice
+     */
+    public function setRentWeek($rentWeek)
+    {
+        $this->rentWeek = $rentWeek;
+
+        return $this;
+    }
+
+    /**
+     * Get rentWeek
+     *
+     * @return float
+     */
+    public function getRentWeek()
+    {
+        return $this->rentWeek;
+    }
+    
+    /**
+     * Returns true if the price currently applies.
+     */
+    public function isCurrent()
+    {
+    	$now = new \DateTime();
+    	return $this->start <= $now && $this->end >= $now;
+    }
+
+    /**
+     * Set petrol1hour
+     *
+     * @param float $petrol1hour
+     *
+     * @return BoatPrice
+     */
+    public function setPetrol1hour($petrol1hour)
+    {
+        $this->petrol1hour = $petrol1hour;
+
+        return $this;
+    }
+
+    /**
+     * Get petrol1hour
+     *
+     * @return float
+     */
+    public function getPetrol1hour()
+    {
+        return $this->petrol1hour;
+    }
+
+    /**
+     * Set petrol2hour
+     *
+     * @param float $petrol2hour
+     *
+     * @return BoatPrice
+     */
+    public function setPetrol2hour($petrol2hour)
+    {
+        $this->petrol2hour = $petrol2hour;
+
+        return $this;
+    }
+
+    /**
+     * Get petrol2hour
+     *
+     * @return float
+     */
+    public function getPetrol2hour()
+    {
+        return $this->petrol2hour;
+    }
+
+    /**
+     * Set petrol4hour
+     *
+     * @param float $petrol4hour
+     *
+     * @return BoatPrice
+     */
+    public function setPetrol4hour($petrol4hour)
+    {
+        $this->petrol4hour = $petrol4hour;
+
+        return $this;
+    }
+
+    /**
+     * Get petrol4hour
+     *
+     * @return float
+     */
+    public function getPetrol4hour()
+    {
+        return $this->petrol4hour;
+    }
+
+    /**
+     * Set petrol8hour
+     *
+     * @param float $petrol8hour
+     *
+     * @return BoatPrice
+     */
+    public function setPetrol8hour($petrol8hour)
+    {
+        $this->petrol8hour = $petrol8hour;
+
+        return $this;
+    }
+
+    /**
+     * Get petrol8hour
+     *
+     * @return float
+     */
+    public function getPetrol8hour()
+    {
+        return $this->petrol8hour;
+    }
+
+    /**
+     * Set rent1hour
+     *
+     * @param float $rent1hour
+     *
+     * @return BoatPrice
+     */
+    public function setRent1hour($rent1hour)
+    {
+        $this->rent1hour = $rent1hour;
+
+        return $this;
+    }
+
+    /**
+     * Get rent1hour
+     *
+     * @return float
+     */
+    public function getRent1hour()
+    {
+        return $this->rent1hour;
+    }
+}

@@ -1,0 +1,130 @@
+<div class="panel panel-default">
+	<div class="panel-heading clearfix">
+		<h3 class="panel-title">Boat</h3>
+	</div>
+	
+	<div class="panel-body form-horizontal form-compact">
+		
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Status</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ include('boat/status.html.twig', { 'boat': boat }) }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">HIN</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.hin }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Location</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.location is empty ? "" : boat.location.name }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Registration</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.registration }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Tracker IMEI</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.trackerImei }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Tracker name</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.trackerName }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Insurance policy</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.insurancePolicy }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Harbor</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.harbor }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading clearfix">
+		<h3 class="panel-title">Technical</h3>
+	</div>
+	
+	<div class="panel-body form-horizontal form-compact">
+
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Shaft</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.shaft }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Steering cable</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.steeringCable }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Steering cable date</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.steeringCableDate is empty ? "" : boat.steeringCableDate|date('l j M Y') }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Battery type</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.batteryType }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Battery date</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.batteryDate is empty ? "" : boat.batteryDate|date('l j M Y') }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Engine serial</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.engineSerial }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Propeller</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.propeller }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Anchor</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.anchor }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Tank 1</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.tank1 }}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-5 control-label">Tank 2</label>
+			<div class="col-sm-7">
+				<p class="form-control-static">{{ boat.tank2 }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h1 class="page-header">
+		Daily report
+	</h1>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="well">
+		
+				{{ form_start(form) }}
+				{{ form_widget(form) }}
+				{{ form_end(form) }}
+			
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			
+			<div class="panel panel-default">
+				<table class="table">
+					<tr>
+						<td class="counter" colspan="2">
+							<p class="lead">{{ confirmedBookings|length }}<br/>
+								<small>confirmed bookings</small>
+							</p>
+						</td>
+						<td class="counter" colspan="2">
+							<p class="lead">{{ cancelledBookings|length }}<br/>
+								<small>cancelled bookings</small>
+							</p>
+						</td>
+					</tr>
+					<tr>
+					
+						<td class="counter">
+							<p class="lead">€ {{ totalTurnover }}<br/>
+								<small>total turnover</small>
+							</p>
+						</td>
+						<td class="counter">
+							<p class="lead">€ {{ turnoverPerMethod['Cash'] }}<br/>
+								<small>cash</small>
+							</p>
+						</td>
+						<td class="counter">
+							<p class="lead">€ {{ turnoverPerMethod['DebitCard'] }}<br/>
+								<small>debit card</small>
+							</p>
+						</td>
+						<td class="counter">
+							<p class="lead">€ {{ turnoverPerMethod['CreditCard'] }}<br/>
+								<small>credit card</small>
+							</p>
+						</td>
+					</tr>
+				</table>
+				
+				<div class="panel-body">
+				
+					<div class="row">
+						<div class="col-md-6">
+						
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Location</th>
+										<th>Cash</th>
+										<th>Debit card</th>
+										<th>Credit card</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for location in turnoverPerLocation %}
+										<tr>
+											<td>{{ location['Name'] }}</td>
+											<td>€ {{ location['Cash'] }}</td>
+											<td>€ {{ location['DebitCard'] }}</td>
+											<td>€ {{ location['CreditCard'] }}</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="4">No confirmed bookings for date</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+
+{% endblock %}
