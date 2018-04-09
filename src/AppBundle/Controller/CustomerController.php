@@ -43,7 +43,11 @@ class CustomerController extends Controller
     public function listAction(Request $request)
     {
         $page = $request->query->get('page', 1);
-        $rowsPerPage = $request->query->get('rowsPerPage', 10);
+        $limit = $request->query->get('limit', 10);
+        $query = $request->query->get('query', '');
+        $orderBy = $request->request->get('orderBy', null);
+        $ascending = $request->request->get('ascending', null);
+        $byColumn = $request->request->get('byColumn', 0);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -52,24 +56,22 @@ class CustomerController extends Controller
 
         $data = [
             'status'    => 0,
-            'total'     => 0,
-            'items'     => []
+            'count'     => 0,
+            'data'     => []
         ];
 
         try {
-            $data['total'] = intval($repository->total());
-            $customers = $repository->page($page, $rowsPerPage);
+            $data['count'] = intval($repository->total());
+            $customers = $repository->page($page, $limit);
             foreach ($customers as $customer) {
                 $model = new \AppBundle\Model\DTO\Customer();
                 $model->fromEntity($customer);
-                $data['items'][] = $model;
+                $data['data'][] = $model;
             }
         } catch (\Exception $e) {
             $data['status'] = -1;
             $data['message'] = $e->getMessage();
         }
-
-        // $customers = $em->getRepository(Customer::class)->find
 
         return new JsonResponse($data);
     }

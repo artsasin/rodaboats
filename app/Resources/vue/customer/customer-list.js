@@ -1,11 +1,9 @@
-import 'vuetify/dist/vuetify.min.css'
-
 import 'babel-polyfill'
 import Vue from 'vue'
-import Vuetify from 'vuetify'
+import { ServerTable, Event } from 'vue-tables-2'
 import CustomerList from './CustomerList.vue'
 
-Vue.use(Vuetify)
+Vue.use(ServerTable)
 
 const vm = new Vue({
     el: '#app',

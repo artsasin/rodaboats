@@ -1,84 +1,32 @@
 <template>
-    <v-app>
-        <v-data-table
-                :headers="headers"
-                :items="items"
-                :search="search"
-                :pagination.sync="pagination"
-                :total-items="totalItems"
-                :loading="loading"
-                class="elevation-1"
-        >
-            <template slot="items" slot-scope="props">
-                <td>{{ props.item.firstName }}</td>
-                <td class="text-xs-right">{{ props.item.lastName }}</td>
-                <td class="text-xs-right">{{ props.item.phoneNumber }}</td>
-            </template>
-        </v-data-table>
-    </v-app>
+    <div id="customer-list-container">
+        <v-server-table :url="dataUrl" :columns="columns" :options="options">
+            <a slot="edit" slot-scope="props" class="btn btn-sm btn-default" @click="edit(props.row.id)">
+                <i class="fa fa-edit"></i>
+            </a>
+        </v-server-table>
+    </div>
 </template>
 
 <script>
-    import axios from 'axios';
-
     export default {
         name: "customer-list",
         data () {
             return {
-                search: '',
-                totalItems: 0,
-                items: [],
-                loading: true,
-                pagination: {},
-                headers: [
-                    {
-                        text: 'First name',
-                        sortable: false,
-                        value: 'firstName'
-                    },
-                    {
-                        text: 'Last name',
-                        sortable: false,
-                        value: 'lastName'
-                    },
-                    {
-                        text: 'Phone number',
-                        sortable: false,
-                        value: 'phoneNumber'
+                columns: ['firstName', 'lastName', 'phoneNumber', 'edit'],
+                dataUrl: Routing.generate('app.customer.get.list'),
+                options: {
+                    headings: {
+                        firstName: 'First name',
+                        lastName: 'Last name',
+                        phoneNumber: 'Phone number'
                     }
-                ]
+                }
             }
-        },
-        watch: {
-            pagination: {
-                handler () {
-                    this.loadCustomers()
-                },
-                deep: true
-            }
-        },
-        mounted () {
-            this.loadCustomers()
         },
         methods: {
-            loadCustomers () {
-                const self = this;
-                const { sortBy, descending, page, rowsPerPage } = this.pagination
-                const params = {
-                    sortBy: sortBy,
-                    descending: descending,
-                    page: page,
-                    rowsPerPage: rowsPerPage
-                }
-                axios.get(Routing.generate('app.customer.get.list'), { params: params })
-                  .then(response => {
-                      self.loading = false
-                      self.items = response.data.items
-                      self.totalItems = response.data.total
-                  })
-                  .catch(error => {
-                      console.log(error)
-                  })
+            edit (id) {
+                console.log(id)
             }
         }
     }
