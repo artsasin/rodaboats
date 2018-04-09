@@ -164,7 +164,7 @@ class Order
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer", inversedBy="orders")
-     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", onDelete="SET NULL")
      * @var Customer
      */
     protected $customer;

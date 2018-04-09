@@ -28,7 +28,8 @@
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"/>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" />
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -85,7 +86,12 @@
                     {% else %}
                         <li><a href="{{ path('booking') }}">Bookings</a></li>
                     {% endif %}
-
+                    {% if 'customer' in app.request.get('_route') %}
+                    <li class="active"><a href="{{ path('app.customer.index') }}">Customers <span
+                                    class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li><a href="{{ path('app.customer.index') }}">Customers</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="nav nav-sidebar">
 
@@ -145,6 +151,8 @@
     </div>
 </div>
 
+<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>

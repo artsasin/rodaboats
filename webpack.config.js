@@ -1,12 +1,18 @@
-var path = require('path')
-// var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+const path = require('path')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
-module.exports = {
-    entry: './app/Resources/vue/main.js',
+const NODE_ENV = process.env.NODE_ENV;
+
+const plugins =  (NODE_ENV === 'production') ? [new ExtractTextPlugin("[name].css"), new UglifyJSPlugin()] : [new ExtractTextPlugin("[name].css")]
+
+const customerConfig = {
+    entry: {
+        'customer-list': './app/Resources/vue/customer/customer-list.js'
+    },
     output: {
-        path: path.resolve(__dirname, './public_html/js'),
-        publicPath: '/js/',
+        path: path.resolve(__dirname, './public_html/vue/customer'),
+        publicPath: '/vue/customer/',
         filename: '[name].js'
     },
     module: {
@@ -20,12 +26,19 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: 'css-loader'
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                })
             }
         ]
     },
-    plugins: [
-        // new UglifyJSPlugin()
-        new ExtractTextPlugin("[name].css")
-    ]
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.js'
+        }
+    },
+    plugins: plugins
 }
+
+module.exports = [customerConfig];

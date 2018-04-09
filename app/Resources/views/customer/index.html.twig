@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('vue/customer/customer-list.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-header">Customers</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="app"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('vue/customer/customer-list.js') }}"></script>
+{% endblock %}
