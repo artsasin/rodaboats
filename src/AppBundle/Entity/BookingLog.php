@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="booking_logs")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\BookingLogRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BookingLogRepository")
  */
 class BookingLog
 {

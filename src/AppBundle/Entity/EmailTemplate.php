@@ -10,7 +10,7 @@ use Cocur\Slugify\Slugify;
 
 /**
  * @ORM\Table(name="emailTemplate")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\EmailTemplateRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EmailTemplateRepository")
  */
 class EmailTemplate
 {

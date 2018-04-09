@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Model\Calendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Calendar;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Booking;
 use AppBundle\Entity\Location;

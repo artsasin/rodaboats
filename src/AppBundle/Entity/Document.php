@@ -10,7 +10,7 @@ use Cocur\Slugify\Slugify;
 
 /**
  * @ORM\Table(name="document")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\DocumentRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DocumentRepository")
  */
 class Document
 {

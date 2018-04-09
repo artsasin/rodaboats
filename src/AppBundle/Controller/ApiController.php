@@ -7,9 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use AppBundle\Entity\Boat;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Location;
 use AppBundle\Entity\Booking;
 use Sabre\VObject;
 
@@ -60,7 +57,6 @@ class ApiController extends Controller
     	$bookings = $builder->getQuery()->getResult();
     	foreach($bookings as $booking)
     	{
-    		
     		// Why does the PHP DateTime class have to be suck a bitch?
     		$start = $booking->getDate()->format('Y-m-d') . ' ' . $booking->getStart()->format('H:i:s');
     		$start = new \DateTime($start);

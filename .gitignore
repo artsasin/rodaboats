@@ -20,3 +20,4 @@
 /cgi-bin/
 /logs/
 /.idea/
+/node_modules/

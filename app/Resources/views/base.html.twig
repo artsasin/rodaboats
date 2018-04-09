@@ -1,151 +1,154 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		<meta name="description" content="">
-		<meta name="author" content="">
-		
-		<!-- Bootstrap core CSS -->
-		<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-		
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<link href="{{ asset('css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
-		
-		<!-- Custom styles for this template -->
-		<link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
-		
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-		
-        <title>{% block title %}RoDa Boats{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        
-        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" />
-    </head>
-    <body>
-    
-    	<nav class="navbar navbar-inverse navbar-fixed-top">
-	      <div class="container-fluid">
-	        <div class="navbar-header">
-	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-	            <span class="sr-only">Toggle navigation</span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	          </button>
-	          <a class="navbar-brand" href="{{ path('calendar') }}">RoDa</a>
-	        </div>
-	        <div id="navbar" class="navbar-collapse collapse">
-	        
-	          
-	          
-	          <ul class="nav navbar-nav navbar-right">
-	            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-	            	<li class="dropdown">
-	            		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Logged in as {{ app.user.username }} <span class="caret"></span></a>
-	            		<ul class="dropdown-menu">
-				    		<li><a href="{{ path('logout_route') }}">Logout</a></li>
-			    		</ul>
-				    </li>
-				{% else %}
-					<li><a href="{{ path('login_route') }}">Login</a></li>
-				{% endif %}
-	          </ul>
-	          
-	          {% block navbar %}
-	          {% endblock %}
-	          
-	        </div>
-	      </div>
-	    </nav>
-	    
-	    <div class="container-fluid">
-	      <div class="row">
-	        <div class="col-xs-3 col-sm-3 col-md-2 sidebar">
-	          
-	          {% block sidebar %}
-	        
-	          <ul class="nav nav-sidebar">
-	          	{% if app.request.get('_route') == 'calendar' %}
-	          		<li class="active"><a href="{{ path('calendar') }}">Dashboard <span class="sr-only">(current)</span></a></li>
-	          	{% else %}
-	          		<li><a href="{{ path('calendar') }}">Dashboard</a></li>
-	            {% endif %}
-	          	
-	          	{% if 'booking' in app.request.get('_route') %}
-	            	<li class="active"><a href="{{ path('booking') }}">Bookings <span class="sr-only">(current)</span></a></li>
-	            {% else %}
-	            	<li><a href="{{ path('booking') }}">Bookings</a></li>
-	            {% endif %}
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	          </ul>
-	          <ul class="nav nav-sidebar">
-	          	
-	          	{% if 'boat' in app.request.get('_route') %}
-	            	<li class="active"><a href="{{ path('boat') }}">Boats <span class="sr-only">(current)</span></a></li>
-	            {% else %}
-	            	<li><a href="{{ path('boat') }}">Boats</a></li>
-	            {% endif %}
-	            
-	          </ul>
-	          
-	          <ul class="nav nav-sidebar">
-	          	{% if 'report' in app.request.get('_route') %}
-	            	<li class="active"><a href="{{ path('report') }}">Reports <span class="sr-only">(current)</span></a></li>
-	            {% else %}
-	            	<li><a href="{{ path('report') }}">Reports</a></li>
-	            {% endif %}
-	            <li><a href="{{ path('reportdaily') }}">Daily report</a></li>
-	            <li><a href="{{ path('reportmonth') }}">Month report</a></li>
-	          </ul>
-	          
-	          {% if is_granted('ROLE_ADMIN') %}
-	          <ul class="nav nav-sidebar">
-	          	{% if 'admin' in app.request.get('_route') %}
-	            	<li class="active"><a href="{{ path('admin') }}">Admin <span class="sr-only">(current)</span></a></li>
-	            {% else %}
-	            	<li><a href="{{ path('admin') }}">Admin</a></li>
-	            {% endif %}
-	          </ul>
-	          {% endif %}
-	          
-	          {% endblock %}
-	          
-	        </div>
-	        <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	        	{% for flash_message in app.session.flashbag.get('notice') %}
-				    <div class="alert alert-success" role="alert">
-				        {{ flash_message }}
-				    </div>
-				{% endfor %}
-				{% for flash_message in app.session.flashbag.get('warning') %}
-				    <div class="alert alert-warning" role="alert">
-				        {{ flash_message }}
-				    </div>
-				{% endfor %}
-				{% for flash_message in app.session.flashbag.get('danger') %}
-				    <div class="alert alert-danger" role="alert">
-				        {{ flash_message }}
-				    </div>
-				{% endfor %}
-	        
-				{% block body %}{% endblock %}
-	      	</div>
-      	  </div>
-      	</div>
-      	  
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-		<script src="{{ asset('js/bootstrap.min.js') }}"></script>
-		<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-		{% block javascripts %}{% endblock %}
-    </body>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{{ asset('css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datepicker3.min.css') }}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <title>{% block title %}RoDa Boats{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('calendar') }}">RoDa</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Logged in as {{ app.user.username }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('logout_route') }}">Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{{ path('login_route') }}">Login</a></li>
+                {% endif %}
+            </ul>
+
+            {% block navbar %}
+            {% endblock %}
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3 col-sm-3 col-md-2 sidebar">
+
+            {% block sidebar %}
+
+                <ul class="nav nav-sidebar">
+                    {% if app.request.get('_route') == 'calendar' %}
+                        <li class="active"><a href="{{ path('calendar') }}">Dashboard <span
+                                        class="sr-only">(current)</span></a></li>
+                    {% else %}
+                        <li><a href="{{ path('calendar') }}">Dashboard</a></li>
+                    {% endif %}
+
+                    {% if 'booking' in app.request.get('_route') %}
+                        <li class="active"><a href="{{ path('booking') }}">Bookings <span
+                                        class="sr-only">(current)</span></a></li>
+                    {% else %}
+                        <li><a href="{{ path('booking') }}">Bookings</a></li>
+                    {% endif %}
+
+                </ul>
+                <ul class="nav nav-sidebar">
+
+                    {% if 'boat' in app.request.get('_route') %}
+                        <li class="active"><a href="{{ path('boat') }}">Boats <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ path('boat') }}">Boats</a></li>
+                    {% endif %}
+
+                </ul>
+
+                <ul class="nav nav-sidebar">
+                    {% if 'report' in app.request.get('_route') %}
+                        <li class="active"><a href="{{ path('report') }}">Reports <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ path('report') }}">Reports</a></li>
+                    {% endif %}
+                    <li><a href="{{ path('reportdaily') }}">Daily report</a></li>
+                    <li><a href="{{ path('reportmonth') }}">Month report</a></li>
+                </ul>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <ul class="nav nav-sidebar">
+                        {% if 'admin' in app.request.get('_route') %}
+                            <li class="active"><a href="{{ path('admin') }}">Admin <span
+                                            class="sr-only">(current)</span></a></li>
+                        {% else %}
+                            <li><a href="{{ path('admin') }}">Admin</a></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+            {% endblock %}
+
+        </div>
+        <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {% for flash_message in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success" role="alert">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashbag.get('warning') %}
+                <div class="alert alert-warning" role="alert">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashbag.get('danger') %}
+                <div class="alert alert-danger" role="alert">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
 </html>

@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="location")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\LocationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LocationRepository")
  */
 class Location
 {
@@ -18,8 +18,8 @@ class Location
 	
 	public function __construct()
 	{
-		
 		$this->status = self::STATUS_ACTIVE;
+		$this->orders = new ArrayCollection();
 	}
 	
 	/**
@@ -50,6 +50,12 @@ class Location
 	 * @ORM\OneToMany(targetEntity="User", mappedBy="location")
 	 */
 	protected $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="location")
+     * @var ArrayCollection
+     */
+	protected $orders;
 	
 	/**
 	 * @ORM\Column(type="string", length=255, nullable=true)
@@ -180,6 +186,34 @@ class Location
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function addOrder(Order $order)
+    {
+        $this->orders[] = $order;
+        return $this;
+    }
+
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function removeOrder(Order $order)
+    {
+        $this->orders->removeElement($order);
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrders()
+    {
+        return $this->orders;
     }
 
     /**

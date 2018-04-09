@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Criteria;
 
 /**
- * @ORM\Table(name="boats", indexes={@ORM\Index(name="date_idx", columns={"date"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\BoatRepository")
+ * @ORM\Table(name="boats")})
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BoatRepository")
  */
 class Boat
 {
@@ -216,12 +216,19 @@ class Boat
 	 * @var unknown
 	 */
 	private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="boat")
+     * @var ArrayCollection
+     */
+	protected $orders;
 	
-	public function __construct(){
-		
+	public function __construct()
+    {
 		$this->bookings = new ArrayCollection();
 		$this->prices = new ArrayCollection();
 		$this->documents = new ArrayCollection();
+		$this->orders = new ArrayCollection();
 	}
 	
 	/**
@@ -1200,5 +1207,33 @@ class Boat
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function addOrder(Order $order)
+    {
+        $this->orders[] = $order;
+        return $this;
+    }
+
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function removeOrder(Order $order)
+    {
+        $this->orders->removeElement($order);
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrders()
+    {
+        return $this->orders;
     }
 }

@@ -6,10 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Boat;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Location;
-use AppBundle\Entity\EmailTemplate;
 
 class TemplateController extends Controller
 {
@@ -17,7 +13,11 @@ class TemplateController extends Controller
     
     /**
      * @Route("/admin/template/{id}/edit", name="edittemplate")
+     *
      * @param Request $request
+     * @param integer $id
+     *
+     * @return Response
      */
     public function editConfirmation(Request $request, $id)
     {
@@ -34,7 +34,6 @@ class TemplateController extends Controller
     	$form->handleRequest($request);
     	if($form->isValid())
     	{
-    		
     		$template->setDate(new \DateTime());
     		$em->flush();
     		 
