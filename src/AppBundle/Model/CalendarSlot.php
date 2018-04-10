@@ -33,11 +33,19 @@ class CalendarSlot
      * @param integer $hour
      * @param integer $minutes
      */
-    public function __construct($hour, $minutes)
+    public function __construct($minutes)
     {
-        $this->hour = $hour;
+//        $this->hour = $hour;
         $this->minutes = $minutes;
         $this->bookings = array();
+    }
+
+    public function format()
+    {
+        $minutes = $this->minutes % 60;
+        $hours = intval(($this->minutes - $minutes) / 60);
+
+        return sprintf('%s:%s', $hours, ($minutes === 0) ? '0' . $minutes : $minutes);
     }
 
     /**
@@ -62,6 +70,6 @@ class CalendarSlot
      */
     public function getCalendarIndex()
     {
-        return intval(($this->hour * 60) + $this->minutes);
+        return intval($this->minutes);
     }
 }

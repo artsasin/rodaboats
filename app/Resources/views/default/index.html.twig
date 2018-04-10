@@ -34,8 +34,9 @@
     </h1>
     <style type="text/css">
         table.mine tr {
-            height: 13px;
+            height: 20px;
         }
+
         table.mine tr td {
             font-size: 8px;
             padding: 0;
@@ -47,70 +48,41 @@
 
             <div class="panel panel-default">
                 <div class="table-responsive">
-                    <table class="table mine">
-                        <thead>
-                            <tr>
-                                <th class="col-xs-1 col-md-1">Time</th>
-                                <th>Boat 1</th>
-                                <th>Boat 1</th>
-                                <th>Boat 1</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td rowspan="3">5:00</td>
-                                <td>a</td>
-                                <td>b</td>
-                                <td>c</td>
-                            </tr>
-                            <tr>
-                                <td>a</td>
-                                <td>b</td>
-                                <td>c</td>
-                            </tr>
-                            <tr>
-                                <td>a</td>
-                                <td>b</td>
-                                <td>c</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-responsive" style="">
-                    <table class="table calendar" style="width: 100%; max-width: none; white-space: nowrap;">
+                    <table class="table calendar">
                         <thead>
                         <tr>
                             <th class="col-xs-1 col-md-1">Time</th>
                             {% for boat in calendar.boats %}
-                                <th>{{ boat.name }}<br/>
-                                    <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
-                                    <br/>
-                                    <a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}"><span
-                                                class="glyphicon glyphicon-plus" aria-hidden="true"></span> book</a>
-                                </th>
+                            <th>{{ boat.name }}<br/>
+                                <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
+                                <br/>
+                                <a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> book
+                                </a>
+                            </th>
                             {% endfor %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for slot in calendar.slots %}
                             <tr>
-                                <td>{{ slot.hour }}:{{ slot.minutes }}</td>
+                                {% if slot.minutes % 30 == 0 %}
+                                    <td rowspan="2" style="vertical-align: top; padding: 0 0 0 5px; font-size: 12px;">
+                                        {{ slot.format() }}
+                                    </td>
+                                {% endif %}
                                 {% for boat in calendar.boats %}
                                     {% set booking = calendar.getBooking(boat, slot) %}
                                     {% if booking %}
-                                        <td class="slot" rowspan="{{ booking.hours * 2 }}">
-                                            <a class="calendar-item"
-                                               href="{{ path('viewbooking', { 'id': booking.id }) }}">
-                                                {{ booking.lesseeLastName }}
-                                                <!--<br /><small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>-->
-                                                <br/>
-                                                <small>{{ booking.hours }} hours</small>
-                                            </a>
+                                        <td class="slot" rowspan="{{ booking.minutes / 15 }}" style="padding: 1px; overflow: hidden;">
+                                            <div style="position: absolute; width: 100%; height: 100%; background-color: #a8c8d8;">&nbsp;</div>
+                                            {#<a href="{{ path('viewbooking', { 'id': booking.id }) }}">#}
+                                                {#{{ booking.lesseeLastName }}<br />#}
+                                                {#<small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>#}
+                                            {#</a>#}
                                         </td>
                                     {% elseif not calendar.busySlot(boat, slot) %}
-                                        <td class="slot available" data-boat="{{ boat.id }}"
-                                            data-hour="{{ slot.hour }}"></td>
+                                        <td class="slot available" style="padding: 8px 0;" data-boat="{{ boat.id }}" data-minutes="{{ slot.minutes }}"></td>
                                     {% endif %}
                                 {% endfor %}
                             </tr>
@@ -118,6 +90,49 @@
                         </tbody>
                     </table>
                 </div>
+
+                {#<div class="table-responsive" style="">#}
+                    {#<table class="table calendar" style="width: 100%; max-width: none; white-space: nowrap;">#}
+                        {#<thead>#}
+                        {#<tr>#}
+                            {#<th class="col-xs-1 col-md-1">Time</th>#}
+                            {#{% for boat in calendar.boats %}#}
+                                {#<th>{{ boat.name }}<br/>#}
+                                    {#<small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>#}
+                                    {#<br/>#}
+                                    {#<a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}">#}
+                                        {#<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> book#}
+                                    {#</a>#}
+                                {#</th>#}
+                            {#{% endfor %}#}
+                        {#</tr>#}
+                        {#</thead>#}
+                        {#<tbody>#}
+                        {#{% for slot in calendar.slots %}#}
+                            {#<tr>#}
+                                {#<td>{{ slot.hour }}:{{ slot.minutes }}</td>#}
+                                {#{% for boat in calendar.boats %}#}
+                                    {#{% set booking = calendar.getBooking(boat, slot) %}#}
+                                    {#{% if booking %}#}
+                                        {#<td class="slot" rowspan="{{ booking.hours * 2 }}">#}
+                                            {#<a class="calendar-item"#}
+                                               {#href="{{ path('viewbooking', { 'id': booking.id }) }}">#}
+                                                {#{{ booking.lesseeLastName }}#}
+                                                {#<!--<br /><small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>-->#}
+                                                {#<br/>#}
+                                                {#<small>{{ booking.hours }} hours</small>#}
+                                            {#</a>#}
+                                        {#</td>#}
+                                    {#{% elseif not calendar.busySlot(boat, slot) %}#}
+                                        {#<td class="slot available" data-boat="{{ boat.id }}"#}
+                                            {#data-hour="{{ slot.hour }}"></td>#}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                            {#</tr>#}
+                        {#{% endfor %}#}
+                        {#</tbody>#}
+                    {#</table>#}
+                {#</div>#}
 
             </div>
         </div>
@@ -135,13 +150,13 @@
 
         $(function () {
             $('#datepicker').datepicker()
-              .on('changeDate', function (e) {
+                .on('changeDate', function (e) {
 
-                  var url = '{{ path('calendar') }}';
-                  url += 'calendar/' + e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
+                    var url = '{{ path('calendar') }}';
+                    url += 'calendar/' + e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
 
-                  document.location = url;
-              });
+                    document.location = url;
+                });
 
             $('table.calendar td.available').on('click', function (e) {
 

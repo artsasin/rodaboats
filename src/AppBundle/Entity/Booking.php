@@ -99,14 +99,28 @@ class Booking
 	private $end;
 
     /**
+     * @param int $start
      * @return int
      */
-	public function getStartCalendarIndex()
+	public function getStartCalendarIndex($start = null)
     {
         $h = $this->start->format('G');
-        $m = intval($this->start->format('i'));
+        if ($start !== null && $h < $start) {
+            $h = $start;
+        }
 
-        return intval(($h * 60) + $m);
+        $m = intval($this->start->format('i'));
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+
+        return intval(($h * 60) + ($m + $adjust));
     }
 
     /**
@@ -116,8 +130,16 @@ class Booking
     {
         $h = $this->end->format('G');
         $m = intval($this->end->format('i'));
-
-        return intval(($h * 60) + $m);
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+        return intval(($h * 60) + ($m + $adjust));
     }
 	
 	/**
@@ -775,7 +797,6 @@ class Booking
      */
     public function getHours()
     {
-    	
     	// Ensure that a duration can be calculated.
     	if($this->start === null || $this->end === null)
     		return null;
@@ -784,7 +805,33 @@ class Booking
     	return $diff->h;
     	
     }
-    
+
+    /**
+     * @return int|null
+     */
+    public function getMinutes()
+    {
+        // Ensure that a duration can be calculated.
+        if($this->start === null || $this->end === null) {
+            return null;
+        }
+
+        $diff = $this->start->diff($this->end, true);
+        $h = intval($diff->h);
+        $m = intval($diff->m);
+
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+
+        return intval(($h * 60) + ($m + $adjust));
+    }
     
 
     /**

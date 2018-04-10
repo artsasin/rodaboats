@@ -54,16 +54,18 @@ class Calendar
         $this->start = $start;
         $this->end = $end;
 
-        for($hour = $start; $hour <= $end; $hour++)
+        for($minutes = $start * 60; $minutes <= $end * 60; $minutes = $minutes + 15)
         {
-            $index = $hour * 60;
-            $slot = new CalendarSlot($hour, 0);
-            $this->slots[$index] = $slot;
-            if ($hour !== $end) {
-                $slot = new CalendarSlot($hour, 30);
-                $index = $index + 30;
-                $this->slots[$index] = $slot;
-            }
+            $slot = new CalendarSlot($minutes);
+            $this->slots[$minutes] = $slot;
+//            $index = $hour * 60;
+//            $slot = new CalendarSlot($hour, 0);
+//            $this->slots[$index] = $slot;
+//            if ($hour !== $end) {
+//                $slot = new CalendarSlot($hour, 30);
+//                $index = $index + 30;
+//                $this->slots[$index] = $slot;
+//            }
         }
     }
 
@@ -121,31 +123,11 @@ class Calendar
             }
         }
 
-        if ($slot->hour == 17 && $slot->minutes == 0 && $boat->getId() == 1) {
-            dump($startSlot);
-        }
-
         if ($startSlot === null) {
             return false;
         }
 
         $booking = $this->getBooking($boat, $startSlot);
-
-        $hour = $booking->getStart()->format('G');
-        $minute = intval($booking->getStart()->format('i'));
-        $startIndex = intval($hour * 60);
-        if ($minute > 30) {
-            $startIndex = intval($startIndex + 30);
-        }
-
-        $hour = $booking->getEnd()->format('G');
-        $minute = intval($booking->getEnd()->format('i'));
-        $endIndex = intval($hour * 60);
-        if ($minute > 30) {
-            $endIndex = intval($endIndex + 30);
-        }
-
-        $slotIndex = ($slot->hour * 60) + $slot->minutes;
 
         return ($slot->getCalendarIndex() >= $booking->getStartCalendarIndex() && $slot->getCalendarIndex() < $booking->getEndCalendarIndex());
     }
@@ -155,17 +137,10 @@ class Calendar
      */
     public function addBooking(Booking $booking)
     {
-        // Find the slot corresponding to this booking. Ensure that the calendar cap is honoured.
-        $start = $booking->getStart();
-        $hour = intval($start->format('G'));
-        $hour = $hour < $this->start ? $this->start : $hour;
-        $minute = intval($start->format('i'));
-        $index = intval($hour * 60);
-        if ($minute >= 30) {
-            $index = intval($index + 30);
+        dump($booking->getStartCalendarIndex($this->start));
+        $slot = $this->slots[$booking->getStartCalendarIndex($this->start)];
+        if ($slot instanceof CalendarSlot) {
+            $slot->addBooking($booking);
         }
-
-        $slot = $this->slots[$index];
-        $slot->addBooking($booking);
     }
 }
