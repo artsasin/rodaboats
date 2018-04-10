@@ -22,4 +22,9 @@ interface DTOInterface
      * @return void
      */
     public function fromJson($json);
+
+    /**
+     * @return bool
+     */
+    public function isValid();
 }

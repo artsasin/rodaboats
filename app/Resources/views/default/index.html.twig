@@ -2,112 +2,159 @@
 
 {% block body %}
 
-	<h1 class="page-header">
+    <h1 class="page-header">
 	
 		<span class="header-nav">
 			<div class="dropdown">
-			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="true">
 			    Location
 			    <span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
 			  	<li><a href="{{ path('calendardate', { 'date': date|date('Y-m-d') }) }}">All locations</a></li>
 			  	<li role="separator" class="divider"></li>
-			  	{% for location in locations %}
-			  		<li><a href="{{ path('calendardate', { 'date': date|date('Y-m-d'), 'location': location.id }) }}">{{ location.name }}</a></li>
-			  	{% endfor %}
+                  {% for location in locations %}
+                      <li><a href="{{ path('calendardate', { 'date': date|date('Y-m-d'), 'location': location.id }) }}">{{ location.name }}</a></li>
+                  {% endfor %}
 			    
 			    
 			  </ul>
 			</div>
 			
 		</span>
-	
-		<span class="glyphicon glyphicon-calendar" aria-hidden="true" id="datepicker"></span>
-	    <a href="{{ path('calendardate', { 'date': prev_date }) }}" class="title-nav"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></a>
-	    <span>{{ date|date('l j M Y') }}</span>
-	    <!--<span class="short">{{ date|date('Y-m-d') }}</span>-->
-	    <a href="{{ path('calendardate', { 'date': next_date }) }}" class="title-nav"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
-	</h1>
 
-	<div class="row">
-		<div class="col-md-12">
-		
-			<div class="panel panel-default">
-			
-			<div class="table-responsive" style="">
-			<table class="table calendar" style="width: auto; max-width: none; white-space: nowrap;">
-				<thead>
-					<tr>
-						<th class="col-xs-1 col-md-1">Time</th>
-						{% for boat in calendar.boats %}
-							<th class="col-xs-3 col-md-3">{{ boat.name }}<br/>
-								<small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small><br/>
-								<a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> book</a>
-							</th>
-						{% endfor %}
-					</tr>
-				</thead>
-				<tbody>
-					{% for slot in calendar.slots %}
-					<tr>
-						<td>{{ slot.hour }}:00</td>
-						{% for boat in calendar.boats %}
-							{% set booking = calendar.getBooking(boat, slot) %}
-							{% if booking %}
-								<td class="slot">
-									<a class="calendar-item" style="height: {{ booking.hours }}00%" href="{{ path('viewbooking', { 'id': booking.id }) }}">
-										{{ booking.lesseeLastName }}
-										<!--<br /><small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>-->
-										<br/><small>{{ booking.hours }} hours</small>
-									</a>
-								</td>
-							{% else %}
-								<td class="slot available" data-boat="{{ boat.id }}" data-hour="{{ slot.hour }}"></td>
-							{% endif %}
-						{% endfor %}
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			</div>
-			
-			</div>
-		</div>
-		
-		
-	</div>
-	
-	
+        <span class="glyphicon glyphicon-calendar" aria-hidden="true" id="datepicker"></span>
+        <a href="{{ path('calendardate', { 'date': prev_date }) }}" class="title-nav"><span
+                    class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></a>
+        <span>{{ date|date('l j M Y') }}</span>
+        <!--<span class="short">{{ date|date('Y-m-d') }}</span>-->
+        <a href="{{ path('calendardate', { 'date': next_date }) }}" class="title-nav"><span
+                    class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+    </h1>
+    <style type="text/css">
+        table.mine tr {
+            height: 13px;
+        }
+        table.mine tr td {
+            font-size: 8px;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table mine">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1 col-md-1">Time</th>
+                                <th>Boat 1</th>
+                                <th>Boat 1</th>
+                                <th>Boat 1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">5:00</td>
+                                <td>a</td>
+                                <td>b</td>
+                                <td>c</td>
+                            </tr>
+                            <tr>
+                                <td>a</td>
+                                <td>b</td>
+                                <td>c</td>
+                            </tr>
+                            <tr>
+                                <td>a</td>
+                                <td>b</td>
+                                <td>c</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-responsive" style="">
+                    <table class="table calendar" style="width: 100%; max-width: none; white-space: nowrap;">
+                        <thead>
+                        <tr>
+                            <th class="col-xs-1 col-md-1">Time</th>
+                            {% for boat in calendar.boats %}
+                                <th>{{ boat.name }}<br/>
+                                    <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
+                                    <br/>
+                                    <a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}"><span
+                                                class="glyphicon glyphicon-plus" aria-hidden="true"></span> book</a>
+                                </th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for slot in calendar.slots %}
+                            <tr>
+                                <td>{{ slot.hour }}:{{ slot.minutes }}</td>
+                                {% for boat in calendar.boats %}
+                                    {% set booking = calendar.getBooking(boat, slot) %}
+                                    {% if booking %}
+                                        <td class="slot" rowspan="{{ booking.hours * 2 }}">
+                                            <a class="calendar-item"
+                                               href="{{ path('viewbooking', { 'id': booking.id }) }}">
+                                                {{ booking.lesseeLastName }}
+                                                <!--<br /><small>{{ booking.start|date('G:i') }} - {{ booking.end|date('G:i') }}</small>-->
+                                                <br/>
+                                                <small>{{ booking.hours }} hours</small>
+                                            </a>
+                                        </td>
+                                    {% elseif not calendar.busySlot(boat, slot) %}
+                                        <td class="slot available" data-boat="{{ boat.id }}"
+                                            data-hour="{{ slot.hour }}"></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
 
 {% endblock %}
 
 {% block javascripts %}
 
-	<script type="text/javascript">
-	
-		$(function() {
-			$('#datepicker').datepicker()
-			.on('changeDate', function(e) {
-				
-				var url = '{{ path('calendar') }}';
-				url += 'calendar/' + e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
-				
-				document.location = url;
-			});
-			
-			$('table.calendar td.available').on('click', function(e) {
-			
-				var cell = $(e.currentTarget);
-				
-				var url = '{{ path('addbooking') }}';
-				url += '/' + cell.attr('data-boat') + '/{{ date|date('Y-m-d') }}?time=' + cell.attr('data-hour') + ':00';
-				
-				document.location = url;
-			});
-		});
-	</script>
-	
+    <script type="text/javascript">
+
+        $(function () {
+            $('#datepicker').datepicker()
+              .on('changeDate', function (e) {
+
+                  var url = '{{ path('calendar') }}';
+                  url += 'calendar/' + e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
+
+                  document.location = url;
+              });
+
+            $('table.calendar td.available').on('click', function (e) {
+
+                var cell = $(e.currentTarget);
+
+                var url = '{{ path('addbooking') }}';
+                url += '/' + cell.attr('data-boat') + '/{{ date|date('Y-m-d') }}?time=' + cell.attr('data-hour') + ':00';
+
+                document.location = url;
+            });
+        });
+    </script>
+
 {% endblock %}
 
 

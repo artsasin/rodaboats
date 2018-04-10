@@ -82,18 +82,43 @@ class Booking
 	
 	/**
 	 * @ORM\Column(type="date")
+     * @var \DateTime
 	 */
 	private $date;
 	
 	/**
 	 * @ORM\Column(type="time")
+     * @var \DateTime
 	 */
 	private $start;
 
 	/**
 	 * @ORM\Column(type="time")
+     * @var \DateTime
 	 */
 	private $end;
+
+    /**
+     * @return int
+     */
+	public function getStartCalendarIndex()
+    {
+        $h = $this->start->format('G');
+        $m = intval($this->start->format('i'));
+
+        return intval(($h * 60) + $m);
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndCalendarIndex()
+    {
+        $h = $this->end->format('G');
+        $m = intval($this->end->format('i'));
+
+        return intval(($h * 60) + $m);
+    }
 	
 	/**
 	 * @ORM\ManyToOne(targetEntity="Location", inversedBy="boats", fetch="EAGER")

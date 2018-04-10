@@ -36,7 +36,8 @@ const customerConfig = {
     resolve: {
         alias: {
             vue: 'vue/dist/vue.js'
-        }
+        },
+        extensions: ['*', '.js', '.vue', '.json']
     },
     plugins: plugins
 }

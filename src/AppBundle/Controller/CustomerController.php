@@ -16,6 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Intl\Intl;
 
 /**
  * Class CustomerController
@@ -31,7 +33,28 @@ class CustomerController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('customer/index.html.twig', []);
+        $customerModel = new \AppBundle\Model\DTO\Customer();
+
+        $list = Intl::getRegionBundle()->getCountryNames();
+        $countries = [
+            ['value' => '', 'text' => '...']
+        ];
+        foreach ($list as $key => $value) {
+            $countries[] = ['value' => $key, 'text' => $value];
+        }
+        $list = Intl::getLanguageBundle()->getLanguageNames();
+        $langs = [
+            ['value' => '', 'text' => '...']
+        ];
+        foreach ($list as $key => $value) {
+            $langs[] = ['value' => $key, 'text' => $value];
+        }
+
+        return $this->render('customer/index.html.twig', [
+            'customerModel' => $customerModel,
+            'countries'     => $countries,
+            'langs'         => $langs
+        ]);
     }
 
     /**
@@ -44,7 +67,7 @@ class CustomerController extends Controller
     {
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 10);
-        $query = $request->query->get('query', '');
+        $query = $request->query->get('query', null);
         $orderBy = $request->request->get('orderBy', null);
         $ascending = $request->request->get('ascending', null);
         $byColumn = $request->request->get('byColumn', 0);
@@ -61,8 +84,8 @@ class CustomerController extends Controller
         ];
 
         try {
-            $data['count'] = intval($repository->total());
-            $customers = $repository->page($page, $limit);
+            $data['count'] = intval($repository->total($query));
+            $customers = $repository->page($page, $limit, $query);
             foreach ($customers as $customer) {
                 $model = new \AppBundle\Model\DTO\Customer();
                 $model->fromEntity($customer);
@@ -71,6 +94,55 @@ class CustomerController extends Controller
         } catch (\Exception $e) {
             $data['status'] = -1;
             $data['message'] = $e->getMessage();
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route(path="/save", options={"expose"=true}, name="app.customer.save")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function saveAction(Request $request)
+    {
+        $content = $request->getContent();
+
+        $model = new \AppBundle\Model\DTO\Customer();
+        $model->fromJson($content);
+
+        $data = [
+            'status'    => 0,
+            'message'   => ''
+        ];
+        if ($model->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            if ($model->id) {
+                $customer = $em->getRepository(Customer::class)->find($model->id);
+            } else {
+                $customer = new Customer();
+            }
+
+            if (!$customer instanceof Customer) {
+                throw new NotFoundHttpException();
+            }
+
+            $customer->setFirstName($model->firstName);
+            $customer->setLastName($model->lastName);
+            $customer->setCountry($model->country);
+            $customer->setLanguage($model->language);
+            $customer->setPhoneNumber($model->phoneNumber);
+            $customer->setEmail($model->email);
+
+            $em->persist($customer);
+            $em->flush();
+
+            $result = new \AppBundle\Model\DTO\Customer();
+            $result->fromEntity($customer);
+            $data['customer'] = $result;
+        } else {
+            $data['status'] = -1;
+            $data['message'] = 'Fill all required fields';
         }
 
         return new JsonResponse($data);

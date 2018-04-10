@@ -24,12 +24,19 @@ class CalendarSlot
     public $hour;
 
     /**
+     * @var integer
+     */
+    public $minutes;
+
+    /**
      * CalendarSlot constructor.
      * @param integer $hour
+     * @param integer $minutes
      */
-    public function __construct($hour)
+    public function __construct($hour, $minutes)
     {
         $this->hour = $hour;
+        $this->minutes = $minutes;
         $this->bookings = array();
     }
 
@@ -48,5 +55,13 @@ class CalendarSlot
     {
         $boatId = $booking->getBoat()->getId();
         $this->bookings[$boatId] = $booking;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCalendarIndex()
+    {
+        return intval(($this->hour * 60) + $this->minutes);
     }
 }

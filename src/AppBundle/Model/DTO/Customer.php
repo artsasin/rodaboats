@@ -41,6 +41,25 @@ class Customer implements DTOInterface
 
     public function fromJson($json)
     {
-        // TODO: Implement fromJson() method.
+        $data = json_decode($json, true);
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+        return (
+            $this->firstName !== null &&
+            $this->lastName !== null &&
+            $this->country !== null &&
+            $this->language !== null &&
+            $this->phoneNumber !== null
+        );
     }
 }

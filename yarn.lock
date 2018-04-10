@@ -5198,6 +5198,10 @@ vue-loader@^14.2.2:
     vue-style-loader "^4.0.1"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-loading-overlay@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-2.0.4.tgz#856431b40ad6c3ce44c240f9c7bdf9b0c5e88f49"
+
 vue-pagination-2@^1.6:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/vue-pagination-2/-/vue-pagination-2-1.6.1.tgz#df28a0d629ccc4a3898a7f30555d6260372c49f1"

@@ -73,6 +73,8 @@ class DefaultController extends Controller
     	$locations = $this->getDoctrine()->getRepository('AppBundle:Location')->findBy(array(
     			'status' => Location::STATUS_ACTIVE
     	));
+
+    	dump($calendar);
     	 
     	// replace this example code with whatever you need
     	return $this->render('default/index.html.twig', array(
