@@ -137,7 +137,6 @@ class Calendar
      */
     public function addBooking(Booking $booking)
     {
-        dump($booking->getStartCalendarIndex($this->start));
         $slot = $this->slots[$booking->getStartCalendarIndex($this->start)];
         if ($slot instanceof CalendarSlot) {
             $slot->addBooking($booking);

@@ -23,7 +23,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/calendar/{date}", name="calendardate")
+     * @Route("/calendar/{date}", options={"expose"=true}, name="calendardate")
      * @param Request $request
      * @param \DateTime|string $date
      * @return Response
@@ -75,8 +75,6 @@ class DefaultController extends Controller
         $locations = $this->getDoctrine()->getRepository('AppBundle:Location')->findBy(array(
             'status' => Location::STATUS_ACTIVE
         ));
-
-        dump($calendar);
 
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', array(
