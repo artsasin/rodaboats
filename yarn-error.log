@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /usr/share/yarn/bin/yarn.js add --save vue-tables-2
+  /usr/bin/node /usr/share/yarn/bin/yarn.js run dev
 
 PATH: 
   /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-9-oracle/bin:/usr/lib/jvm/java-9-oracle/db/bin
@@ -20,9 +20,9 @@ npm manifest:
       "build": "webpack --mode production"
     },
     "devDependencies": {
-      "babel-polyfill": "^6.26.0",
       "css-loader": "^0.28.11",
       "extract-text-webpack-plugin": "^4.0.0-beta.0",
+      "style-loader": "^0.20.3",
       "uglifyjs-webpack-plugin": "^1.2.4",
       "vue-loader": "^14.2.2",
       "vue-template-compiler": "^2.5.16",
@@ -31,10 +31,15 @@ npm manifest:
     },
     "dependencies": {
       "axios": "^0.18.0",
-      "style-loader": "^0.20.3",
+      "babel-core": "^6.26.0",
+      "babel-loader": "^7.1.4",
+      "babel-polyfill": "^6.26.0",
+      "babel-preset-env": "^1.6.1",
+      "babel-preset-es2015": "^6.24.1",
       "uiv": "^0.21.4",
       "vue": "^2.5.16",
-      "vuetify": "^1.0.13"
+      "vue-loading-overlay": "^2.0.4",
+      "vue-tables-2": "^1.4.0"
     }
   }
 
@@ -156,6 +161,12 @@ Lockfile:
     version "4.0.0"
     resolved "https://registry.yarnpkg.com/arr-diff/-/arr-diff-4.0.0.tgz#d6461074febfec71e7e15235761a329a5dc7c520"
   
+  arr-filter@^1.1.0:
+    version "1.1.2"
+    resolved "https://registry.yarnpkg.com/arr-filter/-/arr-filter-1.1.2.tgz#43fdddd091e8ef11aa4c45d9cdc18e2dff1711ee"
+    dependencies:
+      make-iterator "^1.0.0"
+  
   arr-flatten@^1.0.1, arr-flatten@^1.1.0:
     version "1.1.0"
     resolved "https://registry.yarnpkg.com/arr-flatten/-/arr-flatten-1.1.0.tgz#36048bbff4e7b47e136644316c99669ea5ae91f1"
@@ -167,6 +178,26 @@ Lockfile:
   array-differ@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/array-differ/-/array-differ-1.0.0.tgz#eff52e3758249d33be402b8bb8e564bb2b5d4031"
+  
+  array-every@^0.1.2:
+    version "0.1.2"
+    resolved "https://registry.yarnpkg.com/array-every/-/array-every-0.1.2.tgz#be54cf7fbfc4c4777bba85c7af7edac2836d83ed"
+    dependencies:
+      make-iterator "^0.1.1"
+  
+  array-intersection@^0.1.2:
+    version "0.1.2"
+    resolved "https://registry.yarnpkg.com/array-intersection/-/array-intersection-0.1.2.tgz#b14ef021df25e9c9d804116c847cc6a0d67cface"
+    dependencies:
+      array-every "^0.1.2"
+      array-slice "^0.2.3"
+      array-unique "^0.2.1"
+      filter-array "^0.2.0"
+      index-of "^0.1.1"
+  
+  array-slice@^0.2.3:
+    version "0.2.3"
+    resolved "https://registry.yarnpkg.com/array-slice/-/array-slice-0.2.3.tgz#dd3cfb80ed7973a75117cdac69b0b99ec86186f5"
   
   array-union@^1.0.1:
     version "1.0.2"
@@ -439,6 +470,14 @@ Lockfile:
       babel-runtime "^6.22.0"
       babel-template "^6.24.1"
   
+  babel-loader@^7.1.4:
+    version "7.1.4"
+    resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-7.1.4.tgz#e3463938bd4e6d55d1c174c5485d406a188ed015"
+    dependencies:
+      find-cache-dir "^1.0.0"
+      loader-utils "^1.0.2"
+      mkdirp "^0.5.1"
+  
   babel-messages@^6.23.0:
     version "6.23.0"
     resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.23.0.tgz#f3cdf4703858035b2a2951c6ec5edf6c62f2630e"
@@ -503,7 +542,7 @@ Lockfile:
       babel-plugin-syntax-async-generators "^6.5.0"
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-async-to-generator@^6.24.1:
+  babel-plugin-transform-async-to-generator@^6.22.0, babel-plugin-transform-async-to-generator@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-async-to-generator/-/babel-plugin-transform-async-to-generator-6.24.1.tgz#6536e378aff6cb1d5517ac0e40eb3e9fc8d08761"
     dependencies:
@@ -550,7 +589,7 @@ Lockfile:
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-block-scoping@^6.24.1:
+  babel-plugin-transform-es2015-block-scoping@^6.23.0, babel-plugin-transform-es2015-block-scoping@^6.24.1:
     version "6.26.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-block-scoping/-/babel-plugin-transform-es2015-block-scoping-6.26.0.tgz#d70f5299c1308d05c12f463813b0a09e73b1895f"
     dependencies:
@@ -560,7 +599,7 @@ Lockfile:
       babel-types "^6.26.0"
       lodash "^4.17.4"
   
-  babel-plugin-transform-es2015-classes@^6.24.1:
+  babel-plugin-transform-es2015-classes@^6.23.0, babel-plugin-transform-es2015-classes@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-classes/-/babel-plugin-transform-es2015-classes-6.24.1.tgz#5a4c58a50c9c9461e564b4b2a3bfabc97a2584db"
     dependencies:
@@ -574,33 +613,33 @@ Lockfile:
       babel-traverse "^6.24.1"
       babel-types "^6.24.1"
   
-  babel-plugin-transform-es2015-computed-properties@^6.24.1:
+  babel-plugin-transform-es2015-computed-properties@^6.22.0, babel-plugin-transform-es2015-computed-properties@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-computed-properties/-/babel-plugin-transform-es2015-computed-properties-6.24.1.tgz#6fe2a8d16895d5634f4cd999b6d3480a308159b3"
     dependencies:
       babel-runtime "^6.22.0"
       babel-template "^6.24.1"
   
-  babel-plugin-transform-es2015-destructuring@^6.22.0:
+  babel-plugin-transform-es2015-destructuring@^6.22.0, babel-plugin-transform-es2015-destructuring@^6.23.0:
     version "6.23.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-destructuring/-/babel-plugin-transform-es2015-destructuring-6.23.0.tgz#997bb1f1ab967f682d2b0876fe358d60e765c56d"
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-duplicate-keys@^6.24.1:
+  babel-plugin-transform-es2015-duplicate-keys@^6.22.0, babel-plugin-transform-es2015-duplicate-keys@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-duplicate-keys/-/babel-plugin-transform-es2015-duplicate-keys-6.24.1.tgz#73eb3d310ca969e3ef9ec91c53741a6f1576423e"
     dependencies:
       babel-runtime "^6.22.0"
       babel-types "^6.24.1"
   
-  babel-plugin-transform-es2015-for-of@^6.22.0:
+  babel-plugin-transform-es2015-for-of@^6.22.0, babel-plugin-transform-es2015-for-of@^6.23.0:
     version "6.23.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-for-of/-/babel-plugin-transform-es2015-for-of-6.23.0.tgz#f47c95b2b613df1d3ecc2fdb7573623c75248691"
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-function-name@^6.24.1:
+  babel-plugin-transform-es2015-function-name@^6.22.0, babel-plugin-transform-es2015-function-name@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-function-name/-/babel-plugin-transform-es2015-function-name-6.24.1.tgz#834c89853bc36b1af0f3a4c5dbaa94fd8eacaa8b"
     dependencies:
@@ -614,7 +653,7 @@ Lockfile:
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-modules-amd@^6.24.1:
+  babel-plugin-transform-es2015-modules-amd@^6.22.0, babel-plugin-transform-es2015-modules-amd@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-modules-amd/-/babel-plugin-transform-es2015-modules-amd-6.24.1.tgz#3b3e54017239842d6d19c3011c4bd2f00a00d154"
     dependencies:
@@ -622,7 +661,7 @@ Lockfile:
       babel-runtime "^6.22.0"
       babel-template "^6.24.1"
   
-  babel-plugin-transform-es2015-modules-commonjs@^6.24.1:
+  babel-plugin-transform-es2015-modules-commonjs@^6.23.0, babel-plugin-transform-es2015-modules-commonjs@^6.24.1:
     version "6.26.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-modules-commonjs/-/babel-plugin-transform-es2015-modules-commonjs-6.26.0.tgz#0d8394029b7dc6abe1a97ef181e00758dd2e5d8a"
     dependencies:
@@ -631,7 +670,7 @@ Lockfile:
       babel-template "^6.26.0"
       babel-types "^6.26.0"
   
-  babel-plugin-transform-es2015-modules-systemjs@^6.24.1:
+  babel-plugin-transform-es2015-modules-systemjs@^6.23.0, babel-plugin-transform-es2015-modules-systemjs@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-modules-systemjs/-/babel-plugin-transform-es2015-modules-systemjs-6.24.1.tgz#ff89a142b9119a906195f5f106ecf305d9407d23"
     dependencies:
@@ -639,7 +678,7 @@ Lockfile:
       babel-runtime "^6.22.0"
       babel-template "^6.24.1"
   
-  babel-plugin-transform-es2015-modules-umd@^6.24.1:
+  babel-plugin-transform-es2015-modules-umd@^6.23.0, babel-plugin-transform-es2015-modules-umd@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-modules-umd/-/babel-plugin-transform-es2015-modules-umd-6.24.1.tgz#ac997e6285cd18ed6176adb607d602344ad38468"
     dependencies:
@@ -647,14 +686,14 @@ Lockfile:
       babel-runtime "^6.22.0"
       babel-template "^6.24.1"
   
-  babel-plugin-transform-es2015-object-super@^6.24.1:
+  babel-plugin-transform-es2015-object-super@^6.22.0, babel-plugin-transform-es2015-object-super@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-object-super/-/babel-plugin-transform-es2015-object-super-6.24.1.tgz#24cef69ae21cb83a7f8603dad021f572eb278f8d"
     dependencies:
       babel-helper-replace-supers "^6.24.1"
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-parameters@^6.24.1:
+  babel-plugin-transform-es2015-parameters@^6.23.0, babel-plugin-transform-es2015-parameters@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-parameters/-/babel-plugin-transform-es2015-parameters-6.24.1.tgz#57ac351ab49caf14a97cd13b09f66fdf0a625f2b"
     dependencies:
@@ -665,7 +704,7 @@ Lockfile:
       babel-traverse "^6.24.1"
       babel-types "^6.24.1"
   
-  babel-plugin-transform-es2015-shorthand-properties@^6.24.1:
+  babel-plugin-transform-es2015-shorthand-properties@^6.22.0, babel-plugin-transform-es2015-shorthand-properties@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-shorthand-properties/-/babel-plugin-transform-es2015-shorthand-properties-6.24.1.tgz#24f875d6721c87661bbd99a4622e51f14de38aa0"
     dependencies:
@@ -678,7 +717,7 @@ Lockfile:
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-sticky-regex@^6.24.1:
+  babel-plugin-transform-es2015-sticky-regex@^6.22.0, babel-plugin-transform-es2015-sticky-regex@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-sticky-regex/-/babel-plugin-transform-es2015-sticky-regex-6.24.1.tgz#00c1cdb1aca71112cdf0cf6126c2ed6b457ccdbc"
     dependencies:
@@ -692,13 +731,13 @@ Lockfile:
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-typeof-symbol@^6.22.0:
+  babel-plugin-transform-es2015-typeof-symbol@^6.22.0, babel-plugin-transform-es2015-typeof-symbol@^6.23.0:
     version "6.23.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-typeof-symbol/-/babel-plugin-transform-es2015-typeof-symbol-6.23.0.tgz#dec09f1cddff94b52ac73d505c84df59dcceb372"
     dependencies:
       babel-runtime "^6.22.0"
   
-  babel-plugin-transform-es2015-unicode-regex@^6.24.1:
+  babel-plugin-transform-es2015-unicode-regex@^6.22.0, babel-plugin-transform-es2015-unicode-regex@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-unicode-regex/-/babel-plugin-transform-es2015-unicode-regex-6.24.1.tgz#d38b12f42ea7323f729387f18a7c5ae1faeb35e9"
     dependencies:
@@ -706,7 +745,7 @@ Lockfile:
       babel-runtime "^6.22.0"
       regexpu-core "^2.0.0"
   
-  babel-plugin-transform-exponentiation-operator@^6.24.1:
+  babel-plugin-transform-exponentiation-operator@^6.22.0, babel-plugin-transform-exponentiation-operator@^6.24.1:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-exponentiation-operator/-/babel-plugin-transform-exponentiation-operator-6.24.1.tgz#2ab0c9c7f3098fa48907772bb813fe41e8de3a0e"
     dependencies:
@@ -735,7 +774,7 @@ Lockfile:
       babel-plugin-syntax-object-rest-spread "^6.8.0"
       babel-runtime "^6.26.0"
   
-  babel-plugin-transform-regenerator@^6.24.1:
+  babel-plugin-transform-regenerator@^6.22.0, babel-plugin-transform-regenerator@^6.24.1:
     version "6.26.0"
     resolved "https://registry.yarnpkg.com/babel-plugin-transform-regenerator/-/babel-plugin-transform-regenerator-6.26.0.tgz#e0703696fbde27f0a3efcacf8b4dca2f7b3a8f2f"
     dependencies:
@@ -756,7 +795,42 @@ Lockfile:
       core-js "^2.5.0"
       regenerator-runtime "^0.10.5"
   
-  babel-preset-es2015@^6.9.0:
+  babel-preset-env@^1.6.1:
+    version "1.6.1"
+    resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.6.1.tgz#a18b564cc9b9afdf4aae57ae3c1b0d99188e6f48"
+    dependencies:
+      babel-plugin-check-es2015-constants "^6.22.0"
+      babel-plugin-syntax-trailing-function-commas "^6.22.0"
+      babel-plugin-transform-async-to-generator "^6.22.0"
+      babel-plugin-transform-es2015-arrow-functions "^6.22.0"
+      babel-plugin-transform-es2015-block-scoped-functions "^6.22.0"
+      babel-plugin-transform-es2015-block-scoping "^6.23.0"
+      babel-plugin-transform-es2015-classes "^6.23.0"
+      babel-plugin-transform-es2015-computed-properties "^6.22.0"
+      babel-plugin-transform-es2015-destructuring "^6.23.0"
+      babel-plugin-transform-es2015-duplicate-keys "^6.22.0"
+      babel-plugin-transform-es2015-for-of "^6.23.0"
+      babel-plugin-transform-es2015-function-name "^6.22.0"
+      babel-plugin-transform-es2015-literals "^6.22.0"
+      babel-plugin-transform-es2015-modules-amd "^6.22.0"
+      babel-plugin-transform-es2015-modules-commonjs "^6.23.0"
+      babel-plugin-transform-es2015-modules-systemjs "^6.23.0"
+      babel-plugin-transform-es2015-modules-umd "^6.23.0"
+      babel-plugin-transform-es2015-object-super "^6.22.0"
+      babel-plugin-transform-es2015-parameters "^6.23.0"
+      babel-plugin-transform-es2015-shorthand-properties "^6.22.0"
+      babel-plugin-transform-es2015-spread "^6.22.0"
+      babel-plugin-transform-es2015-sticky-regex "^6.22.0"
+      babel-plugin-transform-es2015-template-literals "^6.22.0"
+      babel-plugin-transform-es2015-typeof-symbol "^6.23.0"
+      babel-plugin-transform-es2015-unicode-regex "^6.22.0"
+      babel-plugin-transform-exponentiation-operator "^6.22.0"
+      babel-plugin-transform-regenerator "^6.22.0"
+      browserslist "^2.1.2"
+      invariant "^2.2.2"
+      semver "^5.3.0"
+  
+  babel-preset-es2015@^6.24.1, babel-preset-es2015@^6.9.0:
     version "6.24.1"
     resolved "https://registry.yarnpkg.com/babel-preset-es2015/-/babel-preset-es2015-6.24.1.tgz#d44050d6bc2c9feea702aaf38d727a0210538939"
     dependencies:
@@ -1027,6 +1101,13 @@ Lockfile:
       caniuse-db "^1.0.30000639"
       electron-to-chromium "^1.2.7"
   
+  browserslist@^2.1.2:
+    version "2.11.3"
+    resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.11.3.tgz#fe36167aed1bbcde4827ebfe71347a2cc70b99b2"
+    dependencies:
+      caniuse-lite "^1.0.30000792"
+      electron-to-chromium "^1.3.30"
+  
   buffer-from@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.0.0.tgz#4cb8832d23612589b0406e9e2956c17f06fdf531"
@@ -1111,6 +1192,10 @@ Lockfile:
   caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
     version "1.0.30000824"
     resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000824.tgz#bba3ff425296e04caa37fe426259206a7056551b"
+  
+  caniuse-lite@^1.0.30000792:
+    version "1.0.30000827"
+    resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000827.tgz#2dad2354e4810c3c9bb1cfc57f655c270c25fa52"
   
   caseless@~0.12.0:
     version "0.12.0"
@@ -1257,7 +1342,7 @@ Lockfile:
     version "1.0.4"
     resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   
-  clone@^2.1.1:
+  clone@^2.1.0, clone@^2.1.1:
     version "2.1.2"
     resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
   
@@ -1600,6 +1685,10 @@ Lockfile:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
   
+  debounce@^1.1:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.1.0.tgz#6a1a4ee2a9dc4b7c24bb012558dbcdb05b37f408"
+  
   debug@^2.2.0, debug@^2.3.3, debug@^2.6.8:
     version "2.6.9"
     resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -1725,7 +1814,7 @@ Lockfile:
     version "2.5.8"
     resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.8.tgz#2ab6954619f225e6193b7ac5f7c39c48fefe4380"
   
-  electron-to-chromium@^1.2.7:
+  electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
     version "1.3.42"
     resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.42.tgz#95c33bf01d0cc405556aec899fe61fd4d76ea0f9"
   
@@ -1985,6 +2074,14 @@ Lockfile:
       repeat-string "^1.6.1"
       to-regex-range "^2.1.0"
   
+  filter-array@^0.2.0:
+    version "0.2.0"
+    resolved "https://registry.yarnpkg.com/filter-array/-/filter-array-0.2.0.tgz#9f6f4ceaf5b5e8a6b674a5b5460537714a8c51f1"
+    dependencies:
+      arr-filter "^1.1.0"
+      kind-of "^1.1.0"
+      micromatch "^2.1.0"
+  
   find-cache-dir@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/find-cache-dir/-/find-cache-dir-1.0.0.tgz#9288e3e9e3cc3748717d39eade17cf71fc30ee6f"
@@ -2030,7 +2127,7 @@ Lockfile:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
   
-  for-own@^0.1.4:
+  for-own@^0.1.1, for-own@^0.1.4:
     version "0.1.5"
     resolved "https://registry.yarnpkg.com/for-own/-/for-own-0.1.5.tgz#5265c681a4f294dabbf17c9509b6763aa84510ce"
     dependencies:
@@ -2473,6 +2570,10 @@ Lockfile:
   indent-string@^3.0.0:
     version "3.2.0"
     resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-3.2.0.tgz#4a5fd6d27cc332f37e5419a504dbb837105c9289"
+  
+  index-of@^0.1.1:
+    version "0.1.1"
+    resolved "https://registry.yarnpkg.com/index-of/-/index-of-0.1.1.tgz#d855af36341b284dad61bbd71695c6c694c157ac"
   
   indexes-of@^1.0.1:
     version "1.0.1"
@@ -2935,6 +3036,10 @@ Lockfile:
     dependencies:
       json-buffer "3.0.0"
   
+  kind-of@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-1.1.0.tgz#140a3d2d41a36d2efcfa9377b62c24f8495a5c44"
+  
   kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
     version "3.2.2"
     resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -3103,6 +3208,18 @@ Lockfile:
     dependencies:
       pify "^3.0.0"
   
+  make-iterator@^0.1.1:
+    version "0.1.1"
+    resolved "https://registry.yarnpkg.com/make-iterator/-/make-iterator-0.1.1.tgz#873d27b8198a465a81483b6f5d16da4e863ecf5b"
+    dependencies:
+      for-own "^0.1.1"
+  
+  make-iterator@^1.0.0:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/make-iterator/-/make-iterator-1.0.1.tgz#29b33f312aa8f547c4a5e490f56afcec99133ad6"
+    dependencies:
+      kind-of "^6.0.2"
+  
   map-cache@^0.2.2:
     version "0.2.2"
     resolved "https://registry.yarnpkg.com/map-cache/-/map-cache-0.2.2.tgz#c32abd0bd6525d9b051645bb4f26ac5dc98a0dbf"
@@ -3160,7 +3277,11 @@ Lockfile:
       errno "^0.1.3"
       readable-stream "^2.0.1"
   
-  micromatch@^2.3.7:
+  merge@^1.2.0:
+    version "1.2.0"
+    resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+  
+  micromatch@^2.1.0, micromatch@^2.3.7:
     version "2.3.11"
     resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
     dependencies:
@@ -5180,12 +5301,40 @@ Lockfile:
       vue-style-loader "^4.0.1"
       vue-template-es2015-compiler "^1.6.0"
   
+  vue-loading-overlay@^2.0.4:
+    version "2.0.4"
+    resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-2.0.4.tgz#856431b40ad6c3ce44c240f9c7bdf9b0c5e88f49"
+  
+  vue-pagination-2@^1.6:
+    version "1.6.1"
+    resolved "https://registry.yarnpkg.com/vue-pagination-2/-/vue-pagination-2-1.6.1.tgz#df28a0d629ccc4a3898a7f30555d6260372c49f1"
+    dependencies:
+      merge "^1.2.0"
+      vue ">=2.0.0"
+      vuex "^2.0.0"
+  
+  vue-resource@^0.9.0:
+    version "0.9.3"
+    resolved "https://registry.yarnpkg.com/vue-resource/-/vue-resource-0.9.3.tgz#ab46e1c44ea219142dcc28ae4043b3b04c80959d"
+  
   vue-style-loader@^4.0.1:
     version "4.1.0"
     resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.0.tgz#7588bd778e2c9f8d87bfc3c5a4a039638da7a863"
     dependencies:
       hash-sum "^1.0.2"
       loader-utils "^1.0.2"
+  
+  vue-tables-2@^1.4.0:
+    version "1.4.0"
+    resolved "https://registry.yarnpkg.com/vue-tables-2/-/vue-tables-2-1.4.0.tgz#48f48a7cca14e80eac32836d7be2ff8b8b4bcc7a"
+    dependencies:
+      array-intersection "^0.1.2"
+      clone "^2.1.0"
+      debounce "^1.1"
+      merge "^1.2.0"
+      vue ">=2.0.0"
+      vue-pagination-2 "^1.6"
+      vue-resource "^0.9.0"
   
   vue-template-compiler@^2.5.16:
     version "2.5.16"
@@ -5198,13 +5347,13 @@ Lockfile:
     version "1.6.0"
     resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
   
-  vue@^2.5.16:
+  vue@>=2.0.0, vue@^2.5.16:
     version "2.5.16"
     resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
   
-  vuetify@^1.0.13:
-    version "1.0.13"
-    resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.0.13.tgz#54a802932e1fda1f9d8d1d8586c477a09c179ef3"
+  vuex@^2.0.0:
+    version "2.5.0"
+    resolved "https://registry.yarnpkg.com/vuex/-/vuex-2.5.0.tgz#20f0265ade6c9a5ac6724a405d3ffdb4726c9741"
   
   watchpack@^1.5.0:
     version "1.5.0"
@@ -5421,14 +5570,17 @@ Lockfile:
       yeoman-environment "^2.0.5"
 
 Trace: 
-  Error: Missing list of packages to add to your project.
-      at new MessageError (/usr/share/yarn/lib/cli.js:186:110)
-      at Object.<anonymous> (/usr/share/yarn/lib/cli.js:40587:13)
-      at Generator.next (<anonymous>)
-      at step (/usr/share/yarn/lib/cli.js:98:30)
-      at /usr/share/yarn/lib/cli.js:116:14
-      at new Promise (<anonymous>)
-      at new F (/usr/share/yarn/lib/cli.js:23451:28)
-      at Object.<anonymous> (/usr/share/yarn/lib/cli.js:95:12)
-      at Object.run (/usr/share/yarn/lib/cli.js:40599:19)
-      at run (/usr/share/yarn/lib/cli.js:89113:20)
+  Error: Command failed.
+  Exit code: 2
+  Command: sh
+  Arguments: -c webpack --mode development
+  Directory: /home/artsasin/develop/web/rodaboats
+  Output:
+  
+      at ProcessTermError.MessageError (/usr/share/yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/usr/share/yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/usr/share/yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:126:13)
+      at ChildProcess.emit (events.js:214:7)
+      at maybeClose (internal/child_process.js:925:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
