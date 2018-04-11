@@ -66,7 +66,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./app/Resources/vue/customer/customer-list.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -91,7 +91,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.min.css */ \"./node_modules/vue-loading-overlay/dist/vue-loading.min.css\");\n/* harmony import */ var vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! babel-polyfill */ \"./node_modules/babel-polyfill/lib/index.js\");\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-tables-2 */ \"./node_modules/vue-tables-2/compiled/index.js\");\n/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_tables_2__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var uiv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! uiv */ \"./node_modules/uiv/dist/uiv.esm.js\");\n/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-loading-overlay */ \"./node_modules/vue-loading-overlay/dist/vue-loading.js\");\n/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _CustomerList_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CustomerList.vue */ \"./app/Resources/vue/customer/CustomerList.vue\");\n\n\n\n\n\n\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_tables_2__WEBPACK_IMPORTED_MODULE_3__[\"ServerTable\"])\nvue__WEBPACK_IMPORTED_MODULE_2___default.a.use(uiv__WEBPACK_IMPORTED_MODULE_4__)\nvue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_5___default.a)\n\nconst vm = new vue__WEBPACK_IMPORTED_MODULE_2___default.a({\n    el: '#app',\n    template: '<customer-list></customer-list>',\n    components: { CustomerList: _CustomerList_vue__WEBPACK_IMPORTED_MODULE_6__[\"default\"] }\n})\n\n//# sourceURL=webpack:///./app/Resources/vue/customer/customer-list.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.min.css */ \"./node_modules/vue-loading-overlay/dist/vue-loading.min.css\");\n/* harmony import */ var vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay_dist_vue_loading_min_css__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-tables-2 */ \"./node_modules/vue-tables-2/compiled/index.js\");\n/* harmony import */ var vue_tables_2__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_tables_2__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var uiv__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uiv */ \"./node_modules/uiv/dist/uiv.esm.js\");\n/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-loading-overlay */ \"./node_modules/vue-loading-overlay/dist/vue-loading.js\");\n/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _CustomerList_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CustomerList.vue */ \"./app/Resources/vue/customer/CustomerList.vue\");\n\n\n\n\n\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_tables_2__WEBPACK_IMPORTED_MODULE_2__[\"ServerTable\"])\nvue__WEBPACK_IMPORTED_MODULE_1___default.a.use(uiv__WEBPACK_IMPORTED_MODULE_3__)\nvue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4___default.a)\n\nconst vm = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({\n    el: '#app',\n    template: '<customer-list></customer-list>',\n    components: { CustomerList: _CustomerList_vue__WEBPACK_IMPORTED_MODULE_5__[\"default\"] }\n})\n\n//# sourceURL=webpack:///./app/Resources/vue/customer/customer-list.js?");
 
 /***/ }),
 
@@ -6501,6 +6501,17 @@ eval("var g;\r\n\r\n// This works in non-strict mode\r\ng = (function() {\r\n\tr
 /***/ (function(module, exports) {
 
 eval("module.exports = function(module) {\r\n\tif (!module.webpackPolyfill) {\r\n\t\tmodule.deprecate = function() {};\r\n\t\tmodule.paths = [];\r\n\t\t// module.parent = undefined by default\r\n\t\tif (!module.children) module.children = [];\r\n\t\tObject.defineProperty(module, \"loaded\", {\r\n\t\t\tenumerable: true,\r\n\t\t\tget: function() {\r\n\t\t\t\treturn module.l;\r\n\t\t\t}\r\n\t\t});\r\n\t\tObject.defineProperty(module, \"id\", {\r\n\t\t\tenumerable: true,\r\n\t\t\tget: function() {\r\n\t\t\t\treturn module.i;\r\n\t\t\t}\r\n\t\t});\r\n\t\tmodule.webpackPolyfill = 1;\r\n\t}\r\n\treturn module;\r\n};\r\n\n\n//# sourceURL=webpack:///(webpack)/buildin/module.js?");
+
+/***/ }),
+
+/***/ 0:
+/*!**************************************************************************!*\
+  !*** multi babel-polyfill ./app/Resources/vue/customer/customer-list.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("__webpack_require__(/*! babel-polyfill */\"./node_modules/babel-polyfill/lib/index.js\");\nmodule.exports = __webpack_require__(/*! ./app/Resources/vue/customer/customer-list.js */\"./app/Resources/vue/customer/customer-list.js\");\n\n\n//# sourceURL=webpack:///multi_babel-polyfill_./app/Resources/vue/customer/customer-list.js?");
 
 /***/ })
 

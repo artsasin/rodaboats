@@ -8,7 +8,7 @@ const plugins =  (NODE_ENV === 'production') ? [new ExtractTextPlugin("[name].cs
 
 const customerConfig = {
     entry: {
-        'customer-list': './app/Resources/vue/customer/customer-list.js'
+        'customer-list': ['babel-polyfill', './app/Resources/vue/customer/customer-list.js']
     },
     output: {
         path: path.resolve(__dirname, './public_html/vue/customer'),

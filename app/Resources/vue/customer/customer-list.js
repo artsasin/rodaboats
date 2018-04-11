@@ -1,6 +1,5 @@
 import 'vue-loading-overlay/dist/vue-loading.min.css';
 
-import 'babel-polyfill'
 import Vue from 'vue'
 import { ServerTable, Event } from 'vue-tables-2'
 import * as uiv from 'uiv'
