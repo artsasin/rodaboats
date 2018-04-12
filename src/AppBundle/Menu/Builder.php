@@ -87,6 +87,36 @@ class Builder implements ContainerAwareInterface
         $reports->setLabel('<i class="fa fa-database" aria-hidden="true"></i>&nbsp;Reports');
         $reports->setExtra('safe_label', true);
 
+        $daily = $menu->addChild('Daily report', array('route' => 'reportdaily'));
+        $daily->setLabel('<i class="fa fa-calendar-check-o" aria-hidden="true"></i>&nbsp;Daily report');
+        $daily->setExtra('safe_label', true);
+
+        $month = $menu->addChild('Month report', array('route' => 'reportmonth'));
+        $month->setLabel('<i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Month report');
+        $month->setExtra('safe_label', true);
+
+        return $menu;
+    }
+
+    /**
+     * @param FactoryInterface $factory
+     * @param array $options
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function sideMenuAdmin(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root', array(
+            'childrenAttributes'    => array(
+                'class' => 'nav',
+                'id'    => 'side-menu',
+                'style' => 'margin-top: 10px;'
+            )
+        ));
+
+        $admin = $menu->addChild('Daily report', array('route' => 'admin'));
+        $admin->setLabel('<i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Admin');
+        $admin->setExtra('safe_label', true);
+
         return $menu;
     }
 }

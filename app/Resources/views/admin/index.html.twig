@@ -1,161 +1,140 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_sb.html.twig' %}
 
 {% block body %}
-    
-    <h1 class="page-header">Admin</h1>
-    
     <div class="row">
-    	<div class="col-md-6">
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<a class="pull-right btn btn-success btn-sm" href="{{ path('addboat') }}">+ Add boat</a>
-    				<h3 class="panel-title">Boats</h3>
-				</div>
-    			
-    			<table class="table">
-	    			{% for item in boats %}
-	    				<tr>
-	    					<td class="col-sm-1">{{ include('boat/status.html.twig', { 'boat': item }) }}</td>
-	    					<td><a href="{{ path('viewboat', { 'id': item.id }) }}">{{ item.name }}</a></td>
-	    					<td>
-	    						{% if item.location != null %}
-	    							{{ item.location.name }}
-	    						{% endif %}
-	    					</td>
-	    				</tr>
-	    			{% endfor %}
-	    		</table>
-    		</div>
-    		
-    	</div>
-    	
-    	<div class="col-md-6">
-    	
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<a class="pull-right btn btn-success btn-sm" href="{{ path('adduser') }}">+ Add user</a>
-    				<h3 class="panel-title">Users</h3>
-				</div>
-    			
-    			<table class="table">
-	    			{% for user in users %}
-	    				<tr>
-	    					<td class="col-sm-1">
-	    						{% if user.isActive == 1 %}
-	    							<span class="label label-success">Active</span>
-	    						{% else %}
-	    							<span class="label label-danger">Inactive</span>
-	    						{% endif %}
-	    					</td>
-	    					<td><a href="{{ path('edituser', { 'id': user.id }) }}">{{ user.username }}</a></td>
-	    					<td>{{ user.typeName }}</td>
-	    					<td>
-	    						{% if user.location != null %}
-	    							{{ user.location.name }}
-	    						{% endif %}
-	    					</td>
-	    				</tr>
-	    			{% endfor %}
-	    		</table>
-    		</div>
-    		
-    		
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<a class="pull-right btn btn-success btn-sm" href="{{ path('addlocation') }}">+ Add location</a>
-    				<h3 class="panel-title">Locations</h3>
-				</div>
-    			
-    			<table class="table">
-    				<tr>
-    					<th>Name</th>
-    					<th>Notifcation email address</th>
-    					<th>Calendar</th>
-    				</tr>
-	    			{% for location in locations %}
-	    				<tr>
-	    					<td><a href="{{ path('editlocation', { 'id': location.id }) }}">{{ location.name}}</a></td>
-	    					<td>{{ location.notificationEmail }}</td>
-	    					<td><a href="{{ url('apilocationcalendar', { 'id': location.id, 'key': app.user.apiKey }) }}">Feed</a></td>
-	    				</tr>
-	    			{% endfor %}
-	    		</table>
-    		</div>
-    		
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<h3 class="panel-title">Email templates</h3>
-				</div>
-    			
-    			<table class="table">
-    				<tr>
-    					<th>Name</th>
-    					<th>Language</th>
-    					<th>Updated</th>
-    					<th></th>
-    				</tr>
-	    			{% for template in templates %}
-	    				<tr>
-	    					<td>{{ template.name }}</td>
-	    					<td>{{ template.language }}</td>
-	    					<td>{{ template.date|date('l j M Y') }}</td>
-	    					<td><a href="{{ path('edittemplate', { 'id': template.id }) }}">Edit</a></td>
-	    				</tr>
-	    			{% endfor %}
-	    		</table>
-    		</div>
-
-    	</div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">Admin</h1>
+        </div>
     </div>
-    
     <div class="row">
-    	<div class="col-md-6">
-    	
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<h3 class="panel-title">System tests</h3>
-				</div>
-    			
-    			<div class="panel-body">
-    			
-	    			<form method="get" action="{{ path('testemail') }}" class="form-inline">
-	    			
-	    				<div class="form-group">
-							<input type="text" name="recipient" placeholder="Recipient email address" class="form-control" /><br/>
-						</div>
-						
-		    			<input type="submit" class="btn btn-default" value="Send test email" />
-		    		</form>
-	    		</div>
-    		</div>
-    		
-    		
-    	</div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <a class="pull-right btn btn-success btn-sm" href="{{ path('addboat') }}">+ Add boat</a>
+                    <h3 class="panel-title">Boats</h3>
+                </div>
+                <table class="table">
+                    {% for item in boats %}
+                        <tr>
+                            <td class="col-sm-1">{{ include('boat/status.html.twig', { 'boat': item }) }}</td>
+                            <td><a href="{{ path('viewboat', { 'id': item.id }) }}">{{ item.name }}</a></td>
+                            <td>
+                                {% if item.location != null %}
+                                    {{ item.location.name }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <a class="pull-right btn btn-success btn-sm" href="{{ path('adduser') }}">+ Add user</a>
+                    <h3 class="panel-title">Users</h3>
+                </div>
+                <table class="table">
+                    {% for user in users %}
+                        <tr>
+                            <td class="col-sm-1">
+                                {% if user.isActive == 1 %}
+                                    <span class="label label-success">Active</span>
+                                {% else %}
+                                    <span class="label label-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ path('edituser', { 'id': user.id }) }}">{{ user.username }}</a></td>
+                            <td>{{ user.typeName }}</td>
+                            <td>
+                                {% if user.location != null %}
+                                    {{ user.location.name }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <a class="pull-right btn btn-success btn-sm" href="{{ path('addlocation') }}">+ Add location</a>
+                    <h3 class="panel-title">Locations</h3>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Notifcation email address</th>
+                        <th>Calendar</th>
+                    </tr>
+                    {% for location in locations %}
+                        <tr>
+                            <td><a href="{{ path('editlocation', { 'id': location.id }) }}">{{ location.name }}</a></td>
+                            <td>{{ location.notificationEmail }}</td>
+                            <td>
+                                <a href="{{ url('apilocationcalendar', { 'id': location.id, 'key': app.user.apiKey }) }}">Feed</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title">Email templates</h3>
+                </div>
 
-    	<div class="col-md-6">
-    	
-    		<div class="panel panel-default">
-    			<div class="panel-heading clearfix">
-    				<h3 class="panel-title">System status</h3>
-				</div>
-    			
-    			<div class="panel-body">
-    			
-	    			<div class="form-horizontal">
-	    			
-	    				<div class="form-group">
-							<label class="col-sm-5 control-label">Administrator Email</label>
-							<div class="col-sm-7">
-								<p class="form-control-static">{{ adminEmail }}</p>
-							</div>
-						</div>
-						
-	    			</div>
-	    		</div>
-    		</div>
-    		
-    		
-    	</div>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Language</th>
+                        <th>Updated</th>
+                        <th></th>
+                    </tr>
+                    {% for template in templates %}
+                        <tr>
+                            <td>{{ template.name }}</td>
+                            <td>{{ template.language }}</td>
+                            <td>{{ template.date|date('l j M Y') }}</td>
+                            <td><a href="{{ path('edittemplate', { 'id': template.id }) }}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title">System tests</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="get" action="{{ path('testemail') }}" class="form-inline">
+                        <div class="form-group">
+                            <input type="text" name="recipient" placeholder="Recipient email address" class="form-control"/><br/>
+                        </div>
+                        <input type="submit" class="btn btn-default" value="Send test email"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title">System status</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Administrator Email</label>
+                            <div class="col-sm-7">
+                                <p class="form-control-static">{{ adminEmail }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

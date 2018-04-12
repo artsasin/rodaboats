@@ -1,23 +1,34 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: artsasin
+ * Date: 13.04.18
+ * Time: 0:59
+ */
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Entity\Booking;
 use AppBundle\Entity\Boat;
-use AppBundle\Entity\BookingLog;
-use AppBundle\Entity\User;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use AppBundle\Entity\Customer;
+use AppBundle\Entity\Order;
+use AppBundle\Entity\OrderLog;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BookingListener
+class OrderListener
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
-    protected $tokenStorage;
-
+    /**
+     * OrderListener constructor.
+     * @param TokenStorageInterface $tokenStorage
+     */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
-
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -27,15 +38,14 @@ class BookingListener
      */
     public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
-        // Only act on bookings.
-        $booking = $eventArgs->getEntity();
-        if (!($booking instanceof Booking)) {
+        $entity = $eventArgs->getEntity();
+
+        if (!$entity instanceof Order) {
             return;
         }
 
         $changes = $eventArgs->getEntityChangeSet();
         $flat = array();
-
 
         // Flatten the changes.
         foreach ($changes as $key => $change) {
@@ -57,6 +67,27 @@ class BookingListener
                     continue;
                 }
 
+                if ($change[0] instanceof Customer) {
+                    $flat[$key] = [
+                        'firstName' => [
+                            $change[0]->getFirstName(),
+                            $change[1]->getFirstName()
+                        ],
+                        'lastName' => [
+                            $change[0]->getLastName(),
+                            $change[1]->getLastName()
+                        ],
+                        'email' => [
+                            $change[0]->getEmail(),
+                            $change[1]->getEmail()
+                        ],
+                        'phoneNumber' => [
+                            $change[0]->getPhoneNumber(),
+                            $change[1]->getPhoneNumber()
+                        ]
+                    ];
+                }
+
                 // Do not include other objects.
                 continue;
             }
@@ -68,13 +99,14 @@ class BookingListener
 
         // Create a log entry and schedule it for storage.
         // Attempting to persist here is discouraged according to doctrine documentation.
-        $booking->log = new BookingLog();
-        $booking->log->setBooking($booking);
-        $booking->log->setChangeset(json_encode($flat));
+        $log = new OrderLog();
+        $log->setOrder($entity);
+        $log->setChangeset(json_encode($flat));
 
-        // Lookup the current user.
         $user = $this->tokenStorage->getToken()->getUser();
-        $booking->log->setUser($user);
+        $log->setUser($user);
+
+        $entity->log = $log;
     }
 
     /**
@@ -83,20 +115,21 @@ class BookingListener
      */
     public function postUpdate(LifecycleEventArgs $eventArgs)
     {
-
         // Only act on bookings.
-        $booking = $eventArgs->getEntity();
-        if (!($booking instanceof Booking))
+        $entity = $eventArgs->getEntity();
+        if (!($entity instanceof Order)) {
             return;
+        }
 
         // Do nothing if there is no log to persist.
-        if ($booking->log == null)
+        if ($entity->log === null) {
             return;
+        }
 
         // Store a log entry.
         $em = $eventArgs->getObjectManager();
-        $em->persist($booking->log);
+        $em->persist($entity->log);
         $em->flush();
-        $booking->log = null;
+        $entity->log = null;
     }
 }
