@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_sb.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -27,35 +27,58 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="page-header">
-		<span class="header-nav">
-			<div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Location
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                    <li>
-                        <a href="{{ path('calendardate', { 'date': date|date('Y-m-d') }) }}">All locations</a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    {% for location in locations %}
-                        <li>
-                            <a href="{{ path('calendardate', { 'date': date|date('Y-m-d'), 'location': location.id }) }}">{{ location.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-		</span>
-        <span class="glyphicon glyphicon-calendar" aria-hidden="true" id="datepicker"></span>
-        <a href="{{ path('calendardate', { 'date': prev_date }) }}" class="title-nav">
-            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-        </a>
-        <span>{{ date|date('l j M Y') }}</span>
-        <a href="{{ path('calendardate', { 'date': next_date }) }}" class="title-nav">
-            <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
-        </a>
-    </h1>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">
+                <span class="header-nav pull-right">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Location
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a href="{{ path('calendardate', { 'date': date|date('Y-m-d') }) }}">All locations</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            {% for location in locations %}
+                                <li>
+                                    <a href="{{ path('calendardate', { 'date': date|date('Y-m-d'), 'location': location.id }) }}">{{ location.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </span>
+                <span class="header-nav pull-left">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span class="glyphicon-calendar glyphicon"></span>&nbsp;
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <div id="datetimepicker12"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
+                {#<div class="form-group" style="float: left;">#}
+                    {#<button id="datepicker" style="position:relative;" class="btn btn-default">#}
+                        {#<span class="glyphicon-calendar glyphicon"></span>#}
+                    {#</button>#}
+                    {#<input type="hidden" id="datetimepicker1" />#}
+                {#</div>#}
+                {#<span class="glyphicon glyphicon-calendar" aria-hidden="true" id="datepicker"></span>#}
+                <a href="{{ path('calendardate', { 'date': prev_date }) }}" class="title-nav">
+                    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                </a>
+                <span>{{ date|date('l j M Y') }}</span>
+                <a href="{{ path('calendardate', { 'date': next_date }) }}" class="title-nav">
+                    <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+                </a>
+            </h1>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
@@ -193,10 +216,27 @@
                 }
             });
 
-            jQuery('#datepicker').datepicker().on('changeDate', function (e) {
-                var date = e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
-                document.location = Routing.generate('calendardate', { date: date }, false);
+            jQuery('#datetimepicker1').datetimepicker({
+                widgetParent: $('#datepicker'),
+                widgetPositioning: {
+                    horizontal: 'left',
+                    vertical: 'auto'
+                }
+            }).on('dp.change', function (date, old_date) {
+                // var date = e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate();
+                // document.location = Routing.generate('calendardate', { date: date }, false);
+                console.log(date);
             });
+
+            jQuery('#datepicker').on('click', function() {
+                jQuery('#datetimepicker1').data('DateTimePicker').toggle();
+            });
+
+            $('#datetimepicker12').datetimepicker({
+                inline: true,
+                sideBySide: true
+            });
+
         })
         $(function () {
 

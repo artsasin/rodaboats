@@ -22,7 +22,7 @@ class Builder implements ContainerAwareInterface
      * @param array $options
      * @return \Knp\Menu\ItemInterface
      */
-    public function mainMenu(FactoryInterface $factory, array $options)
+    public function sideMenuCommon(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root', array(
             'childrenAttributes'    => array(
@@ -32,12 +32,60 @@ class Builder implements ContainerAwareInterface
         ));
 
         $dashboard = $menu->addChild('Dashboard', array('route' => 'calendar'));
-        $dashboard->setLabel('<i class="fa fa-dashboard fa-fw" aria-hidden="true"></i>&nbsp;Dashboard');
+        $dashboard->setLabel('<i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;Dashboard');
         $dashboard->setExtra('safe_label', true);
+
+        $bookings = $menu->addChild('Bookings', array('route' => 'booking'));
+        $bookings->setLabel('<i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;Bookings');
+        $bookings->setExtra('safe_label', true);
 
         $customers = $menu->addChild('Customers', array('route' => 'app.customer.index'));
         $customers->setLabel('<i class="fa fa-users" aria-hidden="true"></i>&nbsp;Customers');
         $customers->setExtra('safe_label', true);
+
+        return $menu;
+    }
+
+    /**
+     * @param FactoryInterface $factory
+     * @param array $options
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function sideMenuBoat(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root', array(
+            'childrenAttributes'    => array(
+                'class' => 'nav',
+                'id'    => 'side-menu',
+                'style' => 'margin-top: 10px;'
+            )
+        ));
+
+        $boats = $menu->addChild('Boats', array('route' => 'boat'));
+        $boats->setLabel('<i class="fa fa-ship" aria-hidden="true"></i>&nbsp;Boats');
+        $boats->setExtra('safe_label', true);
+
+        return $menu;
+    }
+
+    /**
+     * @param FactoryInterface $factory
+     * @param array $options
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function sideMenuReport(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root', array(
+            'childrenAttributes'    => array(
+                'class' => 'nav',
+                'id'    => 'side-menu',
+                'style' => 'margin-top: 10px;'
+            )
+        ));
+
+        $reports = $menu->addChild('Reports', array('route' => 'report'));
+        $reports->setLabel('<i class="fa fa-database" aria-hidden="true"></i>&nbsp;Reports');
+        $reports->setExtra('safe_label', true);
 
         return $menu;
     }
