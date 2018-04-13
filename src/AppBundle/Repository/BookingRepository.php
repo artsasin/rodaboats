@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Booking;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,4 +13,39 @@ use Doctrine\ORM\EntityRepository;
  */
 class BookingRepository extends EntityRepository
 {
+    public function getPaginationQueryBuilder($filter = null)
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        switch ($filter) {
+            case 'today':
+                $qb->andWhere($qb->expr()->in('b.status', [
+                    Booking::STATUS_CLOSED,
+                    Booking::STATUS_CONFIRMED,
+                    Booking::STATUS_DELIVERED
+                ]));
+                $qb->andWhere('b.date=:date');
+                $qb->setParameter('date', date('Y-m-d'));
+                break;
+            case 'active':
+                $qb->andWhere($qb->expr()->in('b.status', [
+                    Booking::STATUS_CONFIRMED,
+                    Booking::STATUS_DELIVERED
+                ]));
+                break;
+            case 'unprocessed':
+                $qb->andWhere($qb->expr()->in('b.status', [
+                    Booking::STATUS_DELIVERED
+                ]));
+                break;
+            case 'all':
+                break;
+            default:
+                break;
+        }
+
+        $qb->orderBy('b.date', 'ASC');
+
+        return $qb;
+    }
 }

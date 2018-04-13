@@ -39,6 +39,10 @@ class Builder implements ContainerAwareInterface
         $bookings->setLabel('<i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;Bookings');
         $bookings->setExtra('safe_label', true);
 
+        $orders = $menu->addChild('Orders', array('route' => 'app_order_index'));
+        $orders->setLabel('<i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;Orders');
+        $orders->setExtra('safe_label', true);
+
         $customers = $menu->addChild('Customers', array('route' => 'app.customer.index'));
         $customers->setLabel('<i class="fa fa-users" aria-hidden="true"></i>&nbsp;Customers');
         $customers->setExtra('safe_label', true);

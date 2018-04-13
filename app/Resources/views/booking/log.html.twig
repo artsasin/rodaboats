@@ -1,35 +1,35 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_sb.html.twig' %}
 
 {% block body %}
-
-	<h1 class="page-header">Booking log</h1>
-	
-	
-	
-	<div class="row">
-		<div class="col-md-12">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>User</th>
-						<th>Changes</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for log in logs %}
-						<tr>
-							<td>{{ log.date|date('l j M Y H:i') }}</td>
-							<td>
-								{% if log.user != null %}
-								{{ log.user.username }}
-								{% endif %}
-							</td>
-							<td>{{ log.changeset }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">Booking log</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Changes</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.date|date('l j M Y H:i') }}</td>
+                        <td>
+                            {% if log.user != null %}
+                                {{ log.user.username }}
+                            {% endif %}
+                        </td>
+                        <td>{{ log.changeset }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

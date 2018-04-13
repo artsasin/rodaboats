@@ -1,45 +1,44 @@
 <?xml version="1.0"?>
-
 <bookings>
-	{% if output is not null %}
-		{% for row in output %}
-			<booking>
-				<id>{{ row.id }}</id>
-				<date>{{ row.date|date('Y-m-d') }}</date>
-				<start>{{ row.date|date('Y-m-d') }}T{{ row.start|date('H:i:s') }}</start>
-				<end>{{ row.date|date('Y-m-d') }}T{{ row.end|date('H:i:s') }}</end>
-				<boat id="{{ row.boat is empty ? "" : row.boat.id }}">
-					{{ row.boat is empty ? "" : row.boat.name }}
-				</boat>
-				<hours>{{ row.getHours() }}</hours>
-				<type>{{ row.getTypeName() }}</type>
-				<status>{{ row.getStatusName }}</status>
-				<cancellation>{{ row.getCancellationName() }}</cancellation>
-				<persons>{{ row.numberOfPeople }}</persons>
-				
-				<location>{{ row.location is empty ? "" : row.location.name }}</location>
-				<handler>{{ row.handler is empty ? "" : row.handler.username }}</handler>
-				<bookedBy>{{ row.bookedBy }}</bookedBy>
-				
-				<rent>{{ row.rent }}</rent>
-				<rentDiscount>{{ row.rentDiscount }}</rentDiscount>
-				<deposit>{{ row.deposit }}</deposit>
-				<commission>{{ row.commission }}</commission>
-				<commissionPaidTo>{{ row.commissionPaidTo }}</commissionPaidTo>
-				<kickback>{{ row.kickback }}</kickback>
-				<petrolCost>{{ row.petrolCost }}</petrolCost>
-				<damageAmount>{{ row.damageAmount }}</damageAmount>
-				<paymentMethodRent>{{ row.paymentMethodRent }}</paymentMethodRent>
-				<paymentMethodDeposit>{{ row.paymentMethodDeposit }}</paymentMethodDeposit>
-				<paymentMethodDamage>{{ row.paymentMethodDamage }}</paymentMethodDamage>
-				
-				<lessee>
-					<firstName>{{ row.lesseeFirstName }}</firstName>
-					<lastName>{{ row.lesseeLastName }}</lastName>
-					<email>{{ row.lesseeEmail }}</email>
-					<phone>{{ row.lesseePhone }}</phone>
-				</lessee>
-			</booking>
-		{% endfor %}
-	{% endif %}
+    {% if output is not null %}
+        {% for row in output %}
+            <booking>
+                <id>{{ row.id }}</id>
+                <date>{{ row.date|date('Y-m-d') }}</date>
+                <start>{{ row.date|date('Y-m-d') }}T{{ row.start|date('H:i:s') }}</start>
+                <end>{{ row.date|date('Y-m-d') }}T{{ row.end|date('H:i:s') }}</end>
+                <boat id="{{ row.boat is empty ? "" : row.boat.id }}">
+                    {{ row.boat is empty ? "" : row.boat.name }}
+                </boat>
+                <hours>{{ row.getHours() }}</hours>
+                <type>{{ row.getTypeName() }}</type>
+                <status>{{ row.getStatusName }}</status>
+                <cancellation>{{ row.getCancellationName() }}</cancellation>
+                <persons>{{ row.numberOfPeople }}</persons>
+
+                <location>{{ row.location is empty ? "" : row.location.name }}</location>
+                <handler>{{ row.handler is empty ? "" : row.handler.username }}</handler>
+                <bookedBy>{{ row.bookedBy }}</bookedBy>
+
+                <rent>{{ row.rent }}</rent>
+                <rentDiscount>{{ row.rentDiscount }}</rentDiscount>
+                <deposit>{{ row.deposit }}</deposit>
+                <commission>{{ row.commission }}</commission>
+                <commissionPaidTo>{{ row.commissionPaidTo }}</commissionPaidTo>
+                <kickback>{{ row.kickback }}</kickback>
+                <petrolCost>{{ row.petrolCost }}</petrolCost>
+                <damageAmount>{{ row.damageAmount }}</damageAmount>
+                <paymentMethodRent>{{ row.paymentMethodRent }}</paymentMethodRent>
+                <paymentMethodDeposit>{{ row.paymentMethodDeposit }}</paymentMethodDeposit>
+                <paymentMethodDamage>{{ row.paymentMethodDamage }}</paymentMethodDamage>
+
+                <lessee>
+                    <firstName>{{ row.lesseeFirstName }}</firstName>
+                    <lastName>{{ row.lesseeLastName }}</lastName>
+                    <email>{{ row.lesseeEmail }}</email>
+                    <phone>{{ row.lesseePhone }}</phone>
+                </lessee>
+            </booking>
+        {% endfor %}
+    {% endif %}
 </bookings>

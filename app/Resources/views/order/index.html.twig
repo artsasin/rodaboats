@@ -1,0 +1,79 @@
+{% extends 'base_sb.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">
+                <span class="header-nav">
+					<a href="{{ path('addbooking') }}" class="btn btn-success" type="button">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> order
+                    </a>
+				</span>
+                <span class="header-nav">
+					<div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Filter <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="{{ path('app_order_index', { 'filter': 'today' }) }}">Today</a></li>
+                            <li><a href="{{ path('app_order_index', { 'filter': 'active' }) }}">Active</a></li>
+                            <li><a href="{{ path('app_order_index', { 'filter': 'unprocessed' }) }}">Unprocessed</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ path('app_order_index') }}">All</a></li>
+                        </ul>
+                    </div>
+				</span>
+                Orders
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Customer</th>
+                            <th>Boat</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if pagination|length == 0 %}
+                            <tr>
+                                <td colspan="5">
+                                    No data
+                                </td>
+                            </tr>
+                        {% else %}
+                            {% for order in pagination %}
+                                <tr>
+                                    <td class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        {{ include('order/status.html.twig', { 'order': order }) }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('viewbooking', { 'id': order.id }) }}">
+                                            {{ order.customer.lastName }}, {{ order.customer.firstName }}<br/>
+                                            <small>{{ order.customer.email }}</small>
+                                        </a>
+                                    </td>
+                                    <td>{{ order.boat.name }}<br/>
+                                        <small>{{ order.boat.location is empty ? "" : order.boat.location.name }}</small>
+                                    </td>
+                                    <td>{{ order.date|date('l j M Y') }}<br/>
+                                        <small>{{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}</small>
+                                    </td>
+                                    <td>{{ order.getTypeName }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

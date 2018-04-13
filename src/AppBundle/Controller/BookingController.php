@@ -286,62 +286,15 @@ class BookingController extends Controller
 	 */
 	public function indexAction(Request $request)
 	{
-		
-		$em = $this->getDoctrine()->getManager();
 		$repo = $this->getDoctrine()->getRepository('AppBundle:Booking');
-		$builder = $repo->createQueryBuilder('b');
-		
-		// Apply the optional state filter.
-		$filter = $request->query->get('filter');
-		switch($filter)
-		{
-			case 'today':
-				$builder->andWhere($builder->expr()->in('b.status', array(
-						Booking::STATUS_CLOSED,
-						Booking::STATUS_CONFIRMED,
-						Booking::STATUS_DELIVERED
-				)))
-				->andWhere('b.date = :date')
-				->setParameter("date", date('Y-m-d'));
-				break;
-			default:
-			case 'active':
-				$builder->andWhere($builder->expr()->in('b.status', array(
-						Booking::STATUS_CONFIRMED,
-						Booking::STATUS_DELIVERED
-				)));
-				break;
-			case 'unprocessed':
-				$builder->andWhere($builder->expr()->in('b.status', array(
-						Booking::STATUS_DELIVERED
-				)));
-				break;
-			case 'all':
-				break;
-		}
-		
-		$builder->orderBy('b.date', 'ASC');
-		
-		$query = $builder->getQuery();
-		
-		// Apply paging
-		$pageSize = 25;
-		$query->setMaxResults($pageSize);
-		$page = $request->query->get('page');
-		if(!empty($page) && is_numeric($page))
-			$query->setFirstResult($page * $pageSize);
-		else 
-			$page = 0;
+        $qb = $repo->getPaginationQueryBuilder($request->query->get('filter'));
+        $page = $request->query->getInt('page', 1);
 
-		$paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
-		$totalItems = count($paginator);
-		$pageCount = ceil($totalItems / $pageSize);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($qb, $page,25);
 
 		return $this->render('booking/index.html.twig', array(
-				'bookings' => $paginator,
-				'pages' => $pageCount,
-				'page' => $page,
-				'filter' => $filter,
+				'pagination' => $pagination
 		));
 	}
 	

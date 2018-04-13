@@ -1,118 +1,116 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_sb.html.twig' %}
 
 {% block body %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">
+                Report setup
+            </h1>
+        </div>
+    </div>
 
-	<h1 class="page-header">
-		Report setup
-	</h1>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="well">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<div class="well">
-			
-				{{ form_start(form) }}
-				{{ form_widget(form) }}
-				{{ form_end(form) }}
-				
-			</div>
-		</div>
-	</div>
-	
-	{% if output is not null %}
-	
-	<h1 class="page-header">
-		Report output
-	</h1>
+    {% if output is not null %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">
+                Report output
+            </h1>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-md-12">
-		
-			<table class="table calendar">
-				<thead>
-					<tr>
-						<th colspan="9">Booking</th>
-						<th colspan="3">Location</th>
-						<th colspan="11">Financial</th>
-						<th colspan="4">Customer</th>
-					</tr>
-					<tr>
-						<th>#</th>
-						<th>Date</th>
-						<th>Start</th>
-						<th>End</th>
-						<th>Hours</th>
-						<th>Boat</th>
-						<th>Type</th>
-						<th>Status</th>
-						<th>Cancellation</th>
-						<th>Persons</th>
-						
-						<th>Location</th>
-						<th>Handler</th>
-						<th>Booked by</th>
-						
-						<th>Rent</th>
-						<th>Rent discount</th>
-						<th>Deposit</th>
-						<th>Commission</th>
-						<th>Commission paid to</th>
-						<th>Kickback</th>
-						<th>Petrol cost</th>
-						<th>Damage amount</th>
-						<th>Rent payment method</th>
-						<th>Deposit payment method</th>
-						<th>Damage payment method</th>
-						
-						<th>First name</th>
-						<th>Last name</th>
-						<th>Email</th>
-						<th>Phone</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for row in output %}
-					
-						<tr>
-							<td>{{ row.id }}</td>
-							<td>{{ row.date|date('Y-m-d') }}</td>
-							<td>{{ row.start|date('G:i') }}</td>
-							<td>{{ row.end|date('G:i') }}</td>
-							<td>{{ row.getHours() }}</td>
-							<td>{{ row.boat is empty ? "" : row.boat.name }}</td>
-							<td>{{ row.getTypeName() }}</td>
-							<td>{{ row.getStatusName }}</td>
-							<td>{{ row.getCancellationName() }}</td>
-							<td>{{ row.numberOfPeople }}</td>
-							
-							<td>{{ row.location is empty ? "" : row.location.name }}</td>
-							<td>{{ row.handler is empty ? "" : row.handler.username }}</td>
-							<td>{{ row.bookedBy }}</td>
-							
-							<td>{{ row.rent }}</td>
-							<td>{{ row.rentDiscount }}</td>
-							<td>{{ row.deposit }}</td>
-							<td>{{ row.commission }}</td>
-							<td>{{ row.commissionPaidTo }}</td>
-							<td>{{ row.kickback }}</td>
-							<td>{{ row.petrolCost }}</td>
-							<td>{{ row.damageAmount }}</td>
-							<td>{{ row.paymentMethodRent }}</td>
-							<td>{{ row.paymentMethodDeposit }}</td>
-							<td>{{ row.paymentMethodDamage }}</td>
-							
-							<td>{{ row.lesseeFirstName }}</td>
-							<td>{{ row.lesseeLastName }}</td>
-							<td>{{ row.lesseeEmail }}</td>
-							<td>{{ row.lesseePhone }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-		
-		
-	</div>
-	
-	{% endif %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <table class="table calendar">
+                <thead>
+                    <tr>
+                        <th colspan="9">Booking</th>
+                        <th colspan="3">Location</th>
+                        <th colspan="11">Financial</th>
+                        <th colspan="4">Customer</th>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Hours</th>
+                        <th>Boat</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Cancellation</th>
+                        <th>Persons</th>
 
+                        <th>Location</th>
+                        <th>Handler</th>
+                        <th>Booked by</th>
+
+                        <th>Rent</th>
+                        <th>Rent discount</th>
+                        <th>Deposit</th>
+                        <th>Commission</th>
+                        <th>Commission paid to</th>
+                        <th>Kickback</th>
+                        <th>Petrol cost</th>
+                        <th>Damage amount</th>
+                        <th>Rent payment method</th>
+                        <th>Deposit payment method</th>
+                        <th>Damage payment method</th>
+
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in output %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.date|date('Y-m-d') }}</td>
+                        <td>{{ row.start|date('G:i') }}</td>
+                        <td>{{ row.end|date('G:i') }}</td>
+                        <td>{{ row.getHours() }}</td>
+                        <td>{{ row.boat is empty ? "" : row.boat.name }}</td>
+                        <td>{{ row.getTypeName() }}</td>
+                        <td>{{ row.getStatusName }}</td>
+                        <td>{{ row.getCancellationName() }}</td>
+                        <td>{{ row.numberOfPeople }}</td>
+
+                        <td>{{ row.location is empty ? "" : row.location.name }}</td>
+                        <td>{{ row.handler is empty ? "" : row.handler.username }}</td>
+                        <td>{{ row.bookedBy }}</td>
+
+                        <td>{{ row.rent }}</td>
+                        <td>{{ row.rentDiscount }}</td>
+                        <td>{{ row.deposit }}</td>
+                        <td>{{ row.commission }}</td>
+                        <td>{{ row.commissionPaidTo }}</td>
+                        <td>{{ row.kickback }}</td>
+                        <td>{{ row.petrolCost }}</td>
+                        <td>{{ row.damageAmount }}</td>
+                        <td>{{ row.paymentMethodRent }}</td>
+                        <td>{{ row.paymentMethodDeposit }}</td>
+                        <td>{{ row.paymentMethodDamage }}</td>
+
+                        <td>{{ row.lesseeFirstName }}</td>
+                        <td>{{ row.lesseeLastName }}</td>
+                        <td>{{ row.lesseeEmail }}</td>
+                        <td>{{ row.lesseePhone }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
