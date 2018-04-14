@@ -51,8 +51,8 @@ class BoatPriceController extends Controller
 	}
 	
 	/**
-	 * @Route("/boat/{boat}/price/add", name="addboatprice")
-	 * @Route("/admin/price/add", name="addprice")
+	 * @Route("/boat/{boat}/price/create", name="addboatprice")
+	 * @Route("/admin/price/create", name="addprice")
 	 */
 	public function addPrice(Request $request, $boat = null)
 	{

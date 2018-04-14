@@ -86,7 +86,7 @@ class BoatController extends Controller
 
 	
 	/**
-	 * @Route("/admin/boat/add", name="addboat")
+	 * @Route("/admin/boat/create", name="addboat")
 	 */
 	public function addBoat(Request $request)
 	{
@@ -157,7 +157,7 @@ class BoatController extends Controller
 	}
 	
 	/**
-	 * @Route("/boat/{id}/document/add", name="addboatdocument")
+	 * @Route("/boat/{id}/document/create", name="addboatdocument")
 	 */
 	public function addDocument(Request $request, $id)
 	{

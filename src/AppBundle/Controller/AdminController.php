@@ -41,7 +41,7 @@ class AdminController extends Controller
     }
     
     /**
-     * @Route("/admin/users/add", name="adduser")
+     * @Route("/admin/users/create", name="adduser")
      */
     public function addUser(Request $request)
     {
@@ -250,7 +250,7 @@ class AdminController extends Controller
     }
     
     /**
-     * @Route("/admin/location/add", name="addlocation")
+     * @Route("/admin/location/create", name="addlocation")
      */
     public function addLocation(Request $request)
     {

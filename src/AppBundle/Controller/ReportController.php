@@ -233,7 +233,7 @@ class ReportController extends Controller
     	
     		foreach ($result as $booking) 
     		{
-    			// add a line in the csv file. You need to implement a toArray() method
+    			// create a line in the csv file. You need to implement a toArray() method
     			// to transform your object into an array
     			$row = [
     					$booking->getId(),

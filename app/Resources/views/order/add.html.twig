@@ -1,0 +1,26 @@
+{% extends 'base_sb.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('vue/order/order-create.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">Add order</h1>
+        </div>
+    </div>
+    <div id="app"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.boats = {{ boats | json_encode | raw }};
+        window.orderModel = {{ orderModel | json_encode | raw }};
+        window.bookingHours = {{ hours | json_encode | raw }};
+        window.bookingMinutes = {{ minutes | json_encode | raw }};
+    </script>
+    <script src="{{ asset('vue/order/order-create.js') }}"></script>
+{% endblock %}

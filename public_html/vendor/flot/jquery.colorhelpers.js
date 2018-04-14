@@ -8,12 +8,12 @@
  *
  * Examples:
  *
- *   $.color.parse("#fff").scale('rgb', 0.25).add('a', -0.5).toString()
+ *   $.color.parse("#fff").scale('rgb', 0.25).create('a', -0.5).toString()
  *   var c = $.color.extract($("#mydiv"), 'background-color');
  *   console.log(c.r, c.g, c.b, c.a);
  *   $.color.make(100, 50, 25, 0.4).toString() // returns "rgba(100,50,25,0.4)"
  *
- * Note that .scale() and .add() return the same modified object
+ * Note that .scale() and .create() return the same modified object
  * instead of making a new one.
  *
  * V. 1.1: Fix error handling so e.g. parsing an empty string does

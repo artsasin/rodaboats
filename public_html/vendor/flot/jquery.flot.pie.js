@@ -80,7 +80,7 @@ More detail and specific examples can be found in the included HTML file.
 
 		var highlights = [];
 
-		// add hook to determine if pie plugin in enabled, and then perform necessary operations
+		// create hook to determine if pie plugin in enabled, and then perform necessary operations
 
 		plot.hooks.processOptions.push(function(plot, options) {
 			if (options.series.pie.show) {
@@ -265,7 +265,7 @@ More detail and specific examples can be found in the included HTML file.
 			// WARNING: HACK! REWRITE THIS CODE AS SOON AS POSSIBLE!
 
 			// When combining smaller slices into an 'other' slice, we need to
-			// add a new series.  Since Flot gives plugins no way to modify the
+			// create a new series.  Since Flot gives plugins no way to modify the
 			// list of series, the pie plugin uses a hack where the first call
 			// to processDatapoints results in a call to setData with the new
 			// list of series, then subsequent processDatapoints do nothing.
@@ -547,7 +547,7 @@ More detail and specific examples can be found in the included HTML file.
 				layer.closePath();
 				layer.restore();
 
-				// add inner stroke
+				// create inner stroke
 
 				layer.save();
 				layer.beginPath();
@@ -557,7 +557,7 @@ More detail and specific examples can be found in the included HTML file.
 				layer.closePath();
 				layer.restore();
 
-				// TODO: add extra shadow inside hole (with a mask) if the pie is tilted.
+				// TODO: create extra shadow inside hole (with a mask) if the pie is tilted.
 			}
 		}
 
@@ -803,7 +803,7 @@ More detail and specific examples can be found in the included HTML file.
 					label: "Other"	// label to give the new slice
 				},
 				highlight: {
-					//color: "#fff",		// will add this functionality once parseColor is available
+					//color: "#fff",		// will create this functionality once parseColor is available
 					opacity: 0.5
 				}
 			}

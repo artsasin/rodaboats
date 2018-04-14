@@ -299,7 +299,7 @@ class BookingController extends Controller
 	}
 	
 	/**
-	 * @Route("/booking/add", name="addbooking")
+	 * @Route("/booking/create", name="addbooking")
 	 */
 	public function addBooking(Request $request)
 	{
@@ -307,7 +307,7 @@ class BookingController extends Controller
 	}
 	
 	/**
-	 * @Route("/booking/add/{boat}/{date}", name="addbookingspecific")
+	 * @Route("/booking/create/{boat}/{date}", name="addbookingspecific")
 	 */
 	public function addBookingBoat(Request $request, $boat = null, $date = null)
 	{

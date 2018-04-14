@@ -95,7 +95,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     - height (number)
 	     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
 	     * or
-	     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.add.
+	     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.create.
 	     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
 	     * or
 	     - onReadyCallback (function) function that is going to be called on DOM ready event. You can also subscribe to this event via Eve’s “DOMLoad” event. In this case method returns `undefined`.
@@ -420,7 +420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.fn
 	     [ property (object) ]
 	     **
-	     * You can add your own method to the canvas. For example if you want to draw a pie chart,
+	     * You can create your own method to the canvas. For example if you want to draw a pie chart,
 	     * you can create your own pie chart function and ship it as a Raphaël plugin. To do this
 	     * you need to extend the `Raphael.fn` object. You should modify the `fn` object before a
 	     * Raphaël instance is created, otherwise it will take no effect. Please note that the
@@ -2530,7 +2530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    (function (matrixproto) {
 	        /*\
-	         * Matrix.add
+	         * Matrix.create
 	         [ method ]
 	         **
 	         * Adds given matrix to existing one.
@@ -2897,7 +2897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.el
 	     [ property (object) ]
 	     **
-	     * You can add your own method to elements. This is useful when you want to hack default functionality or
+	     * You can create your own method to elements. This is useful when you want to hack default functionality or
 	     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
 	     * you can redefine element method at any time. Expending element methods wouldn’t affect set.
 	     > Usage
@@ -5297,7 +5297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    /*\
-	     * Paper.add
+	     * Paper.create
 	     [ method ]
 	     **
 	     * Imports elements in JSON array in format `{type: type, <attributes>}`
@@ -5307,7 +5307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     - json (array)
 	     = (object) resulting set of imported elements
 	     > Usage
-	     | paper.add([
+	     | paper.create([
 	     |     {
 	     |         type: "circle",
 	     |         cx: 10,
@@ -5440,7 +5440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.st
 	     [ property (object) ]
 	     **
-	     * You can add your own method to elements and sets. It is wise to add a set method for each element method
+	     * You can create your own method to elements and sets. It is wise to create a set method for each element method
 	     * you added, so you will be able to call the same method on sets too.
 	     **
 	     * See also @Raphael.el.
@@ -8197,7 +8197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (doc.styleSheets.length < 31) {
 	                doc.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
 	            } else {
-	                // no more room, add to the existing one
+	                // no more room, create to the existing one
 	                // http://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
 	                doc.styleSheets[0].addRule(".rvml", "behavior:url(#default#VML)");
 	            }

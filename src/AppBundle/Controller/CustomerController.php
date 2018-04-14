@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Intl\Intl;
 
@@ -144,6 +145,40 @@ class CustomerController extends Controller
             $data['status'] = -1;
             $data['message'] = 'Fill all required fields';
         }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route(path="/details/{id}", options={"expose"=true}, name="app.customer.rest.details")
+     * @param Request $request
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function detailsAction(Request $request, $id)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
+        $repository = $this->getDoctrine()->getRepository(Customer::class);
+        $customer = $repository->find($id);
+
+        $data = [
+            'status'    => 0,
+            'customer'  => null,
+            'message'   => null
+        ];
+
+        if (!$customer instanceof Customer) {
+            $data['status'] = -1;
+            $data['message'] = sprintf('Customer with id %s not found', $id);
+        }
+
+        $dto = new \AppBundle\Model\DTO\Customer();
+        $dto->fromEntity($customer);
+
+        $data['customer'] = $dto;
 
         return new JsonResponse($data);
     }

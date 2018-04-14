@@ -232,6 +232,17 @@ class Order
         $this->status = OrderDataProvider::STATUS_CONFIRMED;
         $this->cancellation = OrderDataProvider::CANCELLATION_REASON_NONE;
         $this->extra = [];
+
+        $now = new \DateTime('now');
+
+        $this->date = clone $now;
+
+        $this->start = clone $now;
+        $this->start->setDate(1970, 1, 1);
+        $this->start->setTime(5 ,0 ,0);
+
+        $this->end = clone $this->start;
+        $this->end->modify('+1 hour');
     }
 
     /**
