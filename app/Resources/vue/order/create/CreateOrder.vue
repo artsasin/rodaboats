@@ -5,12 +5,15 @@
                 <fieldset>
                     <legend>Customer</legend>
                     <div class="row form-group">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <dropdown v-model="customerAutocomplete" :append-to-body="true" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <label class="control-label">Customer name</label>
                             <div class="input-group">
-                                <input class="form-control" type="text" readonly="readonly">
+                                <input class="form-control" type="text" v-model="customerQuery" @focus="customerFocused()" :readonly="customer !== null" />
                                 <div class="input-group-btn">
-                                    <btn type="default">
+                                    <btn type="default" v-show="customer !== null" @click="clearCustomer()">
+                                        <i class="fa fa-close"></i>
+                                    </btn>
+                                    <btn type="default" @click="customerPicker=true">
                                         <i class="fa fa-search"></i>
                                     </btn>
                                     <btn type="default">
@@ -18,12 +21,17 @@
                                     </btn>
                                 </div>
                             </div>
-                        </div>
+                            <template slot="dropdown">
+                                <li v-for="suggest in customerSuggestions">
+                                    <a role="button" @click="selectCustomer(suggest)">{{ suggest.lastName }}&nbsp;{{ suggest.firstName }}</a>
+                                </li>
+                            </template>
+                        </dropdown>
                     </div>
                     <div class="row form-group">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <label class="control-label">Language</label>
-                            <input class="form-control" type="text" readonly="readonly">
+                            <input class="form-control" type="text" readonly="readonly" :value="customer_language">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <label class="control-label">Country</label>
@@ -136,6 +144,9 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12"></div>
         </div>
+        <modal v-model="customerPicker" title="Customer search" size="lg">
+            <p>This is a large modal.</p>
+        </modal>
     </div>
 </template>
 
@@ -151,7 +162,12 @@
                 boats: window.boats,
                 hours: window.bookingHours,
                 minutes: window.bookingMinutes,
-                duration: ''
+                duration: '',
+                customerPicker: false,
+                customer: null,
+                query: '',
+                customerAutocomplete: false,
+                customerSuggestions: []
             }
         },
         methods: {
@@ -167,6 +183,17 @@
             },
             selectBoat (boat) {
                 this.order.boatId = boat['id'];
+            },
+            selectCustomer (customer) {
+                this.customerSuggestions = [];
+                this.query = '';
+                this.customer = customer;
+            },
+            clearCustomer () {
+                this.customer = null;
+            },
+            customerFocused () {
+                this.customerAutocomplete = (this.customer === null && this.query !== '' && this.customerSuggestions.length > 0);
             }
         },
         watch: {
@@ -180,9 +207,48 @@
                         this.order.end = end.toString();
                     }
                 }
+            },
+            query () {
+                if (this.query.length > 1) {
+                    const self = this
+                    axios.get(Routing.generate('app.customer.get.list', { query: this.query }))
+                        .then((response) => {
+                            let items = response.data.data;
+                            if (items.length === 0) {
+                                self.$notify({
+                                    title: 'Customer search',
+                                    content: 'No data was found!',
+                                    type: 'warning'
+                                });
+                                self.query = '';
+                            } else {
+                                self.customerSuggestions = response.data.data;
+                                self.customerAutocomplete = Boolean(self.customerSuggestions.length);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error)
+                        })
+                } else {
+                    this.customerSuggestions = [];
+                    this.customerAutocomplete = false;
+                }
             }
         },
         computed: {
+            customerQuery: {
+                get() {
+                    return (this.customer !== null)
+                        ? this.customer.lastName + ' ' + this.customer.firstName
+                        : this.query;
+                },
+                set(query) {
+                    this.query = query;
+                }
+            },
+            customer_language () {
+                return (this.customer !== null) ? this.customer.language : '';
+            },
             locations () {
                 const result = [];
                 this.boats.forEach(function(boat) {
