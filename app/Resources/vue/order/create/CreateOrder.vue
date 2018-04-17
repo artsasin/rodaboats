@@ -424,6 +424,7 @@
                 }, 500)
             },
             customer_dt_row_click (data) {
+                console.log(data);
                 this.customer = data.row;
                 this.customerPicker = false;
             },
@@ -717,6 +718,14 @@
 </script>
 
 <style>
+    .VueTables__table tr:hover {
+        cursor: pointer;
+    }
+
+    .VueTables__table tr:hover td {
+        background-color: #c1e2b3;
+    }
+
     .VuePagination > nav:before, .VuePagination > nav:after {
         content: " ";
         display: table;
