@@ -1,228 +1,224 @@
 <template>
     <div id="create-order-wrapper">
         <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    Customer
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row form-group">
-                                    <dropdown v-model="customerAutocomplete" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 customer-autocomplete">
-                                        <label class="control-label">Customer name</label>
-                                        <div class="input-group">
-                                            <input class="form-control" ref="customerSearch" type="text" v-model="customerQuery" @focus="customerFocused()" :readonly="customer !== null" />
-                                            <div class="input-group-btn">
-                                                <btn type="default" v-show="customer !== null" @click="clearCustomer()">
-                                                    <i class="fa fa-close"></i>
-                                                </btn>
-                                                <btn type="default" @click="customerPicker=true">
-                                                    <i class="fa fa-search"></i>
-                                                </btn>
-                                                <btn type="default">
-                                                    <i class="fa fa-plus"></i>
-                                                </btn>
-                                            </div>
-                                        </div>
-                                        <template slot="dropdown">
-                                            <li v-for="suggest in customerSuggestions">
-                                                <a role="button" @click="selectCustomer(suggest)">
-                                                    {{ suggest.firstName }}&nbsp;{{ suggest.lastName }},&nbsp;{{ suggest.phoneNumber }}
-                                                </a>
-                                            </li>
-                                        </template>
-                                    </dropdown>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <label class="control-label">Language</label>
-                                        <input class="form-control" type="text" readonly="readonly" :value="customer_language">
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <label class="control-label">Country</label>
-                                        <input class="form-control" type="text" readonly="readonly" :value="customer_country">
+            <!-- customer block -->
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Customer
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row form-group">
+                            <dropdown v-model="customerAutocomplete" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 customer-autocomplete">
+                                <label class="control-label">Customer name</label>
+                                <div class="input-group">
+                                    <input class="form-control" ref="customerSearch" type="text" v-model="customerQuery" @focus="customerFocused()" :readonly="customer !== null" />
+                                    <div class="input-group-btn">
+                                        <btn type="default" v-show="customer !== null" @click="clearCustomer()">
+                                            <i class="fa fa-close"></i>
+                                        </btn>
+                                        <btn type="default" @click="customerPicker=true">
+                                            <i class="fa fa-search"></i>
+                                        </btn>
+                                        <btn type="default">
+                                            <i class="fa fa-plus"></i>
+                                        </btn>
                                     </div>
                                 </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label class="control-label">Phone number</label>
-                                        <input class="form-control" type="text" readonly="readonly" :value="customer_phoneNumber">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label class="control-label">E-mail</label>
-                                        <input class="form-control" type="text" readonly="readonly" :value="customer_email">
-                                    </div>
-                                </div>
+                                <template slot="dropdown">
+                                    <li v-for="suggest in customerSuggestions">
+                                        <a role="button" @click="selectCustomer(suggest)">
+                                            {{ suggest.firstName }}&nbsp;{{ suggest.lastName }},&nbsp;{{ suggest.phoneNumber }}
+                                        </a>
+                                    </li>
+                                </template>
+                            </dropdown>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Language</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_language">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    Booking data
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row form-group">
-                                    <dropdown class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <label class="control-label">Date</label>
-                                        <div class="input-group">
-                                            <input class="form-control" type="text" v-model="order.date" readonly="readonly">
-                                            <div class="input-group-btn">
-                                                <btn class="dropdown-toggle"><i class="glyphicon glyphicon-calendar"></i></btn>
-                                            </div>
-                                        </div>
-                                        <template slot="dropdown">
-                                            <li>
-                                                <date-picker v-model="order.date"/>
-                                            </li>
-                                        </template>
-                                    </dropdown>
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <label class="control-label">Boat</label>
-                                        <div class="input-group">
-                                            <input class="form-control" type="text" readonly="readonly" :value="boatName">
-                                            <div class="input-group-btn">
-                                                <dropdown append-to-body menu-right class="boat-dropdown">
-                                                    <btn type="default" class="dropdown-toggle"><span class="caret"></span></btn>
-                                                    <template slot="dropdown">
-                                                        <li v-for="location in locations">
-                                                            <strong>{{ location }}</strong>
-                                                            <ul>
-                                                                <li v-for="boat in locationBoats(location)">
-                                                                    <a role="button" @click="selectBoat(boat)" :class="{ 'selected': selectedBoat === boat }">
-                                                                        {{ boat.name }}
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </li>
-                                                    </template>
-                                                </dropdown>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                        <label class="control-label">Start</label>
-                                        <table class="table table-condensed" style="margin-bottom: 0">
-                                            <tr>
-                                                <td>
-                                                    <select class="form-control" v-model="startHour">
-                                                        <option v-for="hour in hours" :value="hour">{{ hour }}</option>
-                                                    </select>
-                                                </td>
-                                                <td>:</td>
-                                                <td>
-                                                    <select class="form-control" v-model="startMinute">
-                                                        <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                        <label class="control-label">Duration</label>
-                                        <select class="form-control" v-model="duration">
-                                            <option value="">pick a duration</option>
-                                            <option value="1">1 hour</option>
-                                            <option value="2">2 hours</option>
-                                            <option value="4">4 hours</option>
-                                            <option value="8">8 hours</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                        <label class="control-label">End</label>
-                                        <table class="table table-condensed" style="margin-bottom: 0">
-                                            <tr>
-                                                <td>
-                                                    <select class="form-control" v-model="endHour">
-                                                        <option v-for="hour in hours" :value="hour">{{ hour }}</option>
-                                                    </select>
-                                                </td>
-                                                <td>:</td>
-                                                <td>
-                                                    <select class="form-control" v-model="endMinute">
-                                                        <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                        <label class="control-label">Number of people</label>
-                                        <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" @click="decrementPeopleCount()">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </span>
-                                            <input class="form-control" type="text" v-model="order['numberOfPeople']" />
-                                            <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" @click="incrementPeopleCount()">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                                        <label class="control-label">Booked by</label>
-                                        <input class="form-control" type="text" v-model="order['bookedBy']" />
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <label class="control-label">Extras</label>
-                                        <div class="input-group">
-                                            <input class="form-control" type="text" readonly="readonly" :value="order_extras">
-                                            <div class="input-group-btn">
-                                                <dropdown ref="dropdownExtras" :not-close-elements="dropdownExtrasEle" menu-right v-model="showExtrasSelection" class="dropdown-form">
-                                                    <btn type="default" class="dropdown-toggle">
-                                                        <i class="fa fa-check-square"></i>
-                                                    </btn>
-                                                    <template slot="dropdown">
-                                                        <li class="checkbox" v-for="extra in extras">
-                                                            <label>
-                                                                <input type="checkbox" :value="extra['code']" v-model="order['extra']"> {{ extra.text }}
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <btn block type="primary" @click="showExtrasSelection=false">Apply</btn>
-                                                        </li>
-                                                    </template>
-                                                </dropdown>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Country</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_country">
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    Comments
-                                </h3>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Phone number</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_phoneNumber">
                             </div>
-                            <div class="panel-body">
-                                <textarea class="form-control" v-model="order['comments']" style="height: 58px;"></textarea>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">E-mail</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_email">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- booking data block -->
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Booking data
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Order type</label>
+                                <select class="form-control" v-model="order.type">
+                                    <option value="" disabled="disabled">...</option>
+                                    <option v-for="type in orderTypes" :value="type.code">{{ type.text }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <dropdown class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <label class="control-label">Date</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" v-model="order.date" readonly="readonly">
+                                    <div class="input-group-btn">
+                                        <btn class="dropdown-toggle"><i class="glyphicon glyphicon-calendar"></i></btn>
+                                    </div>
+                                </div>
+                                <template slot="dropdown">
+                                    <li>
+                                        <date-picker v-model="order.date"/>
+                                    </li>
+                                </template>
+                            </dropdown>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <label class="control-label">Boat</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" readonly="readonly" :value="boatName">
+                                    <div class="input-group-btn">
+                                        <dropdown append-to-body menu-right class="boat-dropdown">
+                                            <btn type="default" class="dropdown-toggle"><span class="caret"></span></btn>
+                                            <template slot="dropdown">
+                                                <li v-for="location in locations">
+                                                    <strong>{{ location }}</strong>
+                                                    <ul>
+                                                        <li v-for="boat in locationBoats(location)">
+                                                            <a role="button" @click="selectBoat(boat)" :class="{ 'selected': selectedBoat === boat }">
+                                                                {{ boat.name }}
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </template>
+                                        </dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <label class="control-label">Start</label>
+                                <table class="table table-condensed" style="margin-bottom: 0">
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" v-model="startHour">
+                                                <option v-for="hour in hours" :value="hour">{{ hour }}</option>
+                                            </select>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <select class="form-control" v-model="startMinute">
+                                                <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <label class="control-label">Duration</label>
+                                <select class="form-control" v-model="duration">
+                                    <option value="">pick a duration</option>
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="4">4 hours</option>
+                                    <option value="8">8 hours</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <label class="control-label">End</label>
+                                <table class="table table-condensed" style="margin-bottom: 0">
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" v-model="endHour">
+                                                <option v-for="hour in hours" :value="hour">{{ hour }}</option>
+                                            </select>
+                                        </td>
+                                        <td>:</td>
+                                        <td>
+                                            <select class="form-control" v-model="endMinute">
+                                                <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <label class="control-label">Number of people</label>
+                                <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" @click="decrementPeopleCount()">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </span>
+                                    <input class="form-control" type="text" v-model="order['numberOfPeople']" />
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" @click="incrementPeopleCount()">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                <label class="control-label">Booked by</label>
+                                <input class="form-control" type="text" v-model="order['bookedBy']" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Extras</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" readonly="readonly" :value="order_extras">
+                                    <div class="input-group-btn">
+                                        <dropdown ref="dropdownExtras" :not-close-elements="dropdownExtrasEle" menu-right v-model="showExtrasSelection" class="dropdown-form">
+                                            <btn type="default" class="dropdown-toggle">
+                                                <i class="fa fa-check-square"></i>
+                                            </btn>
+                                            <template slot="dropdown">
+                                                <li class="checkbox" v-for="extra in extras">
+                                                    <label>
+                                                        <input type="checkbox" :value="extra['code']" v-model="order['extra']"> {{ extra.text }}
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <btn block type="primary" @click="showExtrasSelection=false">Apply</btn>
+                                                </li>
+                                            </template>
+                                        </dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- price block -->
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -233,20 +229,22 @@
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null">
+                                <button class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
                                     <i class="fa fa-refresh"></i>&nbsp;suggest
                                 </button>
+                                <!--<div class="alert alert-warning" role="alert">-->
+                                    <!--Unable to suggest prices for the selected booking period.-->
+                                    <!--Please enter prices manually.-->
+                                <!--</div>-->
                                 <div class="row form-group">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
                                             <input class="form-control" type="text" v-model.lazy="order_rent" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent discount</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
@@ -297,6 +295,20 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Comments
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <textarea class="form-control" v-model="order['comments']" style="height: 58px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
                 <button type="button" class="btn btn-lg btn-default">
                     <i class="fa fa-save"></i>&nbsp;Create booking
@@ -341,7 +353,7 @@
                 showExtrasSelection: false,
                 customerDatatable: {
                     dataUrl: Routing.generate('app.customer.get.list'),
-                    columns: ['firstName', 'lastName', 'phoneNumber'],
+                    columns: ['firstName', 'lastName', 'phoneNumber', 'email'],
                     options: {
                         headings: {
                             firstName: 'First name',
@@ -351,15 +363,69 @@
                         sortable: [],
                         highlightMatches: true
                     }
-                }
+                },
+                timeouts: {
+                    checkConflict: null
+                },
+                orderTypes: window.rodaboats.referenceData.orderTypes
             }
         },
         mounted () {
             this.dropdownExtrasEle.push(this.$refs.dropdownExtras.$el);
         },
         methods: {
-            customer_dt_row_click ($event, row) {
-                console.log($event);
+            suggestPrice () {
+                const self = this;
+                axios.get(Routing.generate('suggestprice'), {
+                    params: {
+                        start: this.order.start,
+                        end: this.order.end,
+                        date: this.order.date,
+                        type: this.order.type,
+                        id: this.order.boatId
+                    }
+                }).then((response) => {
+                    if (response.data.success === true) {
+                        self.order.rent = response.data.rent;
+                        self.order.petrolCost = response.data.petrolCost;
+                        self.order.deposit = response.data.deposit;
+                    } else {
+                        self.$notify({
+                            title: 'Price suggestions',
+                            content: 'Unable to suggest prices for the selected booking period. Please enter prices manually.',
+                            duration: 0,
+                            type: 'warning'
+                        })
+                    }
+                    console.log(response.data);
+                }).catch((error) => {
+                    console.error(error);
+                })
+            },
+            checkConflicts () {
+                if (this.order.boatId === null) {
+                    return;
+                }
+                if (this.timeouts.checkConflict !== null) {
+                    clearTimeout(this.timeouts.checkConflict);
+                    this.timeouts.checkConflict = null;
+                }
+                const self = this;
+                this.timeouts.checkConflict = setTimeout(() => {
+                    let loading = self.$loading.show();
+                    axios.post(Routing.generate('app_api_orders_check_conflicts'), self.order)
+                        .then((response) => {
+                            loading.hide();
+                            console.log(response.data)
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        })
+                }, 500)
+            },
+            customer_dt_row_click (data) {
+                this.customer = data.row;
+                this.customerPicker = false;
             },
             locationBoats (location) {
                 const result = [];
@@ -431,6 +497,37 @@
                     this.customerSuggestions = [];
                     this.customerAutocomplete = false;
                 }
+            },
+            customer () {
+                this.order.customerId = (this.customer !== null) ? this.customer.id : null;
+            },
+            'order.boatId': function () {
+                this.checkConflicts();
+            },
+            'order.date': function() {
+                this.checkConflicts();
+            },
+            'order.start': function() {
+                let start = new Date(this.order.start);
+                let end = new Date(this.order.end);
+
+                if (this.duration !== '') {
+                    let h = parseInt(this.duration);
+                    end.setHours(start.getHours() + h);
+                    end.setMinutes(start.getMinutes());
+                    this.order.end = end.toString();
+                } else {
+                    if (start > end) {
+                        end.setHours(start.getHours() + 1);
+                        end.setMinutes(start.getMinutes());
+                        this.order.end = end.toString();
+                    }
+                }
+
+                this.checkConflicts();
+            },
+            'order.end': function() {
+                this.checkConflicts();
             }
         },
         computed: {

@@ -91,6 +91,14 @@ class OrderController extends Controller
             ];
         }
 
+        $types = [];
+        foreach (OrderDataProvider::types() as $code => $value) {
+            $types[] = [
+                'code'  => $code,
+                'text'  => $value
+            ];
+        }
+
         return $this->render('order/add.html.twig', [
             'boats'             => $dtoBoats,
             'orderModel'        => $dtoOrder,
@@ -99,7 +107,10 @@ class OrderController extends Controller
             'languages'         => $languages,
             'countries'         => $countries,
             'paymentMethods'    => $paymentMethods,
-            'extras'            => $extras
+            'extras'            => $extras,
+            'types'             => $types
         ]);
     }
+
+
 }

@@ -26,7 +26,8 @@
         window.paymentMethods = {{ paymentMethods | json_encode | raw }};
         window.rodaboats = {
             referenceData: {
-                extras: {{ extras | json_encode | raw }}
+                extras: {{ extras | json_encode | raw }},
+                orderTypes: {{ types | json_encode | raw }}
             }
         };
     </script>

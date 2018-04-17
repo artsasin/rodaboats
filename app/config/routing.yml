@@ -1,6 +1,11 @@
 app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+    resource:   "@AppBundle/Controller/"
+    type:       annotation
+
+app_api:
+    resource:   '@AppBundle/Controller/Api/'
+    type:       annotation
+    prefix:     '/api'
 
 fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource:   "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

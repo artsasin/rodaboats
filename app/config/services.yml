@@ -18,6 +18,10 @@ services:
         tags:
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postUpdate }
+    app.data.manager:
+        class: AppBundle\Manager\DataManager
+        arguments:
+            - '@doctrine.orm.entity_manager'
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

@@ -1117,7 +1117,7 @@ class Boat
     
     /**
      * Attempts to retrieve the current price record for the passed date (defaults to now).
-     * @return mixed
+     * @return BoatPrice
      */
     public function getCurrentPrice(\DateTime $date = null)
     {
