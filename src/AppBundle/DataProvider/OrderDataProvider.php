@@ -143,6 +143,21 @@ class OrderDataProvider
         ];
     }
 
+    public static function extrasAbbrevations()
+    {
+        return [
+            self::EXTRA_SKIPPER             => 'SK',
+            self::EXTRA_DONUT               => 'DN',
+            self::EXTRA_WATERSKI            => 'WSKI',
+            self::EXTRA_BANANA              => 'BAN',
+            self::EXTRA_EASY_BREATH_MASK    => 'ESY_BM',
+            self::EXTRA_FISHING_GEAR        => 'FGR',
+            self::EXTRA_ROMANTIC_PACKAGE    => 'RPACK',
+            self::EXTRA_LUNCH               => 'LNCH',
+            self::EXTRA_FLYBOARD            => 'FBD',
+        ];
+    }
+
     /**
      * @param $code
      * @return string

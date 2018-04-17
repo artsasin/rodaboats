@@ -8,6 +8,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\DataProvider\CustomerDataProvider;
+use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Order;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -68,11 +70,36 @@ class OrderController extends Controller
         $hours = array('05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22');
         $minutes = array('00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55');
 
+        $languages = CustomerDataProvider::languages();
+        $countries = CustomerDataProvider::countries();
+        OrderDataProvider::paymentMethods();
+
+        $paymentMethods = [];
+        foreach (OrderDataProvider::paymentMethods() as $code => $value) {
+            $paymentMethods[] = [
+                'code'  => $code,
+                'text'  => $value
+            ];
+        }
+
+        $extras = [];
+        foreach (OrderDataProvider::extras() as $code => $value) {
+            $extras[] = [
+                'code'  => $code,
+                'text'  => $value,
+                'abbr'  => OrderDataProvider::extrasAbbrevations()[$code]
+            ];
+        }
+
         return $this->render('order/add.html.twig', [
-            'boats'         => $dtoBoats,
-            'orderModel'    => $dtoOrder,
-            'hours'         => $hours,
-            'minutes'       => $minutes
+            'boats'             => $dtoBoats,
+            'orderModel'        => $dtoOrder,
+            'hours'             => $hours,
+            'minutes'           => $minutes,
+            'languages'         => $languages,
+            'countries'         => $countries,
+            'paymentMethods'    => $paymentMethods,
+            'extras'            => $extras
         ]);
     }
 }

@@ -8,6 +8,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\DataProvider\CustomerDataProvider;
 use AppBundle\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,8 +33,8 @@ class CustomerFakerCommand extends ContainerAwareCommand
             $customer = new Customer();
             $customer->setFirstName($faker->firstName);
             $customer->setLastName($faker->lastName);
-            $customer->setCountry($faker->countryCode);
-            $customer->setLanguage($faker->languageCode);
+            $customer->setCountry(array_rand(CustomerDataProvider::countries()));
+            $customer->setLanguage(array_rand(CustomerDataProvider::languages()));
             $customer->setPhoneNumber($faker->e164PhoneNumber);
             $dice = rand(1, 100);
             if ($dice > 10) {
@@ -42,14 +43,5 @@ class CustomerFakerCommand extends ContainerAwareCommand
             $em->persist($customer);
         }
         $em->flush();
-//        $output->writeln($faker->firstName);
-//        $output->writeln($faker->lastName);
-//        $output->writeln($faker->email);
-//        $output->writeln($faker->languageCode);
-//        $output->writeln($faker->countryCode);
-//        $formatter = $faker->getFormatter('PhoneNumber');
-//        dump($formatter);
-//        $output->writeln($faker->e164PhoneNumber);
-//        dump(Intl::getLanguageBundle()->getLanguageNames());
     }
 }

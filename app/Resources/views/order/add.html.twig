@@ -21,6 +21,14 @@
         window.orderModel = {{ orderModel | json_encode | raw }};
         window.bookingHours = {{ hours | json_encode | raw }};
         window.bookingMinutes = {{ minutes | json_encode | raw }};
+        window.languages = {{ languages | json_encode | raw }};
+        window.countries = {{ countries | json_encode | raw }};
+        window.paymentMethods = {{ paymentMethods | json_encode | raw }};
+        window.rodaboats = {
+            referenceData: {
+                extras: {{ extras | json_encode | raw }}
+            }
+        };
     </script>
     <script src="{{ asset('vue/order/order-create.js') }}"></script>
 {% endblock %}
