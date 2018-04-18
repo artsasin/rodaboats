@@ -1,0 +1,213 @@
+{% extends 'base_sb.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .booking {
+            position: relative;
+            background-color: #d0e9c6;
+            overflow: hidden;
+            padding: 0 3px;
+            min-width: 170px;
+            height: 100%;
+            width: 100%;
+        }
+        .booking div.booking-header {
+            font-size: 12px;
+            text-align: center;
+            border-bottom: 1px dotted white;
+            position: relative;
+            clear: both;
+            overflow: auto;
+            padding: 1px;
+            margin-bottom: 5px;
+        }
+        .booking div.booking-header .time {
+            /*margin-top: 3px;*/
+            margin-left: 3px;
+            /*font-size: 13px;*/
+            font-weight: bold;
+        }
+        .booking .person-name {
+            font-size: 13px;
+            overflow: hidden;
+            height: 18px;
+            width: 100%;
+        }
+        .calendar tr td {
+            width: 170px;
+        }
+        table.calendar, table.calendar tr {
+            height: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-default btn-lg pull-left" type="button" style="margin-right: 20px;" id="dt-toggler">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                        <a href="{{ path('calendardate', { 'date': prev_date }) }}" class="btn btn-default btn-lg pull-left" role="button">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                        <input
+                                class="input-lg pull-left"
+                                style="border-radius: 0; border: none; text-align: center; font-weight: bold;"
+                                id="datetimepicker44"
+                        />
+                        <a href="{{ path('calendardate', { 'date': next_date }) }}" class="btn btn-default btn-lg pull-left" role="button">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="header-nav pull-right">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Location
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                    <li>
+                                        <a href="{{ path('calendardate', { 'date': date|date('Y-m-d') }) }}">All locations</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    {% for location in locations %}
+                                        <li>
+                                            <a href="{{ path('calendardate', { 'date': date|date('Y-m-d'), 'location': location.id }) }}">{{ location.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table calendar">
+                        <thead>
+                        <tr>
+                            <th style="width: 60px;">Time</th>
+                            {% for boat in calendar.boats %}
+                                <th style="width: 170px;">{{ boat.name }}<br/>
+                                    <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
+                                    <br/>
+                                    <a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> book
+                                    </a>
+                                </th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for slot in calendar.slots %}
+                            <tr>
+                                {% if slot.minutes % 30 == 0 %}
+                                    <td rowspan="2" style="vertical-align: top; padding: 0 0 0 5px; font-size: 12px;">
+                                        {{ slot.format() }}
+                                    </td>
+                                {% endif %}
+                                {% for boat in calendar.boats %}
+                                    {% set order = calendar.getOrder(boat, slot) %}
+                                    {% if order %}
+                                        <td class="slot" rowspan="{{ order.minutes / 15 }}" style="padding: 1px; overflow: hidden;">
+                                            <div class="booking">
+                                                <div class="booking-header">
+                                                    <div class="time pull-left">
+                                                        <a href="{{ path('viewbooking', { 'id': order.id }) }}">
+                                                            {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}&nbsp;({{ order.hours }}h)
+                                                        </a>
+                                                    </div>
+                                                    {% if order.comments %}
+                                                        <div
+                                                                class="pull-right"
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="{{ order.comments|nl2br }}"
+                                                                data-container="body"
+                                                                data-html="true"
+                                                        >
+                                                            <i class="fa fa-external-link-square" aria-hidden="true"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="person-name">
+                                                    {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }},
+                                                    <span style="font-size: 11px;">{{ order.numberOfPeople }}&nbsp;ppl</span>
+                                                </div>
+                                                <div class="person-name" style="margin-left: 5px;">
+                                                    <i class="fa fa-phone"></i>&nbsp; {{ order.customer.phoneNumber }}
+                                                </div>
+                                                <div style="font-size: 10px; width: 100%; height: 18px; overflow: hidden;">1</div>
+                                            </div>
+                                        </td>
+                                    {% elseif not calendar.busySlot(boat, slot) %}
+                                        <td class="slot available" style="padding: 8px 0;" data-boat="{{ boat.id }}" data-minutes="{{ slot.minutes }}"></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+            // $('.booking').each(function(index, el) {
+            //     var td = $(el).closest('td.slot');
+            //     var h = 0;
+            //     var w = 0;
+            //     if (td.length > 0) {
+            //         h = td[0].offsetHeight;
+            //         w = td[0].offsetWidth;
+            //     }
+            //
+            //     if (h > 0 && w > 0) {
+            //         $(el).css('height', h - 3);
+            //     }
+            // });
+
+            $('#datetimepicker44').datetimepicker({
+                ignoreReadonly: true,
+                showClose: true,
+                format: 'dddd, MMM DD YYYY',
+                viewDate: "{{ date|date('Y-m-d') }}",
+                defaultDate: "{{ date|date('Y-m-d') }}"
+            }).on('dp.change', function(e) {
+                document.location = Routing.generate('calendardate', { date: e.date.format('YYYY-MM-DD') }, false);
+            });
+            $('#dt-toggler').on('click', function(e) {
+                $('#datetimepicker44').datetimepicker().data('DateTimePicker').toggle();
+            });
+        })
+        $(function () {
+
+            {#$('table.calendar td.available').on('click', function (e) {#}
+
+            {#var cell = $(e.currentTarget);#}
+
+            {#var url = '{{ path('addbooking') }}';#}
+            {#url += '/' + cell.attr('data-boat') + '/{{ date|date('Y-m-d') }}?time=' + cell.attr('data-hour') + ':00';#}
+
+            {#document.location = url;#}
+            {#});#}
+        });
+    </script>
+
+{% endblock %}

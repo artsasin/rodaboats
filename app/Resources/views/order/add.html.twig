@@ -25,6 +25,7 @@
         window.countries = {{ countries | json_encode | raw }};
         window.paymentMethods = {{ paymentMethods | json_encode | raw }};
         window.rodaboats = {
+            customerModel: {{ customerModel | json_encode | raw }},
             referenceData: {
                 extras: {{ extras | json_encode | raw }},
                 orderTypes: {{ types | json_encode | raw }}

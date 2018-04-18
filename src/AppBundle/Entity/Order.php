@@ -689,6 +689,8 @@ class Order
     public function setCustomer($customer)
     {
         $this->customer = $customer;
+        $customer->addOrder($this);
+
         return $this;
     }
 
@@ -707,6 +709,8 @@ class Order
     public function setBoat($boat)
     {
         $this->boat = $boat;
+        $boat->addOrder($this);
+
         return $this;
     }
 
@@ -725,6 +729,8 @@ class Order
     public function setLocation($location)
     {
         $this->location = $location;
+        $location->addOrder($this);
+
         return $this;
     }
 
@@ -760,6 +766,94 @@ class Order
         $diff = $this->start->diff($this->end, true);
 
         return $diff->h;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMinutes()
+    {
+        // Ensure that a duration can be calculated.
+        if($this->start === null || $this->end === null) {
+            return null;
+        }
+
+        $diff = $this->start->diff($this->end, true);
+        $h = intval($diff->h);
+        $m = intval($diff->m);
+
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+
+        return intval(($h * 60) + ($m + $adjust));
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtrasAbbrText()
+    {
+        if (count($this->extra) > 0) {
+            $abbr = OrderDataProvider::extrasAbbrevations();
+            $result = [];
+            foreach ($this->extra as $extra) {
+                $result[] = $abbr[$extra];
+            }
+            return implode(', ', $result);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param int|null $start
+     * @return int
+     */
+    public function getStartCalendarIndex($start = null)
+    {
+        $h = $this->start->format('G');
+        if ($start !== null && $h < $start) {
+            $h = $start;
+        }
+
+        $m = intval($this->start->format('i'));
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+
+        return intval(($h * 60) + ($m + $adjust));
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndCalendarIndex()
+    {
+        $h = $this->end->format('G');
+        $m = intval($this->end->format('i'));
+        $adjust = 0;
+        if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
+            $r = $m % 15;
+            if ($r < 8) {
+                $adjust = -$r;
+            } else {
+                $adjust = (15 - $r);
+            }
+        }
+        return intval(($h * 60) + ($m + $adjust));
     }
 
     /**

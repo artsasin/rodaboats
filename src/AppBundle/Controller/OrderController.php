@@ -12,6 +12,7 @@ use AppBundle\DataProvider\CustomerDataProvider;
 use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Order;
+use AppBundle\Model\DTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,6 +100,8 @@ class OrderController extends Controller
             ];
         }
 
+        $customerModel = new DTO\Customer();
+
         return $this->render('order/add.html.twig', [
             'boats'             => $dtoBoats,
             'orderModel'        => $dtoOrder,
@@ -108,9 +111,8 @@ class OrderController extends Controller
             'countries'         => $countries,
             'paymentMethods'    => $paymentMethods,
             'extras'            => $extras,
-            'types'             => $types
+            'types'             => $types,
+            'customerModel'     => $customerModel
         ]);
     }
-
-
 }

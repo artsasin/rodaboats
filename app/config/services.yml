@@ -22,6 +22,7 @@ services:
         class: AppBundle\Manager\DataManager
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@security.token_storage'
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

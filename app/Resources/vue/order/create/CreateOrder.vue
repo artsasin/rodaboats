@@ -1,5 +1,12 @@
 <template>
     <div id="create-order-wrapper">
+        <div class="row" v-for="(item, index) in alerts">
+            <div class="col-lg-12 col-m-12 col-sm-12 col-xs-12">
+                <alert :type="item.type" dismissible :key="item.key" @dismissed="alerts.splice(index, 1)">
+                    {{ item.content }}
+                </alert>
+            </div>
+        </div>
         <div class="row">
             <!-- customer block -->
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -22,7 +29,7 @@
                                         <btn type="default" @click="customerPicker=true">
                                             <i class="fa fa-search"></i>
                                         </btn>
-                                        <btn type="default">
+                                        <btn type="default" @click="newCustomer">
                                             <i class="fa fa-plus"></i>
                                         </btn>
                                     </div>
@@ -65,11 +72,9 @@
             </div>
             <!-- booking data block -->
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <div class="panel panel-default">
+                <div class="panel" :class="{'panel-default': !validation.isConflicts, 'panel-danger': validation.isConflicts }">
                     <div class="panel-heading">
-                        <h3 class="panel-title">
-                            Booking data
-                        </h3>
+                        <h3 class="panel-title" v-html="booking_data_title"></h3>
                     </div>
                     <div class="panel-body">
                         <div class="row form-group">
@@ -120,7 +125,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" :class="{'has-error': validation.isConflicts}">
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <label class="control-label">Start</label>
                                 <table class="table table-condensed" style="margin-bottom: 0">
@@ -232,10 +237,6 @@
                                 <button class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
                                     <i class="fa fa-refresh"></i>&nbsp;suggest
                                 </button>
-                                <!--<div class="alert alert-warning" role="alert">-->
-                                    <!--Unable to suggest prices for the selected booking period.-->
-                                    <!--Please enter prices manually.-->
-                                <!--</div>-->
                                 <div class="row form-group">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent</label>
@@ -310,7 +311,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <button type="button" class="btn btn-lg btn-default">
+                <button type="button" class="btn btn-lg btn-default" @click="save">
                     <i class="fa fa-save"></i>&nbsp;Create booking
                 </button>
             </div>
@@ -324,33 +325,49 @@
                     @row-click="customer_dt_row_click"
             />
         </modal>
+        <new-customer-modal
+                v-model="createCustomer.openModal"
+                :model="createCustomer.model"
+                :countries="list_countries"
+                :languages="list_languages"
+                @saved="onCustomerSaved"
+        />
     </div>
 </template>
 
 <script>
     import Vue from 'vue'
     import axios from 'axios'
+    import NewCustomerModal from '../../customer/NewCustomerModal'
 
     export default {
         name: "create-order",
+        components: { NewCustomerModal },
         data () {
             return {
                 order: Vue.util.extend({}, window.orderModel),
                 boats: window.boats,
                 hours: window.bookingHours,
                 minutes: window.bookingMinutes,
+                languages: window.languages,
+                countries: window.countries,
+                extras: window.rodaboats.referenceData.extras,
                 duration: '',
                 customerPicker: false,
                 customer: null,
                 query: '',
                 customerAutocomplete: false,
                 customerSuggestions: [],
-                languages: window.languages,
-                countries: window.countries,
                 paymentMethods: window.paymentMethods,
-                extras: window.rodaboats.referenceData.extras,
                 dropdownExtrasEle: [],
                 showExtrasSelection: false,
+                createCustomer: {
+                    openModal: false,
+                    model: Vue.util.extend({}, window.rodaboats.customerModel)
+                },
+                validation: {
+                    isConflicts: false
+                },
                 customerDatatable: {
                     dataUrl: Routing.generate('app.customer.get.list'),
                     columns: ['firstName', 'lastName', 'phoneNumber', 'email'],
@@ -367,13 +384,48 @@
                 timeouts: {
                     checkConflict: null
                 },
-                orderTypes: window.rodaboats.referenceData.orderTypes
+                orderTypes: window.rodaboats.referenceData.orderTypes,
+                alerts: []
             }
         },
         mounted () {
             this.dropdownExtrasEle.push(this.$refs.dropdownExtras.$el);
         },
         methods: {
+            save () {
+                const self = this;
+                let loading = self.$loading.show();
+                axios.post(Routing.generate('app_api_orders_save'), this.order)
+                  .then((response) => {
+                      loading.hide();
+                      if (response.data.status !== 0) {
+                          self.alerts.push({
+                              type: 'danger',
+                              key: new Date().getTime(),
+                              content: response.data.message
+                          });
+                      } else {
+                          self.order.id = response.data.payload.id;
+                          self.$notify({
+                              title: 'Save order',
+                              content: 'Order was saved.',
+                              duration: 0,
+                              type: 'success'
+                          })
+                      }
+                  })
+                  .catch((error) => {
+                      loading.hide();
+                      console.error(error);
+                  })
+            },
+            onCustomerSaved (customer) {
+                this.customer = customer;
+            },
+            newCustomer () {
+                this.createCustomer.model = Vue.util.extend({}, window.rodaboats.customerModel);
+                this.createCustomer.openModal = true;
+            },
             suggestPrice () {
                 const self = this;
                 axios.get(Routing.generate('suggestprice'), {
@@ -416,6 +468,7 @@
                     axios.post(Routing.generate('app_api_orders_check_conflicts'), self.order)
                         .then((response) => {
                             loading.hide();
+                            self.validation.isConflicts = !response.data.valid;
                             console.log(response.data)
                         })
                         .catch((error) => {
@@ -532,6 +585,31 @@
             }
         },
         computed: {
+            booking_data_title () {
+                return (this.validation.isConflicts) ? 'Booking data conflict with existing booking' : 'Booking data';
+            },
+            list_countries () {
+                let entries = Object.entries(this.countries);
+                let result = [];
+                entries.forEach((entry) => {
+                    result.push({
+                        value: entry[0],
+                        text: entry[1]
+                    })
+                });
+                return result;
+            },
+            list_languages () {
+                let entries = Object.entries(this.languages);
+                let result = [];
+                entries.forEach((entry) => {
+                    result.push({
+                        value: entry[0],
+                        text: entry[1]
+                    })
+                });
+                return result;
+            },
             order_extras () {
                 if (this.order.extra.length === 0) {
                     return '';

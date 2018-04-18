@@ -8,6 +8,8 @@
 
 namespace AppBundle\Model\DTO;
 
+use AppBundle\Exception\RodaboatsException;
+
 class Order implements DTOInterface
 {
     public $id;
@@ -93,11 +95,50 @@ class Order implements DTOInterface
 
     public function fromJson($json)
     {
-        // TODO: Implement fromJson() method.
+        $data = json_decode($json, true);
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
     }
 
+    /**
+     * @return bool
+     * @throws RodaboatsException
+     */
     public function isValid()
     {
+        try {
+            $date = new \DateTime($this->date);
+        } catch (\Exception $e) {
+            throw new RodaboatsException('Order date is invalid');
+        }
+
+        try {
+            $start = new \DateTime($this->start);
+        } catch (\Exception $e) {
+            throw new RodaboatsException('Order start has incorrect value');
+        }
+
+        try {
+            $end = new \DateTime($this->end);
+        } catch (\Exception $e) {
+            throw new RodaboatsException('Order end has incorrect value');
+        }
+
+        if ($this->boatId === null) {
+            throw new RodaboatsException('Boat is null');
+        }
+
+        if ($this->customerId === null) {
+            throw new RodaboatsException('Customer is null');
+        }
+
+        if ($this->numberOfPeople === 0) {
+            throw new RodaboatsException('Number of people can not be 0');
+        }
+
         return true;
     }
 }

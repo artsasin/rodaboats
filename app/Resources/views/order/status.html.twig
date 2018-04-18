@@ -1,12 +1,12 @@
-{% if booking.status is constant('STATUS_CONFIRMED', booking) %}
+{% if order.status is constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CONFIRMED') %}
 	<span class="label label-success">Confirmed</span>
 {% endif %}
-{% if booking.status is constant('STATUS_CANCELLED', booking) %}
+{% if order.status is constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CANCELLED') %}
 	<span class="label label-danger">Cancelled</span>
 {% endif %}
-{% if booking.status is constant('STATUS_DELIVERED', booking) %}
+{% if order.status is constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_DELIVERED') %}
 	<span class="label label-primary">Delivered</span>
 {% endif %}
-{% if booking.status is constant('STATUS_CLOSED', booking) %}
+{% if order.status is constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CLOSED') %}
 	<span class="label label-default">Closed</span>
 {% endif %}

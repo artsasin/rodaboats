@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Api;
 
 use AppBundle\Exception\RodaboatsException;
+use AppBundle\Model\ApiResponse;
 use AppBundle\Model\DTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,6 +25,40 @@ use Symfony\Component\HttpFoundation\Request;
 class OrderController extends Controller
 {
     /**
+     * @Route(path="/save", options={"expose"=true}, name="app_api_orders_save")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function saveAction(Request $request)
+    {
+        $json = $request->getContent();
+        $model = new DTO\Order();
+        $model->fromJson($json);
+
+        $manager = $this->get('app.data.manager');
+
+        $response = new ApiResponse();
+
+        try {
+            $conflicts = $manager->isConflicts($model);
+            if (count($conflicts) === 0) {
+                $order = $manager->saveOrder($model);
+                $model->fromEntity($order);
+                $response->payload = $model;
+            } else {
+                $response->status = -1;
+                $response->payload = $conflicts;
+                $response->message = 'Unable to book boat due to conflicting booking(s)';
+            }
+        } catch (RodaboatsException $e) {
+            $response->status = -1;
+            $response->message = $e->getMessage();
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
      * @Route(path="/check-conflict", options={"expose"=true}, name="app_api_orders_check_conflicts")
      * @Method({"POST"})
      * @param Request $request
@@ -31,7 +66,7 @@ class OrderController extends Controller
      */
     public function checkConflictAction(Request $request)
     {
-        $json = json_decode($request->getContent(), true);
+        $json = $request->getContent();
         $manager = $this->get('app.data.manager');
         $order = new DTO\Order();
         $order->fromJson($json);

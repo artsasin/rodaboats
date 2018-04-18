@@ -71,8 +71,4 @@
     .loading-overlay {
         z-index: 1999 !important;
     }
-    .form-group.required .control-label:after {
-        content:"*";
-        color:red;
-    }
 </style>
