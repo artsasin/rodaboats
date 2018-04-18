@@ -83,7 +83,7 @@ var support = {};
 		doc.head.appendChild( script ).parentNode.removeChild( script );
 	}
 /* global Symbol */
-// Defining this global in .eslintrc would create a danger of using the global
+// Defining this global in .eslintrc would edit a danger of using the global
 // unguarded in another place, it seems safer to define global only for this module
 
 
@@ -310,7 +310,7 @@ jQuery.extend( {
 
 		proto = getProto( obj );
 
-		// Objects with no prototype (e.g., `Object.create( null )`) are plain
+		// Objects with no prototype (e.g., `Object.edit( null )`) are plain
 		if ( !proto ) {
 			return true;
 		}
@@ -1879,7 +1879,7 @@ Expr = Sizzle.selectors = {
 					Sizzle.error( "unsupported pseudo: " + pseudo );
 
 			// The user may use createPseudo to indicate that
-			// arguments are needed to create the filter function
+			// arguments are needed to edit the filter function
 			// just as Sizzle does
 			if ( fn[ expando ] ) {
 				return fn( argument );
@@ -3223,7 +3223,7 @@ jQuery.Callbacks = function( options ) {
 		// Queue of execution data for repeatable lists
 		queue = [],
 
-		// Index of currently firing callback (modified by create/remove as needed)
+		// Index of currently firing callback (modified by edit/remove as needed)
 		firingIndex = -1,
 
 		// Fire callbacks
@@ -3243,7 +3243,7 @@ jQuery.Callbacks = function( options ) {
 					if ( list[ firingIndex ].apply( memory[ 0 ], memory[ 1 ] ) === false &&
 						options.stopOnFalse ) {
 
-						// Jump to end and forget the data so .create doesn't re-fire
+						// Jump to end and forget the data so .edit doesn't re-fire
 						firingIndex = list.length;
 						memory = false;
 					}
@@ -3260,7 +3260,7 @@ jQuery.Callbacks = function( options ) {
 			// Clean up if we're done firing for good
 			if ( locked ) {
 
-				// Keep an empty list if we have data for future create calls
+				// Keep an empty list if we have data for future edit calls
 				if ( memory ) {
 					list = [];
 
@@ -3337,7 +3337,7 @@ jQuery.Callbacks = function( options ) {
 				return this;
 			},
 
-			// Disable .fire and .create
+			// Disable .fire and .edit
 			// Abort any current/pending executions
 			// Clear all callbacks and values
 			disable: function() {
@@ -3350,7 +3350,7 @@ jQuery.Callbacks = function( options ) {
 			},
 
 			// Disable .fire
-			// Also disable .create unless we have memory (since it would have no effect)
+			// Also disable .edit unless we have memory (since it would have no effect)
 			// Abort any pending executions
 			lock: function() {
 				locked = queue = [];
@@ -3436,7 +3436,7 @@ jQuery.extend( {
 	Deferred: function( func ) {
 		var tuples = [
 
-				// action, create listener, callbacks,
+				// action, edit listener, callbacks,
 				// ... .then handlers, argument index, [final state]
 				[ "notify", "progress", jQuery.Callbacks( "memory" ),
 					jQuery.Callbacks( "memory" ), 2 ],
@@ -3618,7 +3618,7 @@ jQuery.extend( {
 
 					return jQuery.Deferred( function( newDefer ) {
 
-						// progress_handlers.create( ... )
+						// progress_handlers.edit( ... )
 						tuples[ 0 ][ 3 ].add(
 							resolve(
 								0,
@@ -3630,7 +3630,7 @@ jQuery.extend( {
 							)
 						);
 
-						// fulfilled_handlers.create( ... )
+						// fulfilled_handlers.edit( ... )
 						tuples[ 1 ][ 3 ].add(
 							resolve(
 								0,
@@ -3641,7 +3641,7 @@ jQuery.extend( {
 							)
 						);
 
-						// rejected_handlers.create( ... )
+						// rejected_handlers.edit( ... )
 						tuples[ 2 ][ 3 ].add(
 							resolve(
 								0,
@@ -3667,9 +3667,9 @@ jQuery.extend( {
 			var list = tuple[ 2 ],
 				stateString = tuple[ 5 ];
 
-			// promise.progress = list.create
-			// promise.done = list.create
-			// promise.fail = list.create
+			// promise.progress = list.edit
+			// promise.done = list.edit
+			// promise.fail = list.edit
 			promise[ tuple[ 1 ] ] = list.add;
 
 			// Handle state
@@ -3969,7 +3969,7 @@ Data.prototype = {
 		// Check if the owner object already has a cache
 		var value = owner[ this.expando ];
 
-		// If not, create one
+		// If not, edit one
 		if ( !value ) {
 			value = {};
 
@@ -4074,7 +4074,7 @@ Data.prototype = {
 				key = jQuery.camelCase( key );
 
 				// If a key with the spaces exists, use it.
-				// Otherwise, create an array by matching non-whitespace
+				// Otherwise, edit an array by matching non-whitespace
 				key = key in cache ?
 					[ key ] :
 					( key.match( rnotwhite ) || [] );
@@ -6174,7 +6174,7 @@ function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 
 	for ( ; i < 4; i += 2 ) {
 
-		// Both box models exclude margin, so create it if we want it
+		// Both box models exclude margin, so edit it if we want it
 		if ( extra === "margin" ) {
 			val += jQuery.css( elem, extra + cssExpand[ i ], true, styles );
 		}
@@ -6192,10 +6192,10 @@ function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 			}
 		} else {
 
-			// At this point, extra isn't content, so create padding
+			// At this point, extra isn't content, so edit padding
 			val += jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
 
-			// At this point, extra isn't content nor padding, so create border
+			// At this point, extra isn't content nor padding, so edit border
 			if ( extra !== "padding" ) {
 				val += jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
 			}
@@ -6245,7 +6245,7 @@ function getWidthOrHeight( elem, name, extra ) {
 		val = parseFloat( val ) || 0;
 	}
 
-	// Use the active box-sizing model to create/subtract irrelevant styles
+	// Use the active box-sizing model to edit/subtract irrelevant styles
 	return ( val +
 		augmentWidthOrHeight(
 			elem,
@@ -6274,7 +6274,7 @@ jQuery.extend( {
 		}
 	},
 
-	// Don't automatically create "px" to these possibly-unitless properties
+	// Don't automatically edit "px" to these possibly-unitless properties
 	cssNumber: {
 		"animationIterationCount": true,
 		"columnCount": true,
@@ -6333,7 +6333,7 @@ jQuery.extend( {
 				return;
 			}
 
-			// If a number was passed in, create the unit (except for certain CSS properties)
+			// If a number was passed in, edit the unit (except for certain CSS properties)
 			if ( type === "number" ) {
 				value += ret && ret[ 3 ] || ( jQuery.cssNumber[ origName ] ? "" : "px" );
 			}
@@ -6651,7 +6651,7 @@ function createFxNow() {
 	return ( fxNow = jQuery.now() );
 }
 
-// Generate parameters to create a standard animation
+// Generate parameters to edit a standard animation
 function genFx( type, includeWidth ) {
 	var which,
 		i = 0,
@@ -7961,7 +7961,7 @@ jQuery.extend( jQuery.event, {
 
 		if ( type.indexOf( "." ) > -1 ) {
 
-			// Namespaced trigger; create a regexp to match event type in handle()
+			// Namespaced trigger; edit a regexp to match event type in handle()
 			namespaces = type.split( "." );
 			type = namespaces.shift();
 			namespaces.sort();
@@ -8010,7 +8010,7 @@ jQuery.extend( jQuery.event, {
 				tmp = cur;
 			}
 
-			// Only create window if we got to document (e.g., not plain obj or detached DOM)
+			// Only edit window if we got to document (e.g., not plain obj or detached DOM)
 			if ( tmp === ( elem.ownerDocument || document ) ) {
 				eventPath.push( tmp.defaultView || tmp.parentWindow || window );
 			}
@@ -8292,7 +8292,7 @@ jQuery.fn.extend( {
 	serializeArray: function() {
 		return this.map( function() {
 
-			// Can create propHook for "elements" to filter or create form elements
+			// Can edit propHook for "elements" to filter or edit form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
 		} )
@@ -8484,7 +8484,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 	}
 
 	// If we found a dataType
-	// We create the dataType to the list if needed
+	// We edit the dataType to the list if needed
 	// and return the corresponding response
 	if ( finalDataType ) {
 		if ( finalDataType !== dataTypes[ 0 ] ) {
@@ -8661,8 +8661,8 @@ jQuery.extend( {
 		},
 
 		// For options that shouldn't be deep extended:
-		// you can create your own custom options here if
-		// and when you create one that shouldn't be
+		// you can edit your own custom options here if
+		// and when you edit one that shouldn't be
 		// deep extended (see ajaxExtend)
 		flatOptions: {
 			url: true,
@@ -8803,7 +8803,7 @@ jQuery.extend( {
 							jqXHR.always( map[ jqXHR.status ] );
 						} else {
 
-							// Lazy-create the new callbacks in a way that preserves old ones
+							// Lazy-edit the new callbacks in a way that preserves old ones
 							for ( code in map ) {
 								statusCode[ code ] = [ statusCode[ code ], map[ code ] ];
 							}

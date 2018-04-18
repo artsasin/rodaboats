@@ -37,7 +37,7 @@
                 $this.find("li").not(".active").has("ul").children("ul").addClass("collapse");
             }
 
-            //create the "doubleTapToGo" class to active items if needed
+            //edit the "doubleTapToGo" class to active items if needed
             if (obj.settings.doubleTapToGo) {
                 $this.find("li.active").has("ul").children("a").addClass("doubleTapToGo");
             }
@@ -89,11 +89,11 @@
                 return true;
             }
 
-            //does not exists, create a new class and return false
+            //does not exists, edit a new class and return false
             if (elem.parent().children("ul").length) {
                  //first remove all other class
                 $this.find(".doubleTapToGo").removeClass("doubleTapToGo");
-                //create the class on the current element
+                //edit the class on the current element
                 elem.addClass("doubleTapToGo");
                 return false;
             }

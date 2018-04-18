@@ -55,7 +55,7 @@
                                         {{ include('order/status.html.twig', { 'order': order }) }}
                                     </td>
                                     <td>
-                                        <a href="{{ path('viewbooking', { 'id': order.id }) }}">
+                                        <a href="{{ path('app_order_edit', { 'id': order.id }) }}">
                                             {{ order.customer.lastName }}, {{ order.customer.firstName }}<br/>
                                             <small>{{ order.customer.email }}</small>
                                         </a>

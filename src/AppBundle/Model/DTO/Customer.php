@@ -25,6 +25,8 @@ class Customer implements DTOInterface
 
     public $email;
 
+    public $comment;
+
     /**
      * @param \AppBundle\Entity\Customer $customer
      */
@@ -37,6 +39,7 @@ class Customer implements DTOInterface
         $this->language = $customer->getLanguage();
         $this->phoneNumber = $customer->getPhoneNumber();
         $this->email = $customer->getEmail();
+        $this->comment = $customer->getComment();
     }
 
     public function fromJson($json)

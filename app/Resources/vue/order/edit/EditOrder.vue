@@ -1,5 +1,26 @@
 <template>
     <div id="create-order-wrapper">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h1 class="page-header">
+                    <span class="header-nav" v-show="order.id !== null">
+                        <button class="btn btn-default">
+                            <i class="fa fa-clock-o"></i> Log
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fa fa-check-square"></i> Close
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fa fa-remove"></i> Cancel
+                        </button>
+                    </span>
+                    {{ page_title }}
+                    <small style="margin-left: 20px;">
+                        status: <span class="label" :class="status_label_class">{{ status_text }}</span>
+                    </small>
+                </h1>
+            </div>
+        </div>
         <div class="row" v-for="(item, index) in alerts">
             <div class="col-lg-12 col-m-12 col-sm-12 col-xs-12">
                 <alert :type="item.type" dismissible :key="item.key" @dismissed="alerts.splice(index, 1)">
@@ -201,7 +222,13 @@
                                 <div class="input-group">
                                     <input class="form-control" type="text" readonly="readonly" :value="order_extras">
                                     <div class="input-group-btn">
-                                        <dropdown ref="dropdownExtras" :not-close-elements="dropdownExtrasEle" menu-right v-model="showExtrasSelection" class="dropdown-form">
+                                        <dropdown
+                                                ref="extras_dropdown"
+                                                :not-close-elements="extras_dropdown_$ele"
+                                                menu-right
+                                                v-model="extras_dropdown_opened"
+                                                class="dropdown-form"
+                                        >
                                             <btn type="default" class="dropdown-toggle">
                                                 <i class="fa fa-check-square"></i>
                                             </btn>
@@ -212,7 +239,7 @@
                                                     </label>
                                                 </li>
                                                 <li>
-                                                    <btn block type="primary" @click="showExtrasSelection=false">Apply</btn>
+                                                    <btn block type="primary" @click="extras_dropdown_opened=false">Apply</btn>
                                                 </li>
                                             </template>
                                         </dropdown>
@@ -257,7 +284,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent payment method</label>
                                         <select class="form-control" v-model="order['paymentMethodRent']">
-                                            <option value="">...</option>
+                                            <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                             0                                    </select>
                                     </div>
@@ -284,7 +311,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Deposit payment method</label>
                                         <select class="form-control" v-model="order['paymentMethodDeposit']">
-                                            <option value="">...</option>
+                                            <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                         </select>
                                     </div>
@@ -312,11 +339,11 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
                 <button type="button" class="btn btn-lg btn-default" @click="save">
-                    <i class="fa fa-save"></i>&nbsp;Create booking
+                    <i class="fa fa-save"></i>&nbsp;Save order
                 </button>
             </div>
         </div>
-        <modal v-model="customerPicker" title="Customer search" size="lg">
+        <modal v-model="customerPicker" title="Customer search" size="lg" @show="onCustomerPickerShow">
             <v-server-table
                     :url="customerDatatable.dataUrl"
                     :columns="customerDatatable.columns"
@@ -326,7 +353,7 @@
             />
         </modal>
         <new-customer-modal
-                v-model="createCustomer.openModal"
+                v-model="createCustomer.modalOpened"
                 :model="createCustomer.model"
                 :countries="list_countries"
                 :languages="list_languages"
@@ -341,29 +368,22 @@
     import NewCustomerModal from '../../customer/NewCustomerModal'
 
     export default {
-        name: "create-order",
+        name: "edit-order",
         components: { NewCustomerModal },
         data () {
             return {
-                order: Vue.util.extend({}, window.orderModel),
-                boats: window.boats,
-                hours: window.bookingHours,
-                minutes: window.bookingMinutes,
-                languages: window.languages,
-                countries: window.countries,
-                extras: window.rodaboats.referenceData.extras,
+                order: window.rodaboats.order,
+                customer: null,
                 duration: '',
                 customerPicker: false,
-                customer: null,
-                query: '',
                 customerAutocomplete: false,
                 customerSuggestions: [],
-                paymentMethods: window.paymentMethods,
-                dropdownExtrasEle: [],
-                showExtrasSelection: false,
+                query: '',
+                extras_dropdown_$ele: [],
+                extras_dropdown_opened: false,
                 createCustomer: {
-                    openModal: false,
-                    model: Vue.util.extend({}, window.rodaboats.customerModel)
+                    modalOpened: false,
+                    model: Vue.util.extend({}, window.rodaboats.referenceData.customerModel)
                 },
                 validation: {
                     isConflicts: false
@@ -384,14 +404,19 @@
                 timeouts: {
                     checkConflict: null
                 },
-                orderTypes: window.rodaboats.referenceData.orderTypes,
                 alerts: []
             }
         },
         mounted () {
-            this.dropdownExtrasEle.push(this.$refs.dropdownExtras.$el);
+            this.extras_dropdown_$ele.push(this.$refs.extras_dropdown.$el);
+            if (this.order.id !== null) {
+                this.customer = window.rodaboats.customer;
+            }
         },
         methods: {
+            onCustomerPickerShow () {
+                this.$refs.customerDatatable.refresh();
+            },
             save () {
                 const self = this;
                 let loading = self.$loading.show();
@@ -585,11 +610,42 @@
             }
         },
         computed: {
+            page_title () {
+                return (this.order.id !== null) ? 'Edit order' : 'Add order';
+            },
+            statuses () {
+                return window.rodaboats.referenceData.statuses;
+            },
+            status_text () {
+                return this.statuses[this.order.status];
+            },
+            status_label_class () {
+                return {
+                    'label-success': (this.order.status === 1),
+                    'label-danger': (this.order.status === 2),
+                    'label-default': (this.order.status === 4)
+                };
+            },
+            paymentMethods () {
+                return window.rodaboats.referenceData.paymentMethods;
+            },
+            orderTypes () {
+                return window.rodaboats.referenceData.orderTypes
+            },
+            hours () {
+                return window.rodaboats.referenceData.hours;
+            },
+            minutes () {
+                return window.rodaboats.referenceData.minutes;
+            },
             booking_data_title () {
                 return (this.validation.isConflicts) ? 'Booking data conflict with existing booking' : 'Booking data';
             },
+            countries () {
+                return window.rodaboats.referenceData.countries;
+            },
             list_countries () {
-                let entries = Object.entries(this.countries);
+                let entries = Object.entries(window.rodaboats.referenceData.countries);
                 let result = [];
                 entries.forEach((entry) => {
                     result.push({
@@ -599,8 +655,11 @@
                 });
                 return result;
             },
+            languages () {
+                return window.rodaboats.referenceData.languages;
+            },
             list_languages () {
-                let entries = Object.entries(this.languages);
+                let entries = Object.entries(window.rodaboats.referenceData.languages);
                 let result = [];
                 entries.forEach((entry) => {
                     result.push({
@@ -609,6 +668,9 @@
                     })
                 });
                 return result;
+            },
+            extras () {
+                return window.rodaboats.referenceData.extras;
             },
             order_extras () {
                 if (this.order.extra.length === 0) {
@@ -708,6 +770,9 @@
                 });
 
                 return result;
+            },
+            boats () {
+                return window.rodaboats.referenceData.boats;
             },
             boatName () {
                 return (this.selectedBoat !== null)

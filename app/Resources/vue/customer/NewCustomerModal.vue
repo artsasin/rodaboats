@@ -1,20 +1,20 @@
 <template>
     <modal v-model="open" :title="title">
         <alert v-if="saveError" type="danger">
-            Fill all required fields
+            {{ errorMessage }}
         </alert>
         <div class="row form-group">
-            <div class="col-md-6 form-group required">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">First name</label>
                 <input class="form-control input-sm" type="text" v-model="customer.firstName" />
             </div>
-            <div class="col-md-6 form-group required">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">Last name</label>
                 <input class="form-control input-sm" type="text" v-model="customer.lastName" />
             </div>
         </div>
         <div class="row form-group">
-            <div class="col-md-6 form-group required">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">Country</label>
                 <select class="form-control input-sm" v-model="customer.country">
                     <option v-for="country in countries" v-bind:value="country.value">
@@ -22,7 +22,7 @@
                     </option>
                 </select>
             </div>
-            <div class="col-md-6 form-group required">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">Language</label>
                 <select class="form-control input-sm" v-model="customer.language">
                     <option v-for="lang in languages" v-bind:value="lang.value">
@@ -32,13 +32,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 form-group required">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">Phone number</label>
                 <input class="form-control input-sm" type="text" v-model="customer.phoneNumber" />
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <label>E-mail</label>
                 <input class="form-control input-sm" type="text" v-model="customer.email" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 form-group">
+                <label class="control-label">E-mail</label>
+                <textarea class="form-control" v-model="customer.comment"></textarea>
             </div>
         </div>
         <div slot="footer">
@@ -76,7 +82,8 @@
             return {
                 customer: null,
                 saveError: false,
-                open: this.value
+                open: this.value,
+                errorMessage: ''
             }
         },
         created () {
@@ -107,10 +114,11 @@
                         loading.hide()
                         if (response.data.status !== 0) {
                             self.saveError = true;
+                            self.errorMessage = response.data.message;
                         } else {
                             self.saveError = false;
                             self.open = false;
-                            self.$emit('saved', response.data.customer);
+                            self.$emit('saved', response.data.payload);
                         }
                     })
                     .catch(error => {

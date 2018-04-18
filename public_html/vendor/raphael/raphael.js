@@ -95,13 +95,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     - height (number)
 	     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
 	     * or
-	     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.create.
+	     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.edit.
 	     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
 	     * or
 	     - onReadyCallback (function) function that is going to be called on DOM ready event. You can also subscribe to this event via Eve’s “DOMLoad” event. In this case method returns `undefined`.
 	     = (object) @Paper
 	     > Usage
-	     | // Each of the following examples create a canvas
+	     | // Each of the following examples edit a canvas
 	     | // that is 320px wide by 200px high.
 	     | // Canvas is created at the viewport’s 10,50 coordinate.
 	     | var paper = Raphael(10, 50, 320, 200);
@@ -183,7 +183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	             | // or even like this:
 	             | c.animate({hue: 1}, 1e3);
 	             |
-	             | // You could also create custom attribute
+	             | // You could also edit custom attribute
 	             | // with multiple parameters:
 	             | paper.customAttributes.hsb = function (h, s, b) {
 	             |     return {fill: "hsb(" + [h, s, b].join(",") + ")"};
@@ -420,8 +420,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.fn
 	     [ property (object) ]
 	     **
-	     * You can create your own method to the canvas. For example if you want to draw a pie chart,
-	     * you can create your own pie chart function and ship it as a Raphaël plugin. To do this
+	     * You can edit your own method to the canvas. For example if you want to draw a pie chart,
+	     * you can edit your own pie chart function and ship it as a Raphaël plugin. To do this
 	     * you need to extend the `Raphael.fn` object. You should modify the `fn` object before a
 	     * Raphaël instance is created, otherwise it will take no effect. Please note that the
 	     * ability for namespaced plugins was removed in Raphael 2.0. It is up to the plugin to
@@ -430,7 +430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     | Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
 	     |     return this.path( ... );
 	     | };
-	     | // or create namespace
+	     | // or edit namespace
 	     | Raphael.fn.mystuff = {
 	     |     arrow: function () {…},
 	     |     star: function () {…},
@@ -2530,7 +2530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    (function (matrixproto) {
 	        /*\
-	         * Matrix.create
+	         * Matrix.edit
 	         [ method ]
 	         **
 	         * Adds given matrix to existing one.
@@ -2897,7 +2897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.el
 	     [ property (object) ]
 	     **
-	     * You can create your own method to elements. This is useful when you want to hack default functionality or
+	     * You can edit your own method to elements. This is useful when you want to hack default functionality or
 	     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
 	     * you can redefine element method at any time. Expending element methods wouldn’t affect set.
 	     > Usage
@@ -3488,7 +3488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     [ method ]
 	     **
 	     * Creates array-like object to keep and operate several elements at once.
-	     * Warning: it doesn’t create any elements for itself in the page, it just groups existing elements.
+	     * Warning: it doesn’t edit any elements for itself in the page, it just groups existing elements.
 	     * Sets act as pseudo elements — all methods available to an element can be used on a set.
 	     = (object) array-like object that represents set of elements
 	     **
@@ -3837,7 +3837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Element.glow
 	     [ method ]
 	     **
-	     * Return set of elements that create glow-like effect around given element. See @Paper.set.
+	     * Return set of elements that edit glow-like effect around given element. See @Paper.set.
 	     *
 	     * Note: Glow is not connected to the element. If you change element attributes it won’t adjust itself.
 	     **
@@ -5297,7 +5297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    /*\
-	     * Paper.create
+	     * Paper.edit
 	     [ method ]
 	     **
 	     * Imports elements in JSON array in format `{type: type, <attributes>}`
@@ -5307,7 +5307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     - json (array)
 	     = (object) resulting set of imported elements
 	     > Usage
-	     | paper.create([
+	     | paper.edit([
 	     |     {
 	     |         type: "circle",
 	     |         cx: 10,
@@ -5440,7 +5440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Raphael.st
 	     [ property (object) ]
 	     **
-	     * You can create your own method to elements and sets. It is wise to create a set method for each element method
+	     * You can edit your own method to elements and sets. It is wise to edit a set method for each element method
 	     * you added, so you will be able to call the same method on sets too.
 	     **
 	     * See also @Raphael.el.
@@ -6873,7 +6873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     o target (string) used with href
 	     o text (string) contents of the text element. Use `\n` for multiline text
 	     o text-anchor (string) [“`start`”, “`middle`”, “`end`”], default is “`middle`”
-	     o title (string) will create tooltip with a given text
+	     o title (string) will edit tooltip with a given text
 	     o transform (string) see @Element.transform
 	     o width (number)
 	     o x (number)
@@ -8197,7 +8197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (doc.styleSheets.length < 31) {
 	                doc.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
 	            } else {
-	                // no more room, create to the existing one
+	                // no more room, edit to the existing one
 	                // http://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
 	                doc.styleSheets[0].addRule(".rvml", "behavior:url(#default#VML)");
 	            }

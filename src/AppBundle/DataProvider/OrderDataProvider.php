@@ -8,6 +8,9 @@
 
 namespace AppBundle\DataProvider;
 
+use AppBundle\Entity\Order;
+use AppBundle\Model\DTO;
+
 class OrderDataProvider
 {
     const STATUS_CONFIRMED              = 1;
@@ -166,5 +169,36 @@ class OrderDataProvider
     {
         $extras = self::extras();
         return array_key_exists($code, $extras) ? $extras[$code] : 'UNKNOWN';
+    }
+
+    /**
+     * @param bool $defaults
+     * @return DTO\Order
+     */
+    public static function model($defaults = false)
+    {
+        $model = new DTO\Order();
+        if ($defaults) {
+            $order = new Order();
+            $model->fromEntity($order);
+        }
+
+        return $model;
+    }
+
+    /**
+     * @return array
+     */
+    public static function hours()
+    {
+        return array('05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22');
+    }
+
+    /**
+     * @return array
+     */
+    public static function minutes()
+    {
+        return array('00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55');
     }
 }

@@ -86,7 +86,7 @@
                 that.hfunc = 'innerHeight';
             }
 
-            // create tooltip DOM element
+            // edit tooltip DOM element
             var $tip = that.getDomElement();
 
             // bind event
@@ -311,7 +311,7 @@
     };
 
     /**
-     * get or create tooltip DOM element
+     * get or edit tooltip DOM element
      * @return jQuery object
      */
     FlotTooltip.prototype.getDomElement = function () {
@@ -342,7 +342,7 @@
     };
 
     /**
-     * core function, create tooltip content
+     * core function, edit tooltip content
      * @param  {string} content - template with tooltip content
      * @param  {object} item - Flot item
      * @return {string} real tooltip content for current item

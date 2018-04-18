@@ -63,7 +63,7 @@ const customerConfig = {
 
 const orderConfig = {
     entry: {
-        'order-create': './app/Resources/vue/order/create/app.js'
+        'order-edit': './app/Resources/vue/order/edit/app.js'
     },
     output: {
         path: path.resolve(__dirname, './public_html/vue/order'),

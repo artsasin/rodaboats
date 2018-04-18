@@ -65,6 +65,12 @@ class Customer
     private $email;
 
     /**
+     * @ORM\Column(name="comment", type="text", nullable=true)
+     * @var string
+     */
+    private $comment;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="customer")
      * @var ArrayCollection
      */
@@ -191,6 +197,24 @@ class Customer
     public function setEmail($email)
     {
         $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param $comment
+     * @return Customer
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
         return $this;
     }
 

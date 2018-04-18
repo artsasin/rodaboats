@@ -32,7 +32,7 @@
 // * Filling very large shapes (above 5000 points) is buggy.
 // * Optimize. There is always room for speed improvements.
 
-// Only create this code if we do not already have a canvas implementation
+// Only edit this code if we do not already have a canvas implementation
 if (!document.createElement('canvas').getContext) {
 
 (function() {
@@ -100,7 +100,7 @@ if (!document.createElement('canvas').getContext) {
     addNamespace(doc, 'g_vml_', 'urn:schemas-microsoft-com:vml');
     addNamespace(doc, 'g_o_', 'urn:schemas-microsoft-com:office:office');
 
-    // Setup default CSS.  Only create one style sheet per document
+    // Setup default CSS.  Only edit one style sheet per document
     if (!doc.styleSheets['ex_canvas_']) {
       var ss = doc.createStyleSheet();
       ss.owningElement.id = 'ex_canvas_';
@@ -395,7 +395,7 @@ if (!document.createElement('canvas').getContext) {
     var start = styleString.indexOf('(', 3);
     var end = styleString.indexOf(')', start + 1);
     var parts = styleString.substring(start + 1, end).split(',');
-    // create alpha if needed
+    // edit alpha if needed
     if (parts.length != 4 || styleString.charAt(3) != 'a') {
       parts[3] = 1;
     }
@@ -828,8 +828,8 @@ if (!document.createElement('canvas').getContext) {
                 ' coordorigin="0,0"' ,
                 ' style="width:', W, 'px;height:', H, 'px;position:absolute;');
 
-    // If filters are necessary (rotation exists), create them
-    // filters are bog-slow, so only create them if abbsolutely necessary
+    // If filters are necessary (rotation exists), edit them
+    // filters are bog-slow, so only edit them if abbsolutely necessary
     // The following check doesn't account for skews (which don't exist
     // in the canvas spec (yet) anyway.
 

@@ -1,0 +1,33 @@
+{% extends 'base_sb.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('vue/order/order-edit.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div id="app"></div>
+{% endblock  %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.rodaboats = {
+            customer: {{ customer | json_encode | raw }},
+            order: {{ order | json_encode | raw }},
+            referenceData: {
+                customerModel: {{ customerModel | json_encode | raw }},
+                boats: {{ boats | json_encode | raw }},
+                hours: {{ hours | json_encode | raw }},
+                minutes: {{ minutes | json_encode | raw }},
+                languages: {{ languages | json_encode | raw }},
+                countries: {{ countries | json_encode | raw }},
+                paymentMethods: {{ paymentMethods | json_encode | raw }},
+                extras: {{ extras | json_encode | raw }},
+                orderTypes: {{ types | json_encode | raw }},
+                statuses: {{ statuses | json_encode | raw }}
+            }
+        };
+    </script>
+    <script src="{{ asset('vue/order/order-edit.js') }}"></script>
+{% endblock %}

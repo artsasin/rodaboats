@@ -41,7 +41,7 @@ class AdminController extends Controller
     }
     
     /**
-     * @Route("/admin/users/create", name="adduser")
+     * @Route("/admin/users/edit", name="adduser")
      */
     public function addUser(Request $request)
     {
@@ -250,7 +250,7 @@ class AdminController extends Controller
     }
     
     /**
-     * @Route("/admin/location/create", name="addlocation")
+     * @Route("/admin/location/edit", name="addlocation")
      */
     public function addLocation(Request $request)
     {
@@ -337,7 +337,7 @@ class AdminController extends Controller
 
     	$em = $this->getDoctrine()->getManager();
     	
-    	// Lookup template, create it if it does not exist.
+    	// Lookup template, edit it if it does not exist.
     	$template = $this->getDoctrine()->getRepository('AppBundle:EmailTemplate')->findOneBy(array('name' => 'TEMPLATE_CONFIRMATION'));
     	if($template == null)
     	{

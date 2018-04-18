@@ -16,6 +16,8 @@ use AppBundle\Model\DTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class OrderController
@@ -45,35 +47,29 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route(path="/add", name="app_order_add")
+     * @Route(path="/edit/{id}", name="app_order_edit")
+     * @Route(path="/add", defaults={"id"=null}, name="app_order_add")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param $id
+     * @return Response
      */
-    public function addAction(Request $request)
+    public function editAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $boats = $em->getRepository(Boat::class)->findBy(
-            ['status' => Boat::STATUS_ACTIVE],
-            ['location' => 'ASC']
-        );
+        $manager = $this->get('app.data.manager');
 
-        $dtoBoats = [];
-        foreach ($boats as $boat) {
-            $dto = new \AppBundle\Model\DTO\Boat();
-            $dto->fromEntity($boat);
-            $dtoBoats[] = $dto;
+        // reference data
+        $boats = [];
+        $list = $manager->getBoatRepository()->findBy(['status' => Boat::STATUS_ACTIVE], ['location' => 'ASC']);
+        foreach ($list as $boat) {
+            $model = new DTO\Boat();
+            $model->fromEntity($boat);
+            $boats[] = $model;
         }
 
-        $order = new Order();
-        $dtoOrder = new \AppBundle\Model\DTO\Order();
-        $dtoOrder->fromEntity($order);
-
-        $hours = array('05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22');
-        $minutes = array('00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55');
-
+        $hours = OrderDataProvider::hours();
+        $minutes = OrderDataProvider::minutes();
         $languages = CustomerDataProvider::languages();
         $countries = CustomerDataProvider::countries();
-        OrderDataProvider::paymentMethods();
 
         $paymentMethods = [];
         foreach (OrderDataProvider::paymentMethods() as $code => $value) {
@@ -100,11 +96,21 @@ class OrderController extends Controller
             ];
         }
 
+        // main model
+        $order = OrderDataProvider::model(true);
+        $customer = new DTO\Customer();
         $customerModel = new DTO\Customer();
+        if ($id !== null) {
+            $entity = $manager->getOrderRepository()->find($id);
+            if (!$entity instanceof Order) {
+                throw new NotFoundHttpException();
+            }
+            $customer->fromEntity($entity->getCustomer());
+            $order->fromEntity($entity);
+        }
 
-        return $this->render('order/add.html.twig', [
-            'boats'             => $dtoBoats,
-            'orderModel'        => $dtoOrder,
+        return $this->render('order/edit.html.twig', [
+            'boats'             => $boats,
             'hours'             => $hours,
             'minutes'           => $minutes,
             'languages'         => $languages,
@@ -112,7 +118,10 @@ class OrderController extends Controller
             'paymentMethods'    => $paymentMethods,
             'extras'            => $extras,
             'types'             => $types,
-            'customerModel'     => $customerModel
+            'order'             => $order,
+            'customer'          => $customer,
+            'customerModel'     => $customerModel,
+            'statuses'          => OrderDataProvider::statuses()
         ]);
     }
 }

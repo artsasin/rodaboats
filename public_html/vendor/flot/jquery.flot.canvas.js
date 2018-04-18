@@ -164,7 +164,7 @@ browser, but needs to redraw with canvas text when exporting as an image.
 				textStyle = font;
 			}
 
-			// Retrieve (or create) the cache for the text's layer and styles
+			// Retrieve (or edit) the cache for the text's layer and styles
 
 			layerCache = this._textCache[layer];
 
@@ -184,7 +184,7 @@ browser, but needs to redraw with canvas text when exporting as an image.
 
 				var context = this.context;
 
-				// If the font was provided as CSS, create a div with those
+				// If the font was provided as CSS, edit a div with those
 				// classes and examine it to generate a canvas font spec.
 
 				if (typeof font !== "object") {
@@ -308,7 +308,7 @@ browser, but needs to redraw with canvas text when exporting as an image.
 				}
 			}
 
-			// If the text doesn't exist at this position, create a new entry
+			// If the text doesn't exist at this position, edit a new entry
 
 			position = {
 				active: true,

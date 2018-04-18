@@ -22,7 +22,7 @@ class TemplateController extends Controller
     public function editConfirmation(Request $request, $id)
     {
 
-    	// Lookup template, create it if it does not exist.
+    	// Lookup template, edit it if it does not exist.
     	$template = $this->getDoctrine()->getRepository('AppBundle:EmailTemplate')->find($id);
     	$em = $this->getDoctrine()->getManager();
     	

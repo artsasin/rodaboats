@@ -18,6 +18,8 @@ class Order implements DTOInterface
 
     public $date;
 
+    public $status;
+
     public $start;
 
     public $end;
@@ -57,6 +59,7 @@ class Order implements DTOInterface
         $this->id = $entity->getId();
         $this->type = $entity->getType();
         $this->date = $entity->getDate()->format('Y-m-d');
+        $this->status = $entity->getStatus();
 
         $start = $entity->getStart();
         if ($start !== null) {
