@@ -232,6 +232,9 @@ class Order
         $this->status = OrderDataProvider::STATUS_CONFIRMED;
         $this->cancellation = OrderDataProvider::CANCELLATION_REASON_NONE;
         $this->extra = [];
+        $this->paymentMethodDeposit = OrderDataProvider::PAYMENT_METHOD_CREDIT_CARD;
+        $this->paymentMethodRent = OrderDataProvider::PAYMENT_METHOD_CREDIT_CARD;
+        $this->paymentMethodDamage = OrderDataProvider::PAYMENT_METHOD_CREDIT_CARD;
 
         $now = new \DateTime('now');
 

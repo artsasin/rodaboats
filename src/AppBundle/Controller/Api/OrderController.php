@@ -43,6 +43,9 @@ class OrderController extends Controller
             $conflicts = $manager->isConflicts($model);
             if (count($conflicts) === 0) {
                 $order = $manager->saveOrder($model);
+                if ($model->id === null) {
+                    $this->addFlash('notice', 'The order was saved!');
+                }
                 $model->fromEntity($order);
                 $response->payload = $model;
             } else {

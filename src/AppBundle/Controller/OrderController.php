@@ -47,7 +47,7 @@ class OrderController extends Controller
     }
 
     /**
-     * @Route(path="/edit/{id}", name="app_order_edit")
+     * @Route(path="/edit/{id}", options={"expose"=true}, name="app_order_edit")
      * @Route(path="/add", defaults={"id"=null}, name="app_order_add")
      * @param Request $request
      * @param $id

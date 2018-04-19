@@ -43,7 +43,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 col-md-12 col-sm-12 col-xs-12 form-group">
-                <label class="control-label">E-mail</label>
+                <label class="control-label">Comment</label>
                 <textarea class="form-control" v-model="customer.comment"></textarea>
             </div>
         </div>

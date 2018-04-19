@@ -51,6 +51,18 @@ class Order implements DTOInterface
 
     public $paymentMethodDeposit;
 
+    public $commission;
+
+    public $commissionPaidTo;
+
+    public $damage;
+
+    public $damageAmount;
+
+    public $paymentMethodDamage;
+
+    public $kickback;
+
     /**
      * @param \AppBundle\Entity\Order $entity
      */
@@ -94,6 +106,13 @@ class Order implements DTOInterface
 
         $this->deposit = $entity->getDeposit();
         $this->paymentMethodDeposit = $entity->getPaymentMethodDeposit();
+
+        $this->commission = $entity->getCommission();
+        $this->commissionPaidTo = $entity->getCommissionPaidTo();
+        $this->damage = $entity->getDamage();
+        $this->damageAmount = $entity->getDamageAmount();
+        $this->paymentMethodDamage = $entity->getPaymentMethodDamage();
+        $this->kickback = $entity->getKickback();
     }
 
     public function fromJson($json)

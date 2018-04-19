@@ -7,7 +7,7 @@
                         <button class="btn btn-default">
                             <i class="fa fa-clock-o"></i> Log
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" @click="closeOrder">
                             <i class="fa fa-check-square"></i> Close
                         </button>
                         <button class="btn btn-danger">
@@ -15,7 +15,7 @@
                         </button>
                     </span>
                     {{ page_title }}
-                    <small style="margin-left: 20px;">
+                    <small style="margin-left: 20px;" v-if="order.id !== null">
                         status: <span class="label" :class="status_label_class">{{ status_text }}</span>
                     </small>
                 </h1>
@@ -30,7 +30,7 @@
         </div>
         <div class="row">
             <!-- customer block -->
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-sm-12 col-xs-12" :class="block_customer_class">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -251,7 +251,7 @@
                 </div>
             </div>
             <!-- price block -->
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-sm-12 col-xs-12" :class="block_price_class">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default">
@@ -261,7 +261,7 @@
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
+                                <button v-if="order.id === null" class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
                                     <i class="fa fa-refresh"></i>&nbsp;suggest
                                 </button>
                                 <div class="row form-group">
@@ -321,6 +321,57 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Commission and damage
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Commission</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">&euro;</span>
+                                            <input type="text" class="form-control" :value="commission_amount" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Commission paid to</label>
+                                        <input type="text" class="form-control" :value="order.commissionPaidTo" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Damage</label>
+                                        <input type="text" class="form-control" :value="order.damage" readonly="readonly" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Damage/correction amount</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">&euro;</span>
+                                            <input type="text" class="form-control" :value="damage_amount" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="control-label">Damage payment method</label>
+                                        <input type="text" class="form-control" :value="damage_payment_method" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -351,6 +402,68 @@
                     ref="customerDatatable"
                     @row-click="customer_dt_row_click"
             />
+        </modal>
+        <modal v-model="closeOrderModalOpened" title="Close booking">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Commission</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">&euro;</span>
+                            <input type="text" class="form-control" v-model.lazy="commission_amount" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Commission paid to</label>
+                        <input type="text" class="form-control" v-model="order.commissionPaidTo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Kickback</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">&euro;</span>
+                            <input type="text" class="form-control" v-model.lazy="kickback_amount" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Damage</label>
+                        <textarea class="form-control" v-model="order.damage"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Damage (corr.) amount</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">&euro;</span>
+                            <input type="text" class="form-control" v-model.lazy="damage_amount" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Damage (corr.) payment method</label>
+                        <select class="form-control" v-model="order.paymentMethodDamage">
+                            <option value="" disabled="disabled">...</option>
+                            <option v-for="method in paymentMethods" :value="method.code">{{ method.text }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer">
+                <btn @click="closeOrderModalOpened=false">Cancel</btn>
+                <btn type="primary" @click="console.log('!!!')">Ok</btn>
+            </div>
         </modal>
         <new-customer-modal
                 v-model="createCustomer.modalOpened"
@@ -401,6 +514,7 @@
                         highlightMatches: true
                     }
                 },
+                closeOrderModalOpened: false,
                 timeouts: {
                     checkConflict: null
                 },
@@ -414,6 +528,9 @@
             }
         },
         methods: {
+            closeOrder () {
+                this.closeOrderModalOpened = true;
+            },
             onCustomerPickerShow () {
                 this.$refs.customerDatatable.refresh();
             },
@@ -430,13 +547,16 @@
                               content: response.data.message
                           });
                       } else {
-                          self.order.id = response.data.payload.id;
-                          self.$notify({
-                              title: 'Save order',
-                              content: 'Order was saved.',
-                              duration: 0,
-                              type: 'success'
-                          })
+                          if (self.order.id === null) {
+                              window.location = Routing.generate('app_order_edit', { id: response.data.payload.id });
+                          } else {
+                              self.$notify({
+                                  title: 'Save order',
+                                  content: 'Order was saved.',
+                                  duration: 0,
+                                  type: 'success'
+                              });
+                          }
                       }
                   })
                   .catch((error) => {
@@ -449,7 +569,7 @@
             },
             newCustomer () {
                 this.createCustomer.model = Vue.util.extend({}, window.rodaboats.customerModel);
-                this.createCustomer.openModal = true;
+                this.createCustomer.modalOpened = true;
             },
             suggestPrice () {
                 const self = this;
@@ -610,6 +730,64 @@
             }
         },
         computed: {
+            commission_amount: {
+                get () {
+                    let r = (this.order['commission'] !== '') ? this.order['commission'] : 0;
+                    return r.toFixed(2);
+                },
+                set (r) {
+                    if (r !== '') {
+                        this.order['commission'] = parseFloat(r);
+                    } else {
+                        this.order['commission'] = 0;
+                    }
+                }
+            },
+            kickback_amount: {
+                get () {
+                    let r = (this.order['kickback'] !== '') ? this.order['kickback'] : 0;
+                    return r.toFixed(2);
+                },
+                set (r) {
+                    if (r !== '') {
+                        this.order['kickback'] = parseFloat(r);
+                    } else {
+                        this.order['kickback'] = 0;
+                    }
+                }
+            },
+            damage_amount: {
+                get () {
+                    let r = (this.order['damageAmount'] !== '') ? this.order['damageAmount'] : 0;
+                    return r.toFixed(2);
+                },
+                set (r) {
+                    if (r !== '') {
+                        this.order['damageAmount'] = parseFloat(r);
+                    } else {
+                        this.order['damageAmount'] = 0;
+                    }
+                }
+            },
+            damage_payment_method () {
+                let result = '';
+                if (this.order.paymentMethodDamage !== '' && this.order.paymentMethodDamage !== null) {
+                    const self = this;
+                    this.paymentMethods.forEach(function(method) {
+                        if (method['code'] === self.order.paymentMethodDamage) {
+                            result = method['text'];
+                        }
+                    });
+                }
+
+                return result;
+            },
+            block_customer_class () {
+                return (this.order.id !== null) ? { 'col-lg-3': true, 'col-md-3': true } : { 'col-lg-4': true, 'col-md-4': true };
+            },
+            block_price_class () {
+                return (this.order.id !== null) ? { 'col-lg-3': true, 'col-md-3': true } : { 'col-lg-4': true, 'col-md-4': true };
+            },
             page_title () {
                 return (this.order.id !== null) ? 'Edit order' : 'Add order';
             },
