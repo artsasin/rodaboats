@@ -96,6 +96,14 @@ class OrderController extends Controller
             ];
         }
 
+        $cancellationReasons = [];
+        foreach (OrderDataProvider::cancellationReasons() as $code => $value) {
+            $cancellationReasons[] = [
+                'code'  => $code,
+                'text'  => $value
+            ];
+        }
+
         // main model
         $order = OrderDataProvider::model(true);
         $customer = new DTO\Customer();
@@ -110,18 +118,19 @@ class OrderController extends Controller
         }
 
         return $this->render('order/edit.html.twig', [
-            'boats'             => $boats,
-            'hours'             => $hours,
-            'minutes'           => $minutes,
-            'languages'         => $languages,
-            'countries'         => $countries,
-            'paymentMethods'    => $paymentMethods,
-            'extras'            => $extras,
-            'types'             => $types,
-            'order'             => $order,
-            'customer'          => $customer,
-            'customerModel'     => $customerModel,
-            'statuses'          => OrderDataProvider::statuses()
+            'boats'                 => $boats,
+            'hours'                 => $hours,
+            'minutes'               => $minutes,
+            'languages'             => $languages,
+            'countries'             => $countries,
+            'paymentMethods'        => $paymentMethods,
+            'extras'                => $extras,
+            'types'                 => $types,
+            'order'                 => $order,
+            'customer'              => $customer,
+            'customerModel'         => $customerModel,
+            'statuses'              => OrderDataProvider::statuses(),
+            'cancellationReasons'   => $cancellationReasons
         ]);
     }
 }

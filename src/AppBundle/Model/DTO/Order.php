@@ -63,6 +63,8 @@ class Order implements DTOInterface
 
     public $kickback;
 
+    public $cancellation;
+
     /**
      * @param \AppBundle\Entity\Order $entity
      */
@@ -113,6 +115,8 @@ class Order implements DTOInterface
         $this->damageAmount = $entity->getDamageAmount();
         $this->paymentMethodDamage = $entity->getPaymentMethodDamage();
         $this->kickback = $entity->getKickback();
+
+        $this->cancellation = $entity->getCancellation();
     }
 
     public function fromJson($json)

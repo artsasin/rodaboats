@@ -56,3 +56,6 @@
 .dropdown-menu > li > ul > li > a.selected {
     background-color: #cccccc;
 }
+.loading-overlay {
+    z-index: 10000;
+}

@@ -7,16 +7,17 @@
                         <button class="btn btn-default">
                             <i class="fa fa-clock-o"></i> Log
                         </button>
-                        <button class="btn btn-primary" @click="closeOrder">
+                        <button class="btn btn-primary" @click="closeOrderModalOpen" :disabled="!allowEdit">
                             <i class="fa fa-check-square"></i> Close
                         </button>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" @click="cancelOrderModalOpen" :disabled="!allowEdit">
                             <i class="fa fa-remove"></i> Cancel
                         </button>
                     </span>
                     {{ page_title }}
                     <small style="margin-left: 20px;" v-if="order.id !== null">
                         status: <span class="label" :class="status_label_class">{{ status_text }}</span>
+                        <span v-if="order.status === 2">by {{ cancellationReason }}</span>
                     </small>
                 </h1>
             </div>
@@ -44,13 +45,13 @@
                                 <div class="input-group">
                                     <input class="form-control" ref="customerSearch" type="text" v-model="customerQuery" @focus="customerFocused()" :readonly="customer !== null" />
                                     <div class="input-group-btn">
-                                        <btn type="default" v-show="customer !== null" @click="clearCustomer()">
+                                        <btn type="default" v-show="customer !== null" @click="clearCustomer()" :disabled="!allowEdit">
                                             <i class="fa fa-close"></i>
                                         </btn>
-                                        <btn type="default" @click="customerPicker=true">
+                                        <btn type="default" @click="customerPicker=true" :disabled="!allowEdit">
                                             <i class="fa fa-search"></i>
                                         </btn>
-                                        <btn type="default" @click="newCustomer">
+                                        <btn type="default" @click="newCustomer" :disabled="!allowEdit">
                                             <i class="fa fa-plus"></i>
                                         </btn>
                                     </div>
@@ -101,7 +102,7 @@
                         <div class="row form-group">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label class="control-label">Order type</label>
-                                <select class="form-control" v-model="order.type">
+                                <select class="form-control" v-model="order.type" :disabled="!allowEdit">
                                     <option value="" disabled="disabled">...</option>
                                     <option v-for="type in orderTypes" :value="type.code">{{ type.text }}</option>
                                 </select>
@@ -113,7 +114,7 @@
                                 <div class="input-group">
                                     <input class="form-control" type="text" v-model="order.date" readonly="readonly">
                                     <div class="input-group-btn">
-                                        <btn class="dropdown-toggle"><i class="glyphicon glyphicon-calendar"></i></btn>
+                                        <btn class="dropdown-toggle" :disabled="!allowEdit"><i class="glyphicon glyphicon-calendar"></i></btn>
                                     </div>
                                 </div>
                                 <template slot="dropdown">
@@ -128,7 +129,7 @@
                                     <input class="form-control" type="text" readonly="readonly" :value="boatName">
                                     <div class="input-group-btn">
                                         <dropdown append-to-body menu-right class="boat-dropdown">
-                                            <btn type="default" class="dropdown-toggle"><span class="caret"></span></btn>
+                                            <btn type="default" class="dropdown-toggle" :disabled="!allowEdit"><span class="caret"></span></btn>
                                             <template slot="dropdown">
                                                 <li v-for="location in locations">
                                                     <strong>{{ location }}</strong>
@@ -152,13 +153,13 @@
                                 <table class="table table-condensed" style="margin-bottom: 0">
                                     <tr>
                                         <td>
-                                            <select class="form-control" v-model="startHour">
+                                            <select class="form-control" v-model="startHour" :disabled="!allowEdit">
                                                 <option v-for="hour in hours" :value="hour">{{ hour }}</option>
                                             </select>
                                         </td>
                                         <td>:</td>
                                         <td>
-                                            <select class="form-control" v-model="startMinute">
+                                            <select class="form-control" v-model="startMinute" :disabled="!allowEdit">
                                                 <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
                                             </select>
                                         </td>
@@ -167,7 +168,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <label class="control-label">Duration</label>
-                                <select class="form-control" v-model="duration">
+                                <select class="form-control" v-model="duration" :disabled="!allowEdit">
                                     <option value="">pick a duration</option>
                                     <option value="1">1 hour</option>
                                     <option value="2">2 hours</option>
@@ -180,13 +181,13 @@
                                 <table class="table table-condensed" style="margin-bottom: 0">
                                     <tr>
                                         <td>
-                                            <select class="form-control" v-model="endHour">
+                                            <select class="form-control" v-model="endHour" :disabled="!allowEdit">
                                                 <option v-for="hour in hours" :value="hour">{{ hour }}</option>
                                             </select>
                                         </td>
                                         <td>:</td>
                                         <td>
-                                            <select class="form-control" v-model="endMinute">
+                                            <select class="form-control" v-model="endMinute" :disabled="!allowEdit">
                                                 <option v-for="minute in minutes" :value="minute">{{ minute }}</option>
                                             </select>
                                         </td>
@@ -199,13 +200,13 @@
                                 <label class="control-label">Number of people</label>
                                 <div class="input-group">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" @click="decrementPeopleCount()">
+                                            <button class="btn btn-default" type="button" @click="decrementPeopleCount()" :disabled="!allowEdit">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </span>
                                     <input class="form-control" type="text" v-model="order['numberOfPeople']" />
                                     <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" @click="incrementPeopleCount()">
+                                            <button class="btn btn-default" type="button" @click="incrementPeopleCount()" :disabled="!allowEdit">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </span>
@@ -213,7 +214,7 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                                 <label class="control-label">Booked by</label>
-                                <input class="form-control" type="text" v-model="order['bookedBy']" />
+                                <input class="form-control" type="text" v-model="order['bookedBy']" :disabled="!allowEdit"/>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -229,7 +230,7 @@
                                                 v-model="extras_dropdown_opened"
                                                 class="dropdown-form"
                                         >
-                                            <btn type="default" class="dropdown-toggle">
+                                            <btn type="default" class="dropdown-toggle" :disabled="!allowEdit">
                                                 <i class="fa fa-check-square"></i>
                                             </btn>
                                             <template slot="dropdown">
@@ -269,21 +270,21 @@
                                         <label class="control-label">Rent</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_rent" />
+                                            <input class="form-control" type="text" v-model.lazy="order_rent" :disabled="!allowEdit" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent discount</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_rent_discount" />
+                                            <input class="form-control" type="text" v-model.lazy="order_rent_discount" :disabled="!allowEdit" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent payment method</label>
-                                        <select class="form-control" v-model="order['paymentMethodRent']">
+                                        <select class="form-control" v-model="order['paymentMethodRent']" :disabled="!allowEdit">
                                             <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                             0                                    </select>
@@ -294,7 +295,7 @@
                                         <label class="control-label">Petrol cost</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_petrol_cost" />
+                                            <input class="form-control" type="text" v-model.lazy="order_petrol_cost" :disabled="!allowEdit" />
                                         </div>
                                     </div>
                                 </div>
@@ -303,14 +304,14 @@
                                         <label class="control-label">Deposit</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_deposit" />
+                                            <input class="form-control" type="text" v-model.lazy="order_deposit" :disabled="!allowEdit" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Deposit payment method</label>
-                                        <select class="form-control" v-model="order['paymentMethodDeposit']">
+                                        <select class="form-control" v-model="order['paymentMethodDeposit']" :disabled="!allowEdit">
                                             <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                         </select>
@@ -382,14 +383,14 @@
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <textarea class="form-control" v-model="order['comments']" style="height: 58px;"></textarea>
+                        <textarea class="form-control" v-model="order['comments']" style="height: 58px;" :disabled="!allowEdit"></textarea>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <button type="button" class="btn btn-lg btn-default" @click="save">
+                <button type="button" class="btn btn-lg btn-default" @click="save" :disabled="!allowEdit">
                     <i class="fa fa-save"></i>&nbsp;Save order
                 </button>
             </div>
@@ -462,7 +463,29 @@
             </div>
             <div slot="footer">
                 <btn @click="closeOrderModalOpened=false">Cancel</btn>
-                <btn type="primary" @click="console.log('!!!')">Ok</btn>
+                <btn type="primary" @click="closeOrder">Ok</btn>
+            </div>
+        </modal>
+        <modal v-model="cancelOrderModalOpened" titel="Cancel booking">
+            <div class="row" v-if="cancelOrderError">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <alert type="danger">{{ cancelOrderErrorMessage }}</alert>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">Cancellation reason</label>
+                        <select class="form-control" v-model="order.cancellation">
+                            <option value="" disabled="disabled">...</option>
+                            <option v-for="reason in cancellationReasons" :value="reason.code">{{ reason.text }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer">
+                <btn @click="cancelOrderModalOpened=false">Cancel</btn>
+                <btn type="primary" @click="cancelOrder">Ok</btn>
             </div>
         </modal>
         <new-customer-modal
@@ -515,6 +538,11 @@
                     }
                 },
                 closeOrderModalOpened: false,
+                closeOrderError: false,
+                closeOrderErrorMessage: '',
+                cancelOrderModalOpened: false,
+                cancelOrderError: false,
+                cancelOrderErrorMessage: '',
                 timeouts: {
                     checkConflict: null
                 },
@@ -528,8 +556,65 @@
             }
         },
         methods: {
-            closeOrder () {
+            closeOrderModalOpen () {
                 this.closeOrderModalOpened = true;
+            },
+            closeOrder () {
+                const self = this;
+                let loading = self.$loading.show();
+                this.apiRequest(Routing.generate('app_api_orders_close'))
+                  .then((response) => {
+                      loading.hide();
+                      if (response.data.status !== 0) {
+                          self.closeOrderErrorMessage = response.data.message;
+                          self.closeOrderError = true;
+                      } else {
+                          self.order.status = response.data.payload.status;
+                          self.closeOrderError = false;
+                          self.closeOrderModalOpened = false;
+                          self.$notify({
+                              title: 'Save order',
+                              content: 'Order was saved.',
+                              duration: 0,
+                              type: 'success'
+                          });
+                      }
+                  })
+                  .catch((error) => {
+                      console.error(error);
+                      loading.hide();
+                  });
+            },
+            cancelOrderModalOpen () {
+                this.cancelOrderModalOpened = true;
+            },
+            cancelOrder () {
+                if (this.order.cancellation !== 0) {
+                    const self = this;
+                    let loading = self.$loading.show();
+                    this.apiRequest(Routing.generate('app_api_orders_cancel'))
+                      .then((response) => {
+                          loading.hide();
+                          if (response.data.status !== 0) {
+                              self.cancelOrderErrorMessage = response.data.message;
+                              self.cancelOrderError = true;
+                          } else {
+                              self.order.status = response.data.payload.status;
+                              self.cancelOrderError = false;
+                              self.cancelOrderModalOpened = false;
+                              self.$notify({
+                                  title: 'Save order',
+                                  content: 'Order was saved.',
+                                  duration: 0,
+                                  type: 'success'
+                              });
+                          }
+                      })
+                      .catch((error) => {
+                          console.error(error);
+                          loading.hide();
+                      });
+                }
             },
             onCustomerPickerShow () {
                 this.$refs.customerDatatable.refresh();
@@ -537,7 +622,7 @@
             save () {
                 const self = this;
                 let loading = self.$loading.show();
-                axios.post(Routing.generate('app_api_orders_save'), this.order)
+                this.apiRequest(Routing.generate('app_api_orders_save'))
                   .then((response) => {
                       loading.hide();
                       if (response.data.status !== 0) {
@@ -563,6 +648,9 @@
                       loading.hide();
                       console.error(error);
                   })
+            },
+            apiRequest (url) {
+                return axios.post(url, this.order);
             },
             onCustomerSaved (customer) {
                 this.customer = customer;
@@ -730,6 +818,23 @@
             }
         },
         computed: {
+            allowEdit () {
+                return this.order.status !== 4 && this.order.status !== 2;
+            },
+            cancellationReasons () {
+                return window.rodaboats.referenceData.cancellationReasons;
+            },
+            cancellationReason () {
+                let result = '';
+                const self = this;
+                this.cancellationReasons.forEach((reason) => {
+                    if (reason.code === self.order.cancellation) {
+                        result = reason.text;
+                    }
+                });
+
+                return result;
+            },
             commission_amount: {
                 get () {
                     let r = (this.order['commission'] !== '') ? this.order['commission'] : 0;
@@ -1093,5 +1198,8 @@
     }
     .dropdown-menu > li > ul > li > a.selected {
         background-color: #cccccc;
+    }
+    .loading-overlay {
+        z-index: 10000;
     }
 </style>

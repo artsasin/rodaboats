@@ -12,10 +12,12 @@ namespace AppBundle\Manager;
 use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\EmailTemplate;
 use AppBundle\Entity\Order;
 use AppBundle\Exception\RodaboatsException;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Model\DTO;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DataManager
@@ -31,13 +33,28 @@ class DataManager
     private $tokenStorage;
 
     /**
+     * @var \Swift_Mailer
+     */
+    private $mailer;
+
+    /**
+     * @var EngineInterface
+     */
+    private $twig;
+
+    /**
      * DataManager constructor.
      * @param EntityManagerInterface $em
+     * @param TokenStorageInterface $tokenStorage
+     * @param  \Swift_Mailer $mailer
+     * @param EngineInterface $twig
      */
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, \Swift_Mailer $mailer, EngineInterface $twig)
     {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
+        $this->mailer = $mailer;
+        $this->twig = $twig;
     }
 
     /**
@@ -62,6 +79,14 @@ class DataManager
     public function getCustomerRepository()
     {
         return $this->em->getRepository(Customer::class);
+    }
+
+    /**
+     * @return \AppBundle\Repository\EmailTemplateRepository
+     */
+    public function getEmailTemplateRepository()
+    {
+        return $this->em->getRepository(EmailTemplate::class);
     }
 
     /**
@@ -93,17 +118,21 @@ class DataManager
                 throw new RodaboatsException('Customer is not found');
             }
 
-            if ($order->getId() && $order->getCustomer() !== $customer) {
-                $order->getCustomer()->removeOrder($order);
+            if ($order->getCustomer() !== $customer) {
+                if ($order->getId() !== null) {
+                    $order->getCustomer()->removeOrder($order);
+                }
+                $order->setCustomer($customer);
             }
-            $order->setCustomer($customer);
 
-            if ($order->getId() && $order->getBoat() !== $boat) {
-                $order->getBoat()->removeOrder($order);
-                $order->getLocation()->removeOrder($order);
+            if ($order->getBoat() !== $boat) {
+                if ($order->getId() !== null) {
+                    $order->getBoat()->removeOrder($order);
+                    $order->getLocation()->removeOrder($order);
+                }
+                $order->setBoat($boat);
+                $order->setLocation($boat->getLocation());
             }
-            $order->setBoat($boat);
-            $order->setLocation($boat->getLocation());
 
             $order->setDate(new \DateTime($model->date));
             $order->setStart(new \DateTime($model->start));
@@ -123,8 +152,20 @@ class DataManager
 
             $order->setComments($model->comments);
 
-            $user = $this->tokenStorage->getToken()->getUser();
-            $order->setHandler($user);
+            if ($order->getId() === null) {
+                $user = $this->tokenStorage->getToken()->getUser();
+                $order->setHandler($user);
+            }
+
+            if ($order->getId() !== null) {
+                $order->setStatus($model->status);
+                $order->setCommission($model->commission);
+                $order->setCommissionPaidTo($model->commissionPaidTo);
+                $order->setDamage($model->damage);
+                $order->setDamageAmount($model->damageAmount);
+                $order->setPaymentMethodDamage($model->paymentMethodDamage);
+                $order->setCancellation($model->cancellation);
+            }
 
             $this->em->persist($order);
             $this->em->flush();
@@ -202,5 +243,90 @@ class DataManager
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param Order $order
+     * @param array $recipients
+     * @return bool
+     */
+    public function notifyStaff(Order $order, $recipients = [])
+    {
+        $location = $order->getLocation();
+        if ($location != null) {
+            $recipient = $location->getNotificationEmail();
+            if (!empty($recipient)) {
+                $recipients[] = $recipient;
+            }
+        }
+
+        if (count($recipients) === 0) {
+            return false;
+        }
+
+//        $admin = $this->container->getParameter("admin_email");
+//        if(!empty($admin))
+//            $recipients[] = $admin;
+//        if(empty($recipients))
+//            return;
+
+        // Render the message body.
+        $body = $this->twig->render('emails/newbooking.html.twig', array(
+            'order' => $order
+        ));
+        $subject = sprintf("New booking of %s | %s %s - %s | %s", $order->getBoat()->getName(),
+            $order->getDate()->format('l j M Y'),
+            $order->getStart()->format('G:i'),
+            $order->getEnd()->format('G:i'),
+            $order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
+
+        // Compose and send the message.
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom("info@rodaboats.eu")
+            ->setTo($recipients)
+            ->setBody($body, 'text/html');
+
+        $result = $this->mailer->send($message);
+
+        return ($result === count($recipients));
+    }
+
+    public function notifyCustomer(Order $order)
+    {
+        // Don't send the notification if the customer does not have an email
+        $recipient = $order->getCustomer()->getEmail();
+        if (empty($recipient)) {
+            return false;
+        }
+
+        // Lookup the template
+        $template = $this->getEmailTemplateRepository()->findOneBy(array(
+            'name'      => 'TEMPLATE_CONFIRMATION',
+            'language'  => strtoupper($order->getCustomer()->getLanguage())
+        ));
+
+        // Render the message body.
+        $body = $this->twig->render('emails/bookingconfirmation.html.twig', array(
+            'order'     => $order,
+            'template'  => $template
+        ));
+        $subject = sprintf("Confirmation of booking | %s %s - %s | %s",
+            $order->getDate()->format('l j M Y'),
+            $order->getStart()->format('G:i'),
+            $order->getEnd()->format('G:i'),
+            $order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName()
+        );
+
+        // Compose and send the message.
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom("info@rodaboats.eu")
+            ->setTo($recipient)
+            ->setBody($body, 'text/html');
+
+        $result = $this->mailer->send($message);
+
+        return ($result === 1);
     }
 }
