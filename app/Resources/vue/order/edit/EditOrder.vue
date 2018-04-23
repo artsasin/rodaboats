@@ -817,7 +817,7 @@
                     let end = new Date(this.order.end);
                     if (h + parseInt(this.duration) <= this.maxHour) {
                         end.setHours(h + parseInt(this.duration));
-                        this.order.end = end.toString();
+                        this.order.end = end.toUTCString();
                     }
                 }
             },
@@ -864,12 +864,12 @@
                     let h = parseInt(this.duration);
                     end.setHours(start.getHours() + h);
                     end.setMinutes(start.getMinutes());
-                    this.order.end = end.toString();
+                    this.order.end = end.toUTCString();
                 } else {
                     if (start > end) {
                         end.setHours(start.getHours() + 1);
                         end.setMinutes(start.getMinutes());
-                        this.order.end = end.toString();
+                        this.order.end = end.toUTCString();
                     }
                 }
 
