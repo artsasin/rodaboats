@@ -1,0 +1,71 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+
+<h1>Booking cancelled</h1>
+
+<div class="form-group">
+	<label class="col-sm-5 control-label">Boat</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">
+			{% if order.boat is empty %}
+			{% else %}
+				<a href="{{ path('viewboat', { 'id' : order.boat.id }) }}">{{ order.boat.name }}</a>
+			{% endif %}
+		</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Date and time</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.date|date('l j M Y') }} {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Location</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.location is empty ? "" : order.location.name }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Number of people</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.numberOfPeople }}</p>
+	</div>
+</div>
+
+<h3>Lessee</h3>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Lessee name</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.customer.firstName }} {{ order.customer.lastName }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Lessee phone</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.customer.phoneNumber }}</p>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-5 control-label">Language</label>
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.customer.language }}</p>
+	</div>
+</div>
+
+<h3>Comments</h3>
+<div class="form-group">
+	<div class="col-sm-7">
+		<p class="form-control-static">{{ order.comments }}</p>
+	</div>
+</div>
+
+<table class="btn-primary" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <a href="{{ url('app_order_edit', { 'id': order.id }) }}">View booking</a>
+    </td>
+  </tr>
+</table>
+{% endblock %}

@@ -1,11 +1,30 @@
-{% extends 'base_sb.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block common_body %}
+<head>
+    <meta charset="utf-8">
+    <title>{% block html_title %}{% endblock %}</title>
+    <!-- Normalize or reset CSS with your favorite library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/print/paper.css') }}">
+    <style>
+        @page { size: {{ paper_size }} }
+    </style>
+</head>
+
+<!-- Set "A5", "A4" or "A3" for class name -->
+<!-- Set also "landscape" if you need -->
+<body class="{{ paper_size }}">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
+        {% block body %}{% endblock %}
     </div>
-{% endblock %}
+</body>
+
+</html>
+
+{#{% block common_body %}#}
+    {#<div class="container-fluid">#}
+        {#{% block body %}{% endblock %}#}
+    {#</div>#}
+{#{% endblock %}#}

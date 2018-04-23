@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\DataProvider\CustomerDataProvider;
 use AppBundle\Entity\Customer;
 use AppBundle\Model\ApiResponse;
 use AppBundle\Repository\CustomerRepository;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Intl\Intl;
@@ -37,17 +39,13 @@ class CustomerController extends Controller
     {
         $customerModel = new \AppBundle\Model\DTO\Customer();
 
-        $list = Intl::getRegionBundle()->getCountryNames();
-        $countries = [
-            ['value' => '', 'text' => '...']
-        ];
+        $list = CustomerDataProvider::countries();
+        $countries = [];
         foreach ($list as $key => $value) {
             $countries[] = ['value' => $key, 'text' => $value];
         }
-        $list = Intl::getLanguageBundle()->getLanguageNames();
-        $langs = [
-            ['value' => '', 'text' => '...']
-        ];
+        $list = CustomerDataProvider::languages();
+        $langs = [];
         foreach ($list as $key => $value) {
             $langs[] = ['value' => $key, 'text' => $value];
         }
@@ -57,6 +55,40 @@ class CustomerController extends Controller
             'countries'     => $countries,
             'langs'         => $langs
         ]);
+    }
+
+    /**
+     * @Route(path="/export/csv", name="app.customer.export_csv")
+     * @param Request $request
+     * @return StreamedResponse
+     */
+    public function exportCsvAction(Request $request)
+    {
+        $lang = $request->query->get('lang', 'all');
+        $response = new StreamedResponse();
+        $response->setCallback(function() use ($lang) {
+            $handle = fopen('php://output', 'w+');
+            fputcsv($handle, array('Firstname', 'Lastname', 'Language', 'Email'),';');
+            $repo = $this->getDoctrine()->getManager()->getRepository(Customer::class);
+            $qb = $repo->createQueryBuilder('c');
+            if ($lang !== 'all') {
+                $qb->where($qb->expr()->eq('c.language', ':lang'));
+                $qb->setParameter('lang', $lang);
+            }
+            $qb->orderBy('c.firstName, c.lastName');
+            $rows = $qb->getQuery()->getResult();
+            /** @var Customer $row */
+            foreach ($rows as $row) {
+                fputcsv($handle, array($row->getFirstName(), $row->getLastName(), $row->getLanguage(), $row->getEmail()), ';');
+            }
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $filename = sprintf('customer_export_%s_%s.csv', $lang, date('Y.m.d_H.i.s'));
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        return $response;
     }
 
     /**

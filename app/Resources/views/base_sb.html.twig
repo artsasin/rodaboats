@@ -31,7 +31,7 @@
     {% block stylesheets %}{% endblock %}
 </head>
 
-<body>
+<body{% block body_print_addon %}{% endblock %}>
     {% block common_body %}
     <div id="wrapper">
         <!-- Navigation -->

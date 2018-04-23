@@ -17,6 +17,16 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
+     * @Route(path="/test-print", name="app.default.test_print")
+     * @param Request $request
+     * @return Response
+     */
+    public function testPrintAction(Request $request)
+    {
+        return $this->render('default/test_print.html.twig', ['paper_size' => 'A4']);
+    }
+
+    /**
      * @Route(path="/", name="calendar")
      * @param Request $request
      * @return Response

@@ -329,4 +329,54 @@ class DataManager
 
         return ($result === 1);
     }
+
+    public function notifyOrderCancellation(Order $order, array $recipients = [])
+    {
+        // Do not send cancellation notices for bookings in the past.
+        if ($order->getDate() < new \DateTime(date('Y-m-d'))) {
+            return false;
+        }
+
+
+        // Don't send the notification if the location has no proper notification address.
+        $location = $order->getLocation();
+        if ($location != null) {
+            $recipient = $location->getNotificationEmail();
+            if (!empty($recipient)) {
+                $recipients[] = $recipient;
+            }
+        }
+
+        if (count($recipients) === 0) {
+            return false;
+        }
+
+//        $admin = $this->container->getParameter("admin_email");
+//        if (!empty($admin))
+//            $recipients[] = $admin;
+//        if (empty($recipients)) {
+//            return false;
+//        }
+
+        // Render the message body.
+        $body = $this->twig->render('emails/bookingcancelled.html.twig', array(
+            'order' => $order
+        ));
+        $subject = sprintf("Booking cancellation of %s | %s %s - %s | %s", $order->getBoat()->getName(),
+            $order->getDate()->format('l j M Y'),
+            $order->getStart()->format('G:i'),
+            $order->getEnd()->format('G:i'),
+            $order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
+
+        // Compose and send the message.
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom("info@rodaboats.eu")
+            ->setTo($recipients)
+            ->setBody($body, 'text/html');
+
+        $result = $this->mailer->send($message);
+
+        return ($result === count($recipients));
+    }
 }

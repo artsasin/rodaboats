@@ -6,15 +6,47 @@
 {% endblock %}
 
 {% block body %}
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <h1 class="page-header">Customers</h1>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h1 class="page-header">
+                <span class="header-nav">
+                    <button class="btn btn-success" type="button" data-toggle="modal" data-target="#exportModal">
+                        <span class="fa fa-download" aria-hidden="true"></span> Export
+                    </button>
+                </span>
+                Customers
+            </h1>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="app"></div>
+        </div>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div id="app"></div>
+    <!-- Modal -->
+    <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <form action="{{ path('app.customer.export_csv') }}" target="_blank">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Export customers</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label class="control-label">Language filter</label>
+                        <select class="form-control" name="lang">
+                            <option value="all">All</option>
+                            {% for lang in langs %}
+                                <option value="{{ lang.value }}">{{ lang.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block javascripts %}
