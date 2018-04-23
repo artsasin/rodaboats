@@ -5,12 +5,13 @@
     <style type="text/css">
         .booking {
             position: relative;
-            background-color: #d0e9c6;
+            background-color: #f7ca77;
             overflow: hidden;
             padding: 0 3px;
             min-width: 170px;
             height: 100%;
             width: 100%;
+            /*border: 1px solid #ff5500;*/
         }
         .booking div.booking-header {
             font-size: 12px;
@@ -23,22 +24,38 @@
             margin-bottom: 5px;
         }
         .booking div.booking-header .time {
-            /*margin-top: 3px;*/
             margin-left: 3px;
-            /*font-size: 13px;*/
             font-weight: bold;
         }
         .booking .person-name {
-            font-size: 11px;
+            font-size: 13px;
+            font-weight: bold;
             overflow: hidden;
-            height: 18px;
-            width: 100%;
+        }
+        .booking .peoples-count {
+            font-size: 12px;
+            text-decoration: underline;
+        }
+        .booking .person-phone {
+            font-size: 12px;
+            margin-top: 2px;
         }
         .calendar tr td {
             width: 170px;
         }
         table.calendar, table.calendar tr {
             height: 100%;
+        }
+        .tooltip .tooltip-inner {
+            background-color: #f5e79e;
+            color: #000;
+            border: 1px solid #000;
+            opacity: 0%;
+        }
+        .booking .extras-list {
+            font-size: 12px;
+            padding: 5px;
+            border-top: 1px dotted white;
         }
     </style>
 {% endblock %}
@@ -119,11 +136,12 @@
                                 {% for boat in calendar.boats %}
                                     {% set order = calendar.getOrder(boat, slot) %}
                                     {% if order %}
+                                        {% set extras = order.extrasAbbrText %}
                                         <td class="slot" rowspan="{{ order.minutes / 15 }}" style="padding: 1px; overflow: hidden;">
                                             <div class="booking">
                                                 <div class="booking-header">
                                                     <div class="time pull-left">
-                                                        <a href="{{ path('viewbooking', { 'id': order.id }) }}">
+                                                        <a href="{{ path('app_order_edit', { 'id': order.id }) }}">
                                                             {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}&nbsp;({{ order.hours }}h)
                                                         </a>
                                                     </div>
@@ -135,19 +153,37 @@
                                                                 title="{{ order.comments|nl2br }}"
                                                                 data-container="body"
                                                                 data-html="true"
+                                                                style="cursor: pointer;"
                                                         >
                                                             <i class="fa fa-external-link-square" aria-hidden="true"></i>
                                                         </div>
                                                     {% endif %}
                                                 </div>
-                                                <div class="person-name">
-                                                    {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }},
-                                                    <span style="font-size: 11px;">{{ order.numberOfPeople }}&nbsp;ppl</span>
+                                                <div class="clearfix">
+                                                    <div class="person-name pull-left">
+                                                        {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}
+                                                    </div>
+                                                    <div class="peoples-count pull-right" style="max-width: 50px;">
+                                                        {{ order.numberOfPeople }}&nbsp;ppl
+                                                    </div>
                                                 </div>
-                                                <div class="person-name" style="margin-left: 5px;">
+                                                <div class="person-phone" style="margin-left: 5px;">
                                                     <i class="fa fa-phone"></i>&nbsp; {{ order.customer.phoneNumber }}
+                                                    {% if order.hours == 1 %}
+                                                        :
+                                                        <a
+                                                                role="button"
+                                                                data-toggle="tooltip"
+                                                                data-container="body"
+                                                                data-html="true" title="{{ extras }}"
+                                                        >
+                                                            extras
+                                                        </a>
+                                                    {% endif %}
                                                 </div>
-                                                <div style="font-size: 10px; width: 100%; height: 18px; overflow: hidden;">1</div>
+                                                {% if order.hours > 1 %}
+                                                    <div class="extras-list">Extras: {{ extras }}</div>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     {% elseif not calendar.busySlot(boat, slot) %}
@@ -195,18 +231,19 @@
             $('#dt-toggler').on('click', function(e) {
                 $('#datetimepicker44').datetimepicker().data('DateTimePicker').toggle();
             });
-        })
-        $(function () {
 
-            {#$('table.calendar td.available').on('click', function (e) {#}
-
-            {#var cell = $(e.currentTarget);#}
-
-            {#var url = '{{ path('addbooking') }}';#}
-            {#url += '/' + cell.attr('data-boat') + '/{{ date|date('Y-m-d') }}?time=' + cell.attr('data-hour') + ':00';#}
-
-            {#document.location = url;#}
-            {#});#}
+            $('table.calendar td.available').on('click', function (e) {
+                var cell = $(e.currentTarget);
+                var boat = cell.data('boat');
+                var start = cell.data('minutes');
+                var date = '{{ date | date('d-m-Y') }}';
+                var url = Routing.generate('app_order_add', {
+                    boat: boat,
+                    date: date,
+                    start: start
+                });
+                window.location = url;
+            });
         });
     </script>
 

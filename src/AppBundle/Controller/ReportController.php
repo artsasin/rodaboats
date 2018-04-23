@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\DataProvider\OrderDataProvider;
+use AppBundle\Entity\Order;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,7 @@ use AppBundle\Entity\Booking;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Location;
 use AppBundle\Entity\Report;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ReportController extends Controller
 {
@@ -520,5 +523,60 @@ class ReportController extends Controller
     				'turnoverPerLocation' => $turnoverPerLocation,
     				'form' => $form->createView()
     		));
+    }
+
+    /**
+     * @Route(path="/report/boat-pax-declaration", name="app.report.boat_pax_declaration_form")
+     * @param Request $request
+     * @return Response
+     */
+    public function paxDeclarationRpConfig(Request $request)
+    {
+        $manager = $this->get('app.data.manager');
+        $form = $manager->boatPaxDeclarationForm();
+
+        $form->handleRequest($request);
+        $vars = [
+            'startDate' => null,
+            'startTime' => null,
+            'endTime'   => null,
+            'paxNum'    => 0,
+            'orders'    => [],
+            'boat'      => null
+        ];
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $qb = $manager->getOrderRepository()->createQueryBuilder('o');
+            $qb->andWhere($qb->expr()->gte('o.date', ':start'));
+            $qb->andWhere($qb->expr()->lte('o.date', ':end'));
+            $qb->andWhere($qb->expr()->in('o.status', ':status'));
+            $qb->andWhere($qb->expr()->eq('o.boat', ':boat'));
+            $qb->setParameter('start', $data['start_date']);
+            $qb->setParameter('end', $data['end_date']);
+            $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED]);
+            $qb->setParameter('boat', $data['boat']);
+            $qb->orderBy('o.date', 'ASC');
+            $qb->addOrderBy('o.start', 'ASC');
+
+            /** @var Order[] $orders */
+            $orders = $qb->getQuery()->getResult();
+            if (count($orders) > 0) {
+                $vars['startDate'] = $orders[0]->getDate();
+                $vars['startTime'] = $orders[0]->getStart();
+                $vars['endTime'] = $orders[count($orders) - 1]->getEnd();
+                foreach ($orders as $order) {
+                    $vars['paxNum'] += $order->getNumberOfPeople();
+                }
+                $vars['orders'] = $orders;
+            }
+            $vars['boat'] = $data['boat'];
+            if ($data['print'] === true) {
+                return $this->render('report/pax_declaration_print.html.twig', $vars);
+            }
+        }
+
+        $vars['form'] = $form->createView();
+        return $this->render('report/pax_declaration_form.html.twig', $vars);
     }
 }

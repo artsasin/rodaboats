@@ -1,0 +1,38 @@
+{% extends 'print.html.twig' %}
+
+{% block body %}
+    {% if orders | length > 0 %}
+        <section class="sheet padding-10mm">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Declaración pasajeros &mdash; {{ boat.name }}</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h3>Start date: <u>{{ startDate | date('Y/m/d') }}</u></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h3>Start time: <u>{{ startTime | date('G:i') }}</u></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h3>End time: <u>{{ endTime | date('G:i') }}</u></h3>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

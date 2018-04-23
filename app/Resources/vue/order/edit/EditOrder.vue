@@ -86,7 +86,14 @@
                         <div class="row form-group">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label class="control-label">E-mail</label>
-                                <input class="form-control" type="text" readonly="readonly" :value="customer_email">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" readonly="readonly" :value="customer_email">
+                                    <div class="input-group-btn">
+                                        <btn type="default" v-show="customer !== null" @click="editCustomerEmailModalOpen">
+                                            <i class="fa fa-edit"></i>
+                                        </btn>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -270,7 +277,7 @@
                                         <label class="control-label">Rent</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_rent" :disabled="!allowEdit" />
+                                            <input class="form-control" type="tel" v-model.lazy="order_rent" :disabled="!allowEdit" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -322,7 +329,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" v-if="order.id !== null">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default">
@@ -466,7 +473,7 @@
                 <btn type="primary" @click="closeOrder">Ok</btn>
             </div>
         </modal>
-        <modal v-model="cancelOrderModalOpened" titel="Cancel booking">
+        <modal v-model="cancelOrderModalOpened" title="Cancel booking">
             <div class="row" v-if="cancelOrderError">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <alert type="danger">{{ cancelOrderErrorMessage }}</alert>
@@ -486,6 +493,32 @@
             <div slot="footer">
                 <btn @click="cancelOrderModalOpened=false">Cancel</btn>
                 <btn type="primary" @click="cancelOrder">Ok</btn>
+            </div>
+        </modal>
+        <modal v-model="editCustomerEmail.modalOpened" title="Edit email">
+            <div class="row" v-if="editCustomerEmail.errorMessage !== ''">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <alert type="danger">{{ editCustomerEmail.errorMessage }}</alert>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <p>Current email: <strong>{{ customer_email }}</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label">New email address</label>
+                        <input type="email" class="form-control" v-model="editCustomerEmail.newEmail" />
+                    </div>
+                </div>
+            </div>
+            <div slot="footer">
+                <btn @click="editCustomerEmail.modalOpened=false">Cancel</btn>
+                <btn type="primary" @click="updateCustomerEmail">Ok</btn>
             </div>
         </modal>
         <new-customer-modal
@@ -521,6 +554,11 @@
                     modalOpened: false,
                     model: Vue.util.extend({}, window.rodaboats.referenceData.customerModel)
                 },
+                editCustomerEmail: {
+                    modalOpened: false,
+                    newEmail: '',
+                    errorMessage: ''
+                },
                 validation: {
                     isConflicts: false
                 },
@@ -554,8 +592,35 @@
             if (this.order.id !== null) {
                 this.customer = window.rodaboats.customer;
             }
+            this.checkConflicts();
         },
         methods: {
+            updateCustomerEmail() {
+                let loading = this.$loading.show();
+                const self = this;
+                const p = Vue.util.extend({}, this.customer);
+                p.email = this.editCustomerEmail.newEmail;
+                axios.post(Routing.generate('app.customer.save'), p)
+                    .then((response) => {
+                        loading.hide();
+                        self.customer.email = response.data.payload.email;
+                        self.editCustomerEmail.modalOpened = false;
+                        self.$notify({
+                            title: 'Update customer',
+                            content: 'The customer email was updated.',
+                            duration: 0,
+                            type: 'success'
+                        });
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        loading.hide();
+                    })
+            },
+            editCustomerEmailModalOpen() {
+                this.editCustomerEmail.newEmail = this.customer_email;
+                this.editCustomerEmail.modalOpened = true;
+            },
             closeOrderModalOpen () {
                 this.closeOrderModalOpened = true;
             },
@@ -682,7 +747,6 @@
                             type: 'warning'
                         })
                     }
-                    console.log(response.data);
                 }).catch((error) => {
                     console.error(error);
                 })
@@ -702,7 +766,6 @@
                         .then((response) => {
                             loading.hide();
                             self.validation.isConflicts = !response.data.valid;
-                            console.log(response.data)
                         })
                         .catch((error) => {
                             console.error(error);
@@ -710,7 +773,6 @@
                 }, 500)
             },
             customer_dt_row_click (data) {
-                console.log(data);
                 this.customer = data.row;
                 this.customerPicker = false;
             },
@@ -1016,7 +1078,7 @@
                 },
                 set (r) {
                     if (r !== '') {
-                        this.order['rent'] = parseFloat(rent);
+                        this.order['rent'] = parseFloat(r);
                     } else {
                         this.order['rent'] = 0;
                     }

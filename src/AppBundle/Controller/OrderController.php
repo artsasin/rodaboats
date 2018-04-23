@@ -48,7 +48,7 @@ class OrderController extends Controller
 
     /**
      * @Route(path="/edit/{id}", options={"expose"=true}, name="app_order_edit")
-     * @Route(path="/add", defaults={"id"=null}, name="app_order_add")
+     * @Route(path="/add", options={"expose"=true}, defaults={"id"=null}, name="app_order_add")
      * @param Request $request
      * @param $id
      * @return Response
@@ -106,6 +106,38 @@ class OrderController extends Controller
 
         // main model
         $order = OrderDataProvider::model(true);
+
+        $boatId = $request->query->get('boat', null);
+        $date = $request->query->get('date', null);
+        $start = $request->query->get('start', null);
+
+        if ($boatId !== null) {
+            $boat = $manager->getBoatRepository()->find($boatId);
+            if (!$boat instanceof Boat) {
+                throw new NotFoundHttpException();
+            }
+            $order->boatId = $boat->getId();
+        }
+
+        if ($date !== null) {
+            try {
+                $d = new \DateTime($date);
+                $order->date = $d->format('Y-m-d');
+            } catch (\Exception $e) {
+                // so the date is incorrect and we leave it as current date
+            }
+        }
+
+        if ($start !== null) {
+            $m = $start % 60;
+            $h = intval(($start - $m) / 60);
+            $d = new \DateTime('01-01-1970');
+            $d->setTime($h, $m, 0);
+            $order->start = $d->format('c');
+            $d->modify('+1 hour');
+            $order->end = $d->format('c');
+        }
+
         $customer = new DTO\Customer();
         $customerModel = new DTO\Customer();
         if ($id !== null) {

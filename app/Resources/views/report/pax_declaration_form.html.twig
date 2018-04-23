@@ -1,0 +1,52 @@
+{% extends 'base_sb.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Report <small>Boat Pax Declaration</small></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well well-lg">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+    {% if orders | length > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">
+                    Report output &mdash; {{ boat.name }}
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h3>Start date: <u>{{ startDate | date('Y/m/d') }}</u></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h3>Start time: <u>{{ startTime | date('G:i') }}</u></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <h3>End time: <u>{{ endTime | date('G:i') }}</u></h3>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

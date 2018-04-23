@@ -18,6 +18,13 @@ services:
         tags:
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postUpdate }
+    customer.listener:
+        class: AppBundle\EventListener\CustomerListener
+        calls:
+            - [setContainer, ['@service_container']]
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postUpdate }
     app.data.manager:
         class: AppBundle\Manager\DataManager
         arguments:
@@ -25,6 +32,7 @@ services:
             - '@security.token_storage'
             - '@mailer'
             - '@templating'
+            - '@form.factory'
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

@@ -99,6 +99,10 @@ class Builder implements ContainerAwareInterface
         $month->setLabel('<i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Month report');
         $month->setExtra('safe_label', true);
 
+        $boatPaxDeclaration = $menu->addChild('Boat Pax Declaration', array('route' => 'app.report.boat_pax_declaration_form'));
+        $boatPaxDeclaration->setLabel('<i class="fa fa-users" aria-hidden="true"></i>&nbsp;Pax declaration');
+        $boatPaxDeclaration->setExtra('safe_label', true);
+
         return $menu;
     }
 

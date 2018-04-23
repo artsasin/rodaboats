@@ -77,11 +77,17 @@ class Customer
     private $orders;
 
     /**
+     * @var bool
+     */
+    public $newEmail;
+
+    /**
      * Customer constructor.
      */
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->newEmail = false;
     }
 
     /**

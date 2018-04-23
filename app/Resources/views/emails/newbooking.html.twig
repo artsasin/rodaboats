@@ -8,7 +8,7 @@
         <label class="col-sm-5 control-label">Boat</label>
         <div class="col-sm-7">
             <p class="form-control-static">
-                {% if booking.boat is empty %}
+                {% if order.boat is empty %}
                 {% else %}
                     <a href="{{ path('viewboat', { 'id' : order.boat.id }) }}">{{ order.boat.name }}</a>
                 {% endif %}

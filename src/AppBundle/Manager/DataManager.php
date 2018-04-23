@@ -18,7 +18,9 @@ use AppBundle\Exception\RodaboatsException;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Model\DTO;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DataManager
 {
@@ -43,18 +45,29 @@ class DataManager
     private $twig;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * DataManager constructor.
      * @param EntityManagerInterface $em
      * @param TokenStorageInterface $tokenStorage
      * @param  \Swift_Mailer $mailer
      * @param EngineInterface $twig
      */
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, \Swift_Mailer $mailer, EngineInterface $twig)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        TokenStorageInterface $tokenStorage,
+        \Swift_Mailer $mailer,
+        EngineInterface $twig,
+        FormFactoryInterface $formFactory
+    ) {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -378,5 +391,58 @@ class DataManager
         $result = $this->mailer->send($message);
 
         return ($result === count($recipients));
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    public function reNotifyCustomer(Customer $customer)
+    {
+        $qb = $this->getOrderRepository()->createQueryBuilder('o');
+        $qb->where($qb->expr()->eq('o.customer', ':customer'));
+        $qb->andWhere($qb->expr()->in('o.status', ':status'));
+        $qb->andWhere($qb->expr()->gte('o.date', ':date'));
+
+        $qb->setParameter('customer', $customer);
+        $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED]);
+        $qb->setParameter('date', new \DateTime('now'));
+
+        $orders = $qb->getQuery()->getResult();
+        foreach ($orders as $order) {
+            $this->notifyCustomer($order);
+        }
+    }
+
+    /**
+     * @param $options
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function boatPaxDeclarationForm(array $options = [])
+    {
+        $data = [
+            'boat'          => null,
+            'start_date'    => new \DateTime(),
+            'end_date'      => new \DateTime(),
+            'print'         => false
+        ];
+
+        $fb = $this->formFactory->createBuilder('form', $data, $options);
+
+        $fb->add('boat', 'entity', [
+            'class'         => 'AppBundle:Boat',
+            'choice_label'  => 'name',
+            'required'     => false,
+            'constraints' => array(
+                new NotBlank()
+            )
+        ]);
+        $fb->add('start_date', 'date');
+        $fb->add('end_date', 'date');
+        $fb->add('print', 'checkbox', [
+            'required' => false
+        ]);
+        $fb->add('save', 'submit', array('label' => 'Execute'));
+
+        return $fb->getForm();
     }
 }

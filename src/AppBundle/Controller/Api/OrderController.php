@@ -46,6 +46,8 @@ class OrderController extends Controller
                 $order = $manager->saveOrder($model);
                 if ($model->id === null) {
                     $this->addFlash('notice', 'The order was saved!');
+                    $manager->notifyStaff($order, [0 => $this->getParameter('admin_email')]);
+                    $manager->notifyCustomer($order);
                 }
                 $model->fromEntity($order);
                 $response->payload = $model;
@@ -108,6 +110,10 @@ class OrderController extends Controller
         try {
             $model->status = OrderDataProvider::STATUS_CANCELLED;
             $order = $manager->saveOrder($model);
+            $manager->notifyOrderCancellation(
+                $order,
+                [0 => $this->getParameter('admin_email')]
+            );
             $model->fromEntity($order);
             $response->payload = $model;
         } catch (RodaboatsException $e) {
