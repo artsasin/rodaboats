@@ -1159,7 +1159,7 @@
                     let h = parseInt(hour);
                     let dt = new Date(this.order.start);
                     dt.setHours(h);
-                    this.order.start = dt.toString();
+                    this.order.start = dt.toUTCString();
                 }
             },
             startMinute: {
@@ -1172,7 +1172,7 @@
                     let m = parseInt(minute);
                     let dt = new Date(this.order.start);
                     dt.setMinutes(m);
-                    this.order.start = dt.toString();
+                    this.order.start = dt.toUTCString();
                 }
             },
             endHour: {
@@ -1185,7 +1185,7 @@
                     let h = parseInt(hour);
                     let dt = new Date(this.order.end);
                     dt.setHours(h);
-                    this.order.end = dt.toString();
+                    this.order.end = dt.toUTCString();
                 }
             },
             endMinute: {
@@ -1198,7 +1198,7 @@
                     let m = parseInt(minute);
                     let dt = new Date(this.order.end);
                     dt.setMinutes(m);
-                    this.order.end = dt.toString();
+                    this.order.end = dt.toUTCString();
                 }
             }
         }
