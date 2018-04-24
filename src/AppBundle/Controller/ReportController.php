@@ -554,7 +554,7 @@ class ReportController extends Controller
             $qb->andWhere($qb->expr()->eq('o.boat', ':boat'));
             $qb->setParameter('start', $data['start_date']);
             $qb->setParameter('end', $data['end_date']);
-            $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED]);
+            $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED, OrderDataProvider::STATUS_CLOSED, OrderDataProvider::STATUS_DELIVERED]);
             $qb->setParameter('boat', $data['boat']);
             $qb->orderBy('o.date', 'ASC');
             $qb->addOrderBy('o.start', 'ASC');

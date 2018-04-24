@@ -9,6 +9,8 @@
 namespace AppBundle\Model\DTO;
 
 
+use AppBundle\Exception\RodaboatsException;
+
 class Customer implements DTOInterface
 {
     public $id;
@@ -54,15 +56,26 @@ class Customer implements DTOInterface
 
     /**
      * @return bool
+     * @throws RodaboatsException
      */
     public function isValid()
     {
-        return (
-            $this->firstName !== null &&
-            $this->lastName !== null &&
-            $this->country !== null &&
-            $this->language !== null &&
-            $this->phoneNumber !== null
-        );
+        if (
+            $this->firstName === null ||
+            $this->lastName === null ||
+            $this->country === null ||
+            $this->language === null ||
+            $this->phoneNumber === null
+        ) {
+            throw new RodaboatsException('Fill all required fields');
+        }
+
+        if (!empty($this->email)) {
+            if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
+                throw new RodaboatsException('Email is invalid');
+            }
+        }
+
+        return true;
     }
 }

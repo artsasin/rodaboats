@@ -92,12 +92,72 @@ class DefaultController extends Controller
             'status' => Location::STATUS_ACTIVE
         ));
 
+        $printLink = '#';
+        if (!empty($location)) {
+            $printLink = $this->generateUrl('app.default.calendar.print', [
+                'date'      => $date->format('Y-m-d'),
+                'location'  => $location->getId()
+            ]);
+        }
+
         return $this->render('dashboard/calendar.html.twig', array(
             'calendar'  => $calendar,
             'date'      => $date,
             'locations' => $locations,
             'next_date' => $nextDate->format('Y-m-d'),
             'prev_date' => $prevDate->format('Y-m-d'),
+            'location'  => $location,
+            'printLink' => $printLink
+        ));
+    }
+
+    /**
+     * @Route(path="/calendar-print", name="app.default.calendar.print")
+     * @param Request $request
+     */
+    public function printTimeSheetAction(Request $request)
+    {
+        $date = $request->query->get('date');
+        $location = $request->query->get('location');
+
+        if (!($date instanceof DateTime)) {
+            $date = new DateTime($date);
+        }
+
+        $manager = $this->get('app.data.manager');
+
+
+        $location = $this->getDoctrine()->getRepository('AppBundle:Location')->find($location);
+        $boats = $manager->getBoatRepository()->findBy([
+            'status'    => Boat::STATUS_ACTIVE,
+            'location'  => $location
+        ]);
+
+        $calendar = new OrderCalendar();
+        $calendar->populateSlots(5, 22);
+
+        foreach ($boats as $boat) {
+            $calendar->addBoat($boat);
+        }
+
+        $orders = $manager->getOrderRepository()->findBy([
+            'date'      => $date,
+            'status'    => [
+                OrderDataProvider::STATUS_CONFIRMED,
+                OrderDataProvider::STATUS_CLOSED,
+                OrderDataProvider::STATUS_DELIVERED
+            ]
+        ]);
+
+        foreach ($orders as $order) {
+            $calendar->addOrder($order);
+        }
+
+        return $this->render('dashboard/calendar_print.html.twig', array(
+            'calendar'  => $calendar,
+            'date'      => $date,
+            'location'  => $location,
+            'landscape' => true
         ));
     }
 

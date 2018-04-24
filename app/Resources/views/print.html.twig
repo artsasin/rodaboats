@@ -9,22 +9,20 @@
     <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/print/paper.css') }}">
     <style>
-        @page { size: {{ paper_size | default('A4') }} }
+        @page {
+            size: {{ paper_size | default('A4') }}{% if landscape is defined and landscape is same as(true) %} landscape{% endif %}
+        }
     </style>
+    {% block stylesheets %}
+    {% endblock %}
 </head>
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="{{ paper_size | default('A4') }}">
+<body class="{{ paper_size | default('A4') }}{% if landscape is defined and landscape is same as(true) %} landscape{% endif %}">
     <div class="container-fluid">
         {% block body %}{% endblock %}
     </div>
 </body>
 
 </html>
-
-{#{% block common_body %}#}
-    {#<div class="container-fluid">#}
-        {#{% block body %}{% endblock %}#}
-    {#</div>#}
-{#{% endblock %}#}

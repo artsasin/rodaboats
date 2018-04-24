@@ -82,6 +82,11 @@
                         </a>
                     </div>
                     <div class="col-md-6">
+                        <span class="header-nav">
+                            <a href="{{ printLink }}" target="_blank" class="btn btn-default" {% if location is null %}disabled="disabled"{% endif %}>
+                                <i class="fa fa-print"></i> Print
+                            </a>
+                        </span>
                         <span class="header-nav pull-right">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

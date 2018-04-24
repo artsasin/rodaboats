@@ -77,12 +77,12 @@ class Order implements DTOInterface
 
         $start = $entity->getStart();
         if ($start !== null) {
-            $this->start = $start->format('c');
+            $this->start = $start->getTimestamp();
         }
 
         $end = $entity->getEnd();
         if ($end !== null) {
-            $this->end = $end->format('c');
+            $this->end = $end->getTimestamp();
         }
 
         $this->numberOfPeople = $entity->getNumberOfPeople();
@@ -142,13 +142,15 @@ class Order implements DTOInterface
         }
 
         try {
-            $start = new \DateTime($this->start);
+            $start = new \DateTime();
+            $start->setTimestamp($this->start);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order start has incorrect value');
         }
 
         try {
-            $end = new \DateTime($this->end);
+            $end = new \DateTime();
+            $end->setTimestamp($this->end);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order end has incorrect value');
         }

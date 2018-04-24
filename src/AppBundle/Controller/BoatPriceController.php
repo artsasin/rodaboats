@@ -109,8 +109,10 @@ class BoatPriceController extends Controller
     public function suggestPrice(Request $request)
     {
         $date = new \DateTime($request->query->get('date'));
-        $start = new \DateTime($request->query->get('start'));
-        $end = new \DateTime($request->query->get('end'));
+        $start = new \DateTime();
+        $start->setTimestamp($request->query->get('start'));
+        $end = new \DateTime();
+        $end->setTimestamp($request->query->get('end'));
         $boat = $this->getDoctrine()->getRepository('AppBundle:Boat')->find($request->query->get('id'));
         $type = $request->query->get('type');
 

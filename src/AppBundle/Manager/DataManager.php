@@ -8,12 +8,12 @@
 
 namespace AppBundle\Manager;
 
-
 use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\EmailTemplate;
 use AppBundle\Entity\Order;
+use AppBundle\Entity\OrderLog;
 use AppBundle\Exception\RodaboatsException;
 use Doctrine\ORM\EntityManagerInterface;
 use AppBundle\Model\DTO;
@@ -103,6 +103,14 @@ class DataManager
     }
 
     /**
+     * @return \AppBundle\Repository\OrderLogRepository
+     */
+    public function getOrderLogRepository()
+    {
+        return $this->em->getRepository(OrderLog::class);
+    }
+
+    /**
      * @param DTO\Order $model
      * @return Order|null
      * @throws RodaboatsException
@@ -148,8 +156,12 @@ class DataManager
             }
 
             $order->setDate(new \DateTime($model->date));
-            $order->setStart(new \DateTime($model->start));
-            $order->setEnd(new \DateTime($model->end));
+            $start = new \DateTime();
+            $start->setTimestamp($model->start);
+            $order->setStart($start);
+            $end = new \DateTime();
+            $end->setTimestamp($model->end);
+            $order->setEnd($end);
 
             $order->setType($model->type);
             $order->setNumberOfPeople($model->numberOfPeople);
@@ -200,13 +212,15 @@ class DataManager
         }
 
         try {
-            $start = new \DateTime($order->start);
+            $start = new \DateTime();
+            $start->setTimestamp($order->start);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order start has incorrect value');
         }
 
         try {
-            $end = new \DateTime($order->end);
+            $end = new \DateTime();
+            $end->setTimestamp($order->end);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order end has incorrect value');
         }
@@ -276,12 +290,6 @@ class DataManager
         if (count($recipients) === 0) {
             return false;
         }
-
-//        $admin = $this->container->getParameter("admin_email");
-//        if(!empty($admin))
-//            $recipients[] = $admin;
-//        if(empty($recipients))
-//            return;
 
         // Render the message body.
         $body = $this->twig->render('emails/newbooking.html.twig', array(
@@ -363,13 +371,6 @@ class DataManager
         if (count($recipients) === 0) {
             return false;
         }
-
-//        $admin = $this->container->getParameter("admin_email");
-//        if (!empty($admin))
-//            $recipients[] = $admin;
-//        if (empty($recipients)) {
-//            return false;
-//        }
 
         // Render the message body.
         $body = $this->twig->render('emails/bookingcancelled.html.twig', array(

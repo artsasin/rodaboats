@@ -165,4 +165,23 @@ class OrderController extends Controller
             'cancellationReasons'   => $cancellationReasons
         ]);
     }
+
+    /**
+     * @Route(path="/log/{id}", options={"expose"=true}, name="app.order.log")
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function logAction(Request $request, $id)
+    {
+        $manager = $this->get('app.data.manager');
+        $order = $manager->getOrderRepository()->find($id);
+        if (!$order) {
+            throw new NotFoundHttpException();
+        }
+
+        $logs = $manager->getOrderLogRepository()->findBy(['order' => $order], ['creationDate' => 'ASC']);
+
+        return $this->render('order/log.html.twig', ['logs' => $logs]);
+    }
 }

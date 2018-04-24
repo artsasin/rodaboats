@@ -4,9 +4,9 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h1 class="page-header">
                     <span class="header-nav" v-show="order.id !== null">
-                        <button class="btn btn-default">
+                        <a :href="order_log_link" class="btn btn-default">
                             <i class="fa fa-clock-o"></i> Log
-                        </button>
+                        </a>
                         <button class="btn btn-primary" @click="closeOrderModalOpen" :disabled="!allowEdit">
                             <i class="fa fa-check-square"></i> Close
                         </button>
@@ -89,7 +89,7 @@
                                 <div class="input-group">
                                     <input class="form-control" type="text" readonly="readonly" :value="customer_email">
                                     <div class="input-group-btn">
-                                        <btn type="default" v-show="customer !== null" @click="editCustomerEmailModalOpen">
+                                        <btn type="default" :disabled="customer === null" @click="editCustomerEmailModalOpen">
                                             <i class="fa fa-edit"></i>
                                         </btn>
                                     </div>
@@ -812,12 +812,12 @@
         watch: {
             duration () {
                 if (this.duration !== '') {
-                    let start = new Date(this.order.start);
-                    let h = start.getHours();
-                    let end = new Date(this.order.end);
+                    let start = moment.unix(this.order.start);
+                    let h = start.hour();
+                    let end = moment(this.order.end);
                     if (h + parseInt(this.duration) <= this.maxHour) {
-                        end.setHours(h + parseInt(this.duration));
-                        this.order.end = end.toUTCString();
+                        end.hour(h + parseInt(this.duration));
+                        this.order.end = end.unix();
                     }
                 }
             },
@@ -857,19 +857,19 @@
                 this.checkConflicts();
             },
             'order.start': function() {
-                let start = new Date(this.order.start);
-                let end = new Date(this.order.end);
+                let start = moment.unix(this.order.start);
+                let end = moment.unix(this.order.end);
 
                 if (this.duration !== '') {
                     let h = parseInt(this.duration);
-                    end.setHours(start.getHours() + h);
-                    end.setMinutes(start.getMinutes());
-                    this.order.end = end.toUTCString();
+                    end.hour(start.hour() + h);
+                    end.minute(start.minute());
+                    this.order.end = end.unix();
                 } else {
                     if (start > end) {
-                        end.setHours(start.getHours() + 1);
-                        end.setMinutes(start.getMinutes());
-                        this.order.end = end.toUTCString();
+                        end.hour(start.hour() + 1);
+                        end.minute(start.minute());
+                        this.order.end = end.unix();
                     }
                 }
 
@@ -880,6 +880,9 @@
             }
         },
         computed: {
+            order_log_link () {
+                return (this.order.id !== null) ? Routing.generate('app.order.log', {id: this.order.id}) : '#';
+            },
             allowEdit () {
                 return this.order.status !== 4 && this.order.status !== 2;
             },
@@ -1151,54 +1154,54 @@
             },
             startHour: {
                 get () {
-                    let dt = new Date(this.order.start);
-                    let h = dt.getHours();
+                    let dt = moment.unix(this.order.start);
+                    let h = dt.hour();
                     return (h > 9) ? h.toString() : '0' + h.toString();
                 },
                 set (hour) {
                     let h = parseInt(hour);
-                    let dt = new Date(this.order.start);
-                    dt.setHours(h);
-                    this.order.start = dt.toUTCString();
+                    let dt = moment.unix(this.order.start);
+                    dt.hour(h);
+                    this.order.start = dt.unix();
                 }
             },
             startMinute: {
                 get () {
-                    let dt = new Date(this.order.start);
-                    let m = dt.getMinutes();
+                    let dt = moment.unix(this.order.start);
+                    let m = dt.minute();
                     return (m > 9) ? m.toString() : '0' + m.toString();
                 },
                 set (minute) {
                     let m = parseInt(minute);
-                    let dt = new Date(this.order.start);
-                    dt.setMinutes(m);
-                    this.order.start = dt.toUTCString();
+                    let dt = moment.unix(this.order.start);
+                    dt.minute(m);
+                    this.order.start = dt.unix();
                 }
             },
             endHour: {
                 get () {
-                    let dt = new Date(this.order.end);
-                    let h = dt.getHours();
+                    let dt = moment.unix(this.order.end);
+                    let h = dt.hour();
                     return (h > 9) ? h.toString() : '0' + h.toString();
                 },
                 set (hour) {
                     let h = parseInt(hour);
-                    let dt = new Date(this.order.end);
-                    dt.setHours(h);
-                    this.order.end = dt.toUTCString();
+                    let dt = moment.unix(this.order.end);
+                    dt.hour(h);
+                    this.order.end = dt.unix();
                 }
             },
             endMinute: {
                 get () {
-                    let dt = new Date(this.order.end);
-                    let m = dt.getMinutes();
+                    let dt = moment.unix(this.order.end);
+                    let m = dt.minute();
                     return (m > 9) ? m.toString() : '0' + m.toString();
                 },
                 set (minute) {
                     let m = parseInt(minute);
-                    let dt = new Date(this.order.end);
-                    dt.setMinutes(m);
-                    this.order.end = dt.toUTCString();
+                    let dt = moment.unix(this.order.end);
+                    dt.minute(m);
+                    this.order.end = dt.unix();
                 }
             }
         }

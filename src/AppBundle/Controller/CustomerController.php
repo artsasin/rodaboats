@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\DataProvider\CustomerDataProvider;
 use AppBundle\Entity\Customer;
+use AppBundle\Exception\RodaboatsException;
 use AppBundle\Model\ApiResponse;
 use AppBundle\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -146,36 +147,37 @@ class CustomerController extends Controller
         $model->fromJson($content);
 
         $data = new ApiResponse();
+        try {
+            if ($model->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                if ($model->id) {
+                    $customer = $em->getRepository(Customer::class)->find($model->id);
+                } else {
+                    $customer = new Customer();
+                }
 
-        if ($model->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            if ($model->id) {
-                $customer = $em->getRepository(Customer::class)->find($model->id);
-            } else {
-                $customer = new Customer();
+                if (!$customer instanceof Customer) {
+                    throw new NotFoundHttpException();
+                }
+
+                $customer->setFirstName($model->firstName);
+                $customer->setLastName($model->lastName);
+                $customer->setCountry($model->country);
+                $customer->setLanguage($model->language);
+                $customer->setPhoneNumber($model->phoneNumber);
+                $customer->setEmail($model->email);
+                $customer->setComment($model->comment);
+
+                $em->persist($customer);
+                $em->flush();
+
+                $result = new \AppBundle\Model\DTO\Customer();
+                $result->fromEntity($customer);
+                $data->payload = $result;
             }
-
-            if (!$customer instanceof Customer) {
-                throw new NotFoundHttpException();
-            }
-
-            $customer->setFirstName($model->firstName);
-            $customer->setLastName($model->lastName);
-            $customer->setCountry($model->country);
-            $customer->setLanguage($model->language);
-            $customer->setPhoneNumber($model->phoneNumber);
-            $customer->setEmail($model->email);
-            $customer->setComment($model->comment);
-
-            $em->persist($customer);
-            $em->flush();
-
-            $result = new \AppBundle\Model\DTO\Customer();
-            $result->fromEntity($customer);
-            $data->payload = $result;
-        } else {
+        } catch (RodaboatsException $e) {
             $data->status = -1;
-            $data->message = 'Fill all required fields';
+            $data->message = $e->getMessage();
         }
 
         return new JsonResponse($data);
