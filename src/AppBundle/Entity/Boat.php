@@ -210,10 +210,34 @@ class Boat
 	 * @ORM\Column(type="date", nullable=true)
 	 */
 	private $engineHoursCheck;
+
+    /**
+     * @ORM\Column(name="waxed_and_polished", type="date", nullable=true)
+     * @var \DateTime
+     */
+	private $waxedAndPolished;
+
+    /**
+     * @ORM\Column(name="charging_checked", type="date", nullable=true)
+     * @var \DateTime
+     */
+	private $chargingChecked;
+
+    /**
+     * @ORM\Column(name="greasing_steering", type="date", nullable=true)
+     * @var \DateTime
+     */
+	private $greasingSteering;
+
+    /**
+     * @ORM\Column(name="vaseline_upholstery", type="date", nullable=true)
+     * @var \DateTime
+     */
+	private $vaselineUpholstery;
 	
 	/**
 	 * @ORM\Column(type="text", nullable=true)
-	 * @var unknown
+	 * @var string
 	 */
 	private $comments;
 
@@ -233,7 +257,8 @@ class Boat
 	
 	/**
 	 * Returns the name of the passed status code.
-	 * @param unknown $status
+	 * @param int $status
+     * @return string
 	 */
 	public static function statusName($status)
 	{
@@ -1235,5 +1260,77 @@ class Boat
     public function getOrders()
     {
         return $this->orders;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getWaxedAndPolished()
+    {
+        return $this->waxedAndPolished;
+    }
+
+    /**
+     * @param \DateTime $waxedAndPolished
+     * @return Boat
+     */
+    public function setWaxedAndPolished($waxedAndPolished)
+    {
+        $this->waxedAndPolished = $waxedAndPolished;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getChargingChecked()
+    {
+        return $this->chargingChecked;
+    }
+
+    /**
+     * @param \DateTime $chargingChecked
+     * @return Boat
+     */
+    public function setChargingChecked($chargingChecked)
+    {
+        $this->chargingChecked = $chargingChecked;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getGreasingSteering()
+    {
+        return $this->greasingSteering;
+    }
+
+    /**
+     * @param \DateTime $greasingSteering
+     * @return Boat
+     */
+    public function setGreasingSteering($greasingSteering)
+    {
+        $this->greasingSteering = $greasingSteering;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getVaselineUpholstery()
+    {
+        return $this->vaselineUpholstery;
+    }
+
+    /**
+     * @param \DateTime $vaselineUpholstery
+     * @return Boat
+     */
+    public function setVaselineUpholstery($vaselineUpholstery)
+    {
+        $this->vaselineUpholstery = $vaselineUpholstery;
+        return $this;
     }
 }

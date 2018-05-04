@@ -31,13 +31,28 @@
                         <h4 class="modal-title" id="myModalLabel">Export customers</h4>
                     </div>
                     <div class="modal-body">
-                        <label class="control-label">Language filter</label>
-                        <select class="form-control" name="lang">
-                            <option value="all">All</option>
-                            {% for lang in langs %}
-                                <option value="{{ lang.value }}">{{ lang.text }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Format</label>
+                                    <select class="form-control" name="export_format">
+                                        <option value="csv">CSV</option>
+                                        <option value="plain">Plain text</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label">Language filter</label>
+                                    <select class="form-control" name="lang">
+                                        <option value="all">All</option>
+                                        {% for lang in langs %}
+                                            <option value="{{ lang.value }}">{{ lang.text }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -4,35 +4,105 @@
     {% if orders | length > 0 %}
         <section class="sheet padding-10mm">
             <div class="row">
-                <div class="col-lg-12">
-                    <h2 class="page-header">Declaración pasajeros &mdash; {{ boat.name }}</h2>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <p class="text-center" style="font-size: 14px;">
+                        <strong><span class="text-uppercase">declaració per a la remissió de l'informació referent al moviment de passatgers de</span></strong>
+                        <br />
+                        <strong><span class="text-uppercase">l'embarcasió de llista</span>&nbsp;6a&nbsp;<span class="text-uppercase">al port</span></strong>
+                        &nbsp;
+                        <u><i>{{ boat.location.name }}</i></u>
+                    </p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h3>Start date: <u>{{ startDate | date('Y/m/d') }}</u></h3>
+                <div class="col-lg-12 table-responsive">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-3 text-uppercase">any</td>
+                            <td class="col-md-3"><em>{{ startDate | date('Y') }}</em></td>
+                            <td class="col-md-3 text-uppercase">port base</td>
+                            <td class="col-md-3"><em>{{ boat.location.name }}</em></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h3>Start time: <u>{{ startTime | date('G:i') }}</u></h3>
+                <div class="col-lg-12 table-responsive">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-6 text-uppercase">itinerary</td>
+                            <td class="col-md-6">&nbsp;</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-lg-12 table-responsive">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-5 text-uppercase">nom i matricula del vaixell</td>
+                            <td class="col-md-7">&nbsp;</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h3>Number of passengers: <u>{{ paxNum }}</u></h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h3>End time: <u>{{ endTime | date('G:i') }}</u></h3>
+                <div class="col-lg-12 table-responsive">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-2 text-uppercase">dia</td>
+                            <td class="col-md-3 text-uppercase">hora entrada</td>
+                            <td class="col-md-2 text-uppercase">desembarcats</td>
+                            <td class="col-md-3 text-uppercase">hora salida</td>
+                            <td class="col-md-2 text-uppercase">embarcats</td>
+                        </tr>
+                        {% set page = 1 %}
+                        {% set rows = 0 %}
+                        {% set limit = 24 %}
+                        {% for order in orders %}
+                            <tr>
+                                <td class="text-right">{{ order.date | date('d-m-Y') }}</td>
+                                <td class="text-right">{{ order.start | date('G:i') }}</td>
+                                <td class="text-right">{{ order.numberOfPeople }}</td>
+                                <td class="text-right">{{ order.end | date('G:i') }}</td>
+                                <td class="text-right">{{ order.numberOfPeople }}</td>
+                            </tr>
+                            {% set rows = rows + 1 %}
+        {% if rows == limit %}
+        {% set rows = 0 %}
+        {% set page = page + 1 %}
+        {% set limit = 30 %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
+        <section class="sheet padding-10mm">
+            <div class="row">
+                <div class="col-lg-12 table-responsive">
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-2 text-uppercase">dia</td>
+                            <td class="col-md-3 text-uppercase">hora entrada</td>
+                            <td class="col-md-2 text-uppercase">desembarcats</td>
+                            <td class="col-md-3 text-uppercase">hora salida</td>
+                            <td class="col-md-2 text-uppercase">embarcats</td>
+                        </tr>
+        {% endif %}
+                        {% endfor %}
+        {% if rows != 0 %}
+                        </tbody>
+                    </table>
+                </div>
+        </section>
+        {% endif %}
     {% endif %}
 {% endblock %}

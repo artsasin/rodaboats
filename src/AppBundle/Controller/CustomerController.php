@@ -66,10 +66,14 @@ class CustomerController extends Controller
     public function exportCsvAction(Request $request)
     {
         $lang = $request->query->get('lang', 'all');
+        $format = $request->query->get('export_format', 'csv');
+
         $response = new StreamedResponse();
-        $response->setCallback(function() use ($lang) {
+        $response->setCallback(function() use ($lang, $format) {
             $handle = fopen('php://output', 'w+');
-            fputcsv($handle, array('Firstname', 'Lastname', 'Language', 'Email'),';');
+            if ($format === 'csv') {
+                fputcsv($handle, array('Firstname', 'Lastname', 'Language', 'Email'), ';');
+            }
             $repo = $this->getDoctrine()->getManager()->getRepository(Customer::class);
             $qb = $repo->createQueryBuilder('c');
             if ($lang !== 'all') {
@@ -79,15 +83,28 @@ class CustomerController extends Controller
             $qb->orderBy('c.firstName, c.lastName');
             $rows = $qb->getQuery()->getResult();
             /** @var Customer $row */
+            $emails = [];
             foreach ($rows as $row) {
-                fputcsv($handle, array($row->getFirstName(), $row->getLastName(), $row->getLanguage(), $row->getEmail()), ';');
+                if ($format === 'csv') {
+                    fputcsv($handle, array($row->getFirstName(), $row->getLastName(), $row->getLanguage(), $row->getEmail()), ';');
+                } else {
+                    $emails[] = sprintf('%s %s <%s>', $row->getFirstName(), $row->getLastName(), $row->getEmail());
+                }
+            }
+            if ($format === 'plain') {
+                fwrite($handle, implode(',', $emails));
             }
             fclose($handle);
         });
 
         $response->setStatusCode(200);
-        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $filename = sprintf('customer_export_%s_%s.csv', $lang, date('Y.m.d_H.i.s'));
+        if ($format === 'csv') {
+            $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+            $filename = sprintf('customer_export_%s_%s.csv', $lang, date('Y.m.d_H.i.s'));
+        } else {
+            $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
+            $filename = sprintf('customer_export_%s_%s.txt', $lang, date('Y.m.d_H.i.s'));
+        }
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
         return $response;
     }

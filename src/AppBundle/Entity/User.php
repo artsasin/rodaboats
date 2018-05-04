@@ -59,7 +59,7 @@ class User implements UserInterface, \Serializable
 	private $plainPassword;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Location", inversedBy="boats")
+	 * @ORM\ManyToOne(targetEntity="Location", inversedBy="users")
 	 * @ORM\JoinColumn(name="location_id", referencedColumnName="id")
 	 */
 	protected $location;

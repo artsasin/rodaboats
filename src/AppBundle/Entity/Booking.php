@@ -252,13 +252,13 @@ class Booking
 	
 	/**
 	 * Contains log item generated from update.
-	 * @var unknown
+	 * @var BookingLog
 	 */
 	public $log;
 	
 	/**
 	 * @ORM\Column(type="integer")
-	 * @var unknown
+	 * @var integer
 	 */
 	private $cancellation;
 	
@@ -276,9 +276,15 @@ class Booking
 	
 	/**
 	 * @ORM\Column(type="text", nullable=true)
-	 * @var unknown
+	 * @var string
 	 */
 	private $comments;
+
+    /**
+     * @ORM\Column(name="imported", type="boolean")
+     * @var bool
+     */
+	private $imported;
 	
     /**
      * Get id
@@ -1142,5 +1148,23 @@ class Booking
     public function getPaymentMethodDamage()
     {
         return $this->paymentMethodDamage;
+    }
+
+    /**
+     * @param bool $imported
+     * @return Booking
+     */
+    public function setImported($imported)
+    {
+        $this->imported = $imported;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImported()
+    {
+        return $this->imported;
     }
 }

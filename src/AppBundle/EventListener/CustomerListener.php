@@ -30,11 +30,13 @@ class CustomerListener implements ContainerAwareInterface
         }
 
         $changes = $eventArgs->getEntityChangeSet();
-        $old = $changes['email'][0];
-        $new = $changes['email'][1];
+        if (array_key_exists('email', $changes)) {
+            $old = $changes['email'][0];
+            $new = $changes['email'][1];
 
-        if (!empty($new) && $new !== $old) {
-            $entity->newEmail = true;
+            if (!empty($new) && $new !== $old) {
+                $entity->newEmail = true;
+            }
         }
     }
 

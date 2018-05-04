@@ -542,19 +542,20 @@ class ReportController extends Controller
             'endTime'   => null,
             'paxNum'    => 0,
             'orders'    => [],
-            'boat'      => null
+            'boat'      => null,
         ];
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $qb = $manager->getOrderRepository()->createQueryBuilder('o');
             $qb->andWhere($qb->expr()->gte('o.date', ':start'));
             $qb->andWhere($qb->expr()->lte('o.date', ':end'));
-            $qb->andWhere($qb->expr()->in('o.status', ':status'));
+//            $qb->andWhere($qb->expr()->in('o.status', ':status'));
             $qb->andWhere($qb->expr()->eq('o.boat', ':boat'));
             $qb->setParameter('start', $data['start_date']);
             $qb->setParameter('end', $data['end_date']);
-            $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED, OrderDataProvider::STATUS_CLOSED, OrderDataProvider::STATUS_DELIVERED]);
+//            $qb->setParameter('status', [OrderDataProvider::STATUS_CONFIRMED, OrderDataProvider::STATUS_CLOSED, OrderDataProvider::STATUS_DELIVERED]);
             $qb->setParameter('boat', $data['boat']);
             $qb->orderBy('o.date', 'ASC');
             $qb->addOrderBy('o.start', 'ASC');
