@@ -386,7 +386,7 @@ class Booking
     /**
      * Get location
      *
-     * @return string
+     * @return Location
      */
     public function getLocation()
     {

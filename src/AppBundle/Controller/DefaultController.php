@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\DataProvider\OrderDataProvider;
+use AppBundle\Entity\Order;
 use AppBundle\Model\Calendar;
 use AppBundle\Model\OrderCalendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,7 +24,39 @@ class DefaultController extends Controller
      */
     public function testPrintAction(Request $request)
     {
-        return $this->render('default/test_print.html.twig', ['paper_size' => 'A4']);
+        $date = new \DateTime('2017-04-14');
+        $em = $this->getDoctrine()->getManager();
+
+        $location = $em->getRepository(Location::class)->find(4);
+        $boats = $em->getRepository(Boat::class)->findBy([
+            'location'  => $location,
+            'status'    => Boat::STATUS_ACTIVE
+        ]);
+
+        $qb = $em->getRepository(Order::class)->createQueryBuilder('o');
+        $qb->select('o');
+        $qb->orderBy('o.boat');
+        $qb->addOrderBy('o.start');
+        $qb->where($qb->expr()->in('o.boat', ':boats'));
+        $qb->andWhere($qb->expr()->eq('o.date', ':date'));
+        $qb->andWhere($qb->expr()->in('o.status', ':status'));
+        $qb->setParameter('boats', $boats);
+        $qb->setParameter('date', $date);
+        $qb->setParameter('status', array(
+            OrderDataProvider::STATUS_CONFIRMED,
+            OrderDataProvider::STATUS_CLOSED,
+            OrderDataProvider::STATUS_DELIVERED
+        ));
+
+        $orders = $qb->getQuery()->getResult();
+
+        dump($orders);
+
+        return $this->render('default/test_print.html.twig', [
+            'paper_size'    => 'A4',
+            'landscape'     => true,
+            'orders'        => $orders
+        ]);
     }
 
     /**

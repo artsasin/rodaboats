@@ -103,7 +103,11 @@ class OrderListener
         $log->setOrder($entity);
         $log->setChangeset(json_encode($flat));
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = null;
+        $token = $this->tokenStorage->getToken();
+        if ($token !== null) {
+            $user = $token->getUser();
+        }
         $log->setUser($user);
 
         $entity->log = $log;

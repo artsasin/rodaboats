@@ -123,7 +123,7 @@
                                 <th style="width: 170px;">{{ boat.name }}<br/>
                                     <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
                                     <br/>
-                                    <a href="{{ path('addbookingspecific', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}">
+                                    <a href="{{ path('app_order_add', { 'boat': boat.id, 'date': date|date('Y-m-d') }) }}">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> book
                                     </a>
                                 </th>

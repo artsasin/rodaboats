@@ -73,7 +73,12 @@ class BookingListener
         $booking->log->setChangeset(json_encode($flat));
 
         // Lookup the current user.
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = null;
+        $token = $this->tokenStorage->getToken();
+        if ($token !== null) {
+            $user = $token->getUser();
+        }
+
         $booking->log->setUser($user);
     }
 
