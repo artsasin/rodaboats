@@ -131,11 +131,13 @@ class OrderController extends Controller
         if ($start !== null) {
             $m = $start % 60;
             $h = intval(($start - $m) / 60);
-            $d = new \DateTime('01-01-1970');
-            $d->setTime($h, $m, 0);
-            $order->start = $d->format('c');
-            $d->modify('+1 hour');
-            $order->end = $d->format('c');
+            $d = new \DateTime();
+            $d->setDate(1970, 1, 1);
+            $d->setTime($h, $m);
+            $order->start = $d->getTimestamp();
+            $end = clone $d;
+            $end->modify('+1 hour');
+            $order->end = $end->getTimestamp();
         }
 
         $customer = new DTO\Customer();
