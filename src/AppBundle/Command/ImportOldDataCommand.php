@@ -10,6 +10,7 @@ namespace AppBundle\Command;
 
 
 use AppBundle\DataProvider\CustomerDataProvider;
+use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Booking;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order;
@@ -115,9 +116,9 @@ class ImportOldDataCommand extends ContainerAwareCommand
                 $order->setKickback($booking->getKickback());
                 $order->setLocation($booking->getLocation());
                 $order->setNumberOfPeople($booking->getNumberOfPeople());
-                $order->setPaymentMethodDamage($booking->getPaymentMethodDamage());
-                $order->setPaymentMethodDeposit($booking->getPaymentMethodDeposit());
-                $order->setPaymentMethodRent($booking->getPaymentMethodRent());
+                $order->setPaymentMethodDamage(OrderDataProvider::guessPaymentMethod($booking->getPaymentMethodDamage()));
+                $order->setPaymentMethodDeposit(OrderDataProvider::guessPaymentMethod($booking->getPaymentMethodDeposit()));
+                $order->setPaymentMethodRent(OrderDataProvider::guessPaymentMethod($booking->getPaymentMethodRent()));
                 $order->setPetrolCost($booking->getPetrolCost());
                 $order->setRent($booking->getRent());
                 $order->setRentDiscount($booking->getRentDiscount());

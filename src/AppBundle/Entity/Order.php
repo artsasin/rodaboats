@@ -768,7 +768,21 @@ class Order
 
         $diff = $this->start->diff($this->end, true);
 
-        return $diff->h;
+        $h = intval($diff->h);
+        $m = intval($diff->i);
+
+        $result = $h;
+
+        if ($m > 0) {
+            $result++;
+        }
+
+        return $result;
+    }
+
+    public function getHoursAdjusted()
+    {
+
     }
 
     /**
@@ -782,8 +796,9 @@ class Order
         }
 
         $diff = $this->start->diff($this->end, true);
+
         $h = intval($diff->h);
-        $m = intval($diff->m);
+        $m = intval($diff->i);
 
         $adjust = 0;
         if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {

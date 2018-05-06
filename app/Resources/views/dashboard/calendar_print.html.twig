@@ -2,131 +2,70 @@
 
 {% block stylesheets %}
     <style>
-        .booking {
-            position: relative;
-            background-color: #eee;
+        .order-item {
+            border: 1px solid #ccc;
+            height: 150px;
+            min-height: 150px;
+            max-height: 150px;
             overflow: hidden;
-            padding: 0 3px;
-            min-width: 170px;
-            height: 100%;
-            width: 100%;
-            -webkit-print-color-adjust: exact;
-            border: 1px solid #000;
-        }
-        .booking div.booking-header {
-            font-size: 12px;
-            text-align: center;
-            border-bottom: 1px dotted white;
-            position: relative;
-            clear: both;
-            overflow: auto;
-            padding: 1px;
-            margin-bottom: 5px;
-        }
-        .booking div.booking-header .time {
-            margin-left: 3px;
-            font-weight: bold;
-        }
-        .booking .person-name {
             font-size: 13px;
-            font-weight: bold;
-            overflow: hidden;
-        }
-        .booking .peoples-count {
-            font-size: 12px;
-            text-decoration: underline;
-        }
-        .booking .person-phone {
-            font-size: 12px;
-            margin-top: 2px;
-        }
-        .calendar {
-            font-size: 10px;
-        }
-        .calendar tr td {
-            width: 170px;
-        }
-        table.calendar, table.calendar tr {
-            height: 100%;
-        }
-        .tooltip .tooltip-inner {
-            background-color: #f5e79e;
-            color: #000;
-            border: 1px solid #000;
-            opacity: 0%;
-        }
-        .booking .extras-list {
-            font-size: 12px;
-            padding: 5px;
-            border-top: 1px dotted white;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="page-header">
-                {{ location.name }} timesheet on {{ date | date('Y-m-d') }}
-            </h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="table-responsive">
-                    <table class="table table-bordered calendar">
-                        <tbody>
-                        <tr>
-                            <th style="width: 60px;">Time</th>
-                            {% for boat in calendar.boats %}
-                                <th style="width: 170px;">{{ boat.name }}<br/>
-                                    <small>{% if boat.location != null %}{{ boat.location.name }}{% endif %}</small>
-                                </th>
-                            {% endfor %}
-                        </tr>
-                        {% for slot in calendar.slots %}
-                            <tr>
-                                {% if slot.minutes % 30 == 0 %}
-                                    <td rowspan="2" style="vertical-align: top; padding: 0 0 0 5px; font-size: 10px;">
-                                        {{ slot.format() }}
-                                    </td>
-                                {% endif %}
-                                {% for boat in calendar.boats %}
-                                    {% set order = calendar.getOrder(boat, slot) %}
-                                    {% if order %}
-                                        {% set extras = order.extrasAbbrText %}
-                                        <td class="slot" rowspan="{{ order.minutes / 15 }}" style="padding: 1px; overflow: hidden;">
-                                            <div class="booking">
-                                                <div class="booking-header">
-                                                    <div class="time pull-left">
-                                                        {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}&nbsp;({{ order.hours }}h)
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix">
-                                                    <div class="person-name pull-left">
-                                                        {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}
-                                                    </div>
-                                                    <div class="peoples-count pull-right" style="max-width: 50px;">
-                                                        {{ order.numberOfPeople }}&nbsp;ppl
-                                                    </div>
-                                                </div>
-                                                <div class="person-phone" style="margin-left: 5px;">
-                                                    <i class="fa fa-phone"></i>&nbsp; {{ order.customer.phoneNumber }}
-                                                </div>
-                                                <div class="extras-list">Extras: {{ extras }}</div>
-                                            </div>
-                                        </td>
-                                    {% elseif not calendar.busySlot(boat, slot) %}
-                                        <td class="slot available" style="padding: 8px 0;"></td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+    {% set boat = null %}
+    {% set cnt = 16 %}
+    {% for order in orders %}
+        {% if order.boat != boat %}
+            {% if boat is not null %}
+                {% if cnt > 0 %}
+                    {% for i in 1..cnt %}
+                        <div class="col-md-3 order-item">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                </div>
+                </section>
+            {% endif %}
+            {% set cnt = 16 %}
+            {% set boat = order.boat %}
+            <section class="sheet padding-10mm">
+            <div class="row">
+                <div class="col-md-12">
+                    <p style="font-size: 14px;">
+                        Date: <strong><u>{{ date | date('d-m-Y') }}</u></strong> /
+                        Location: <strong><u>{{ location.name }}</u></strong> /
+                        Boat: <strong><u>{{ order.boat.name }}</u></strong>
+                    </p>
                 </div>
             </div>
+            <div class="row">
+        {% endif %}
+        <div class="col-md-3 order-item">
+            <div style="margin-bottom: 3px;">{{ order.start | date('G:i') }} - {{ order.end | date('G:i') }}</div>
+            <div style="margin-bottom: 3px;">
+                {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}, {{ order.numberOfPeople }} people<br />
+                <span style="margin-left: 5px;">Tel.: {{ order.customer.phoneNumber }}</span>
+            </div>
+            <div>
+                Extras:
+                <br />
+                <span style="margin-left: 5px;">{{ order.extrasAbbrText }}</span>
+                <br />
+                Comments:
+                <br />
+                <span style="margin-left: 5px;">{{ order.comments }}</span>
+            </div>
         </div>
+        {% set cnt = cnt - 1 %}
+    {% endfor %}
+    {% if cnt > 0 %}
+        {% for i in 1..cnt %}
+            <div class="col-md-3 order-item">
+            </div>
+        {% endfor %}
+    {% endif %}
     </div>
+    </section>
 {% endblock %}

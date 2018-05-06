@@ -41,6 +41,19 @@ class OrderDataProvider
     const EXTRA_FLYBOARD                = 'flyboard';
 
     /**
+     * @param string $paymentMethod
+     * @return string
+     */
+    public static function guessPaymentMethod($paymentMethod)
+    {
+        if (stristr($paymentMethod, 'cash') !== false) {
+            return self::PAYMENT_METHOD_CASH;
+        } else {
+            return self::PAYMENT_METHOD_CREDIT_CARD;
+        }
+    }
+
+    /**
      * @return array
      */
     public static function statuses()

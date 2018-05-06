@@ -147,6 +147,7 @@ class DefaultController extends Controller
     /**
      * @Route(path="/calendar-print", name="app.default.calendar.print")
      * @param Request $request
+     * @return Response
      */
     public function printTimeSheetAction(Request $request)
     {
@@ -157,37 +158,33 @@ class DefaultController extends Controller
             $date = new DateTime($date);
         }
 
-        $manager = $this->get('app.data.manager');
+        $em = $this->getDoctrine()->getManager();
 
-
-        $location = $this->getDoctrine()->getRepository('AppBundle:Location')->find($location);
-        $boats = $manager->getBoatRepository()->findBy([
-            'status'    => Boat::STATUS_ACTIVE,
-            'location'  => $location
+        $location = $em->getRepository(Location::class)->find($location);
+        $boats = $em->getRepository(Boat::class)->findBy([
+            'location'  => $location,
+            'status'    => Boat::STATUS_ACTIVE
         ]);
 
-        $calendar = new OrderCalendar();
-        $calendar->populateSlots(5, 22);
+        $qb = $em->getRepository(Order::class)->createQueryBuilder('o');
+        $qb->select('o');
+        $qb->orderBy('o.boat');
+        $qb->addOrderBy('o.start');
+        $qb->where($qb->expr()->in('o.boat', ':boats'));
+        $qb->andWhere($qb->expr()->eq('o.date', ':date'));
+        $qb->andWhere($qb->expr()->in('o.status', ':status'));
+        $qb->setParameter('boats', $boats);
+        $qb->setParameter('date', $date);
+        $qb->setParameter('status', array(
+            OrderDataProvider::STATUS_CONFIRMED,
+            OrderDataProvider::STATUS_CLOSED,
+            OrderDataProvider::STATUS_DELIVERED
+        ));
 
-        foreach ($boats as $boat) {
-            $calendar->addBoat($boat);
-        }
-
-        $orders = $manager->getOrderRepository()->findBy([
-            'date'      => $date,
-            'status'    => [
-                OrderDataProvider::STATUS_CONFIRMED,
-                OrderDataProvider::STATUS_CLOSED,
-                OrderDataProvider::STATUS_DELIVERED
-            ]
-        ]);
-
-        foreach ($orders as $order) {
-            $calendar->addOrder($order);
-        }
+        $orders = $qb->getQuery()->getResult();
 
         return $this->render('dashboard/calendar_print.html.twig', array(
-            'calendar'  => $calendar,
+            'orders'    => $orders,
             'date'      => $date,
             'location'  => $location,
             'landscape' => true
