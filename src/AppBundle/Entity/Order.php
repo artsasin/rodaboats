@@ -474,6 +474,16 @@ class Order
     /**
      * @return string
      */
+    public function getPaymentMethodDamageName()
+    {
+        return array_key_exists($this->paymentMethodDamage, OrderDataProvider::paymentMethods()) ?
+            OrderDataProvider::paymentMethods()[$this->paymentMethodDamage] :
+            '';
+    }
+
+    /**
+     * @return string
+     */
     public function getPaymentMethodRent()
     {
         return $this->paymentMethodRent;
@@ -487,6 +497,16 @@ class Order
     {
         $this->paymentMethodRent = $paymentMethodRent;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodRentName()
+    {
+        return array_key_exists($this->paymentMethodRent, OrderDataProvider::paymentMethods()) ?
+            OrderDataProvider::paymentMethods()[$this->paymentMethodRent] :
+            '';
     }
 
     /**
@@ -577,6 +597,16 @@ class Order
     {
         $this->paymentMethodDeposit = $paymentMethodDeposit;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodDepositName()
+    {
+        return array_key_exists($this->paymentMethodDeposit, OrderDataProvider::paymentMethods()) ?
+            OrderDataProvider::paymentMethods()[$this->paymentMethodDeposit] :
+            '';
     }
 
     /**

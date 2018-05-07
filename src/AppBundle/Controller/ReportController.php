@@ -15,15 +15,17 @@ use AppBundle\Entity\Booking;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Location;
 use AppBundle\Entity\Report;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ReportController extends Controller
 {
-	
+    /**
+     * @param $report
+     * @return \Symfony\Component\Form\FormInterface
+     */
 	protected function buildForm($report)
 	{
-	
-	
 		$form = $this->createFormBuilder($report)
 	
 		->add('boat', 'entity', array(
@@ -48,26 +50,26 @@ class ReportController extends Controller
 		))
 		
 		->add('status', 'choice', array(
-				'choices' => Booking::statuses(),
+				'choices' => OrderDataProvider::statuses(),
 				'required' => false,
 		))
 		
 		->add('cancellationReason', 'choice', array(
-				'choices' => Booking::cancellationReasons(),
+				'choices' => OrderDataProvider::cancellationReasons(),
 				'required' => false,
 		))
-		
-		
 	
 		->add('save', 'submit', array('label' => 'Execute'))
 		->getForm();
 	
 		return $form;
 	}
-	
+
+    /**
+     * @return \Symfony\Component\Form\FormInterface
+     */
 	protected function buildDailyForm()
 	{
-	
 		$default = array(
 				'date' => new \DateTime(date('Y-m-d')),
 				'location' => null,
@@ -83,7 +85,7 @@ class ReportController extends Controller
 				'required' => false,
 		))
 		->add('paymentMethod', 'choice', array(
-				'choices' => Booking::paymentMethods(),
+				'choices' => array_flip(OrderDataProvider::paymentMethods()),
 				'required' => false,
 				'choices_as_values' => true,
 		))
@@ -96,10 +98,12 @@ class ReportController extends Controller
 	
 		return $form;
 	}
-	
+
+    /**
+     * @return \Symfony\Component\Form\FormInterface
+     */
 	protected function buildMonthForm()
 	{
-	
 		$default = array(
 				'date' => new \DateTime(date('Y-m-d')),
 				'location' => null,
@@ -118,7 +122,7 @@ class ReportController extends Controller
 				'required' => false,
 		))
 		->add('paymentMethod', 'choice', array(
-				'choices' => Booking::paymentMethods(),
+				'choices' => OrderDataProvider::paymentMethods(),
 				'required' => false,
 				'choices_as_values' => true,
 		))
@@ -146,10 +150,8 @@ class ReportController extends Controller
     	$form = $this->buildForm($report);
     	
     	$form->handleRequest($request);
-    	if($form->isValid())
-    	{
-    		
-    		$repository = $this->getDoctrine()->getRepository('AppBundle:Booking');
+    	if($form->isValid()) {
+    		$repository = $this->getDoctrine()->getRepository('AppBundle:Order');
     		$builder = $repository->createQueryBuilder('booking');
     		
     		// Constrain by date range.
@@ -180,7 +182,7 @@ class ReportController extends Controller
     		}
     		
     		// Optionally apply the payment filter.
-    		if($report->status == Booking::STATUS_CANCELLED && !empty($report->cancellationReason))
+    		if($report->status == OrderDataProvider::STATUS_CANCELLED && !empty($report->cancellationReason))
     		{
     			$builder->andWhere('booking.cancellation = :cancellationReason')
     			->setParameter('cancellationReason', $report->cancellationReason);
@@ -189,84 +191,69 @@ class ReportController extends Controller
     		// Execute the query.
     		$query = $builder->getQuery();
     		$results = $query->getResult();
-    		
-    		
     	} else {
     		$results = null;
     	}
     	
-    	switch($report->output)
-    	{
+    	switch($report->output) {
     		default:
     		case 'HTML':
-    			
     			return $this->render('report/index.html.twig', array(
     					'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
     					'form' => $form->createView(),
     					'output' => $results,
     			));
-    			
     			break;
     		case 'XML':
-    			
     			$response = $this->render('report/report.xml.twig', array(
     					'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
     					'output' => $results,
     			));
-    			
     			$response->headers->set('Content-Type', 'application/xml; charset=utf-8');
     			$response->headers->set('Content-Disposition', 'attachment;filename=report.xml');
     			return $response;
-    			
     			break;
     	}
-        
     }
-    
+
+    /**
+     * @param $result
+     * @return StreamedResponse
+     */
     public function csvOutput($result)
     {
-
-
     	// get the service container to pass to the closure
     	$container = $this->container;
     	$response = new StreamedResponse(function() use($container, $result) {
-    	
-    		
     		$handle = fopen('php://output', 'r+');
-    	
-    		foreach ($result as $booking) 
-    		{
+    		foreach ($result as $booking) {
     			// edit a line in the csv file. You need to implement a toArray() method
     			// to transform your object into an array
-    			$row = [
-    					$booking->getId(),
-    					
-    			];
+    			$row = [$booking->getId()];
     			fputcsv($handle, $row);
     		}
-    	
     		fclose($handle);
     	});
     	
     	$response->headers->set('Content-Type', 'application/force-download');
     	$response->headers->set('Content-Disposition','attachment; filename="export.csv"');
-    	
     	return $response;
     }
     
     /**
      * @Route("/report/daily", name="reportdaily")
+     * @param Request $request
+     * @return Response
      */
     public function dailyReport(Request $request)
     {
-    	
     	// Build the form.
     	$form = $this->buildDailyForm();
     	$form->handleRequest($request);
     	$data = $form->getData();
     	
     	// Retrieve all bookings for this date.
-    	$repository = $this->getDoctrine()->getRepository('AppBundle:Booking');
+    	$repository = $this->getDoctrine()->getRepository('AppBundle:Order');
     	$builder = $repository->createQueryBuilder('booking')
     	->andWhere('booking.date = :date')
     	->setParameter('date', $data['date'])
@@ -305,20 +292,17 @@ class ReportController extends Controller
     			'commission' => 0,
     			'kickback' => 0
     	);
-    	
-    	foreach($bookings as $booking)
-    	{
-    		if($booking->getPaymentMethodRent() == 'Cash')
-    		{
+
+    	/** @var Order $booking */
+        foreach($bookings as $booking) {
+    		if($booking->getPaymentMethodRent() == 'Cash') {
     			$total['rentCash'] += $booking->getRent();
     			$total['petrolCash'] += $booking->getPetrolCost();
     		} else {
     			$total['rentCard'] += $booking->getRent();
     			$total['petrolCard'] += $booking->getPetrolCost();
     		}
-    		
-    		switch($booking->getPaymentMethodDamage())
-    		{
+    		switch($booking->getPaymentMethodDamage()) {
     			case 'Cash':
     				$total['damageCash'] += $booking->getDamageAmount();
     				break;
@@ -327,16 +311,16 @@ class ReportController extends Controller
     				$total['damageCard'] += $booking->getDamageAmount();
     				break;
     		}
-    		
     		$total['commission'] += $booking->getCommission();
     		$total['kickback'] += $booking->getKickBack();
     	}
     	
-    	if($data['print'])
-    		$view = 'report/dailyprint.html.twig';
-    	else 
-    		$view = 'report/daily.html.twig';
-    	
+    	if($data['print']) {
+            $view = 'report/dailyprint.html.twig';
+        } else {
+            $view = 'report/daily.html.twig';
+        }
+
     	return $this->render($view, array(
     			'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
     			'bookings' => $bookings,
@@ -349,10 +333,11 @@ class ReportController extends Controller
     
     /**
      * @Route("/report/month", name="reportmonth")
+     * @param Request $request
+     * @return Response
      */
     public function monthReport(Request $request)
     {
-    	 
     	// Build the form.
     	$form = $this->buildMonthForm();
     	$form->handleRequest($request);
@@ -362,7 +347,7 @@ class ReportController extends Controller
     	$endDate = new \DateTime('last day of '.$data['date']->format('F-Y'));
     	
     	// Retrieve all bookings for this date.
-    	$repository = $this->getDoctrine()->getRepository('AppBundle:Booking');
+    	$repository = $this->getDoctrine()->getRepository('AppBundle:Order');
     	$builder = $repository->createQueryBuilder('booking')
     	->andWhere('booking.date >= :date_start AND booking.date <= :date_end')
     	->setParameter('date_start', $startDate)
@@ -402,18 +387,16 @@ class ReportController extends Controller
     			'commission' => 0,
     			'kickback' => 0
     	);
-    	 
-    	foreach($bookings as $booking)
-    	{
-    		if($booking->getPaymentMethodRent() == 'Cash')
-    		{
+
+    	/** @var Order $booking */
+        foreach($bookings as $booking) {
+    		if($booking->getPaymentMethodRent() == 'Cash') {
     			$total['rentCash'] += $booking->getRent();
     			$total['petrolCash'] += $booking->getPetrolCost();
     		} else {
     			$total['rentCard'] += $booking->getRent();
     			$total['petrolCard'] += $booking->getPetrolCost();
     		}
-    
     		switch($booking->getPaymentMethodDamage())
     		{
     			case 'Cash':
@@ -424,16 +407,16 @@ class ReportController extends Controller
     				$total['damageCard'] += $booking->getDamageAmount();
     				break;
     		}
-    
     		$total['commission'] += $booking->getCommission();
     		$total['kickback'] += $booking->getKickBack();
     	}
     	 
-    	if($data['print'])
-    		$view = 'report/monthprint.html.twig';
-    	else
-    		$view = 'report/month.html.twig';
-    	 
+    	if($data['print']) {
+            $view = 'report/monthprint.html.twig';
+        } else {
+            $view = 'report/month.html.twig';
+        }
+
     	return $this->render($view, array(
     			'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
     			'bookings' => $bookings,

@@ -80,6 +80,9 @@ class CustomerController extends Controller
                 $qb->where($qb->expr()->eq('c.language', ':lang'));
                 $qb->setParameter('lang', $lang);
             }
+            $qb->andWhere($qb->expr()->eq('c.refuseEmailLetters', ':refuse_newsletters'));
+            $qb->setParameter('refuse_newsletters', false);
+            $qb->andWhere($qb->expr()->isNotNull('c.email'));
             $qb->orderBy('c.firstName, c.lastName');
             $rows = $qb->getQuery()->getResult();
             /** @var Customer $row */

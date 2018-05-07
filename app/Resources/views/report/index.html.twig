@@ -98,14 +98,14 @@
                         <td>{{ row.kickback }}</td>
                         <td>{{ row.petrolCost }}</td>
                         <td>{{ row.damageAmount }}</td>
-                        <td>{{ row.paymentMethodRent }}</td>
-                        <td>{{ row.paymentMethodDeposit }}</td>
-                        <td>{{ row.paymentMethodDamage }}</td>
+                        <td>{{ row.paymentMethodRentName }}</td>
+                        <td>{{ row.paymentMethodDepositName }}</td>
+                        <td>{{ row.paymentMethodDamageName }}</td>
 
-                        <td>{{ row.lesseeFirstName }}</td>
-                        <td>{{ row.lesseeLastName }}</td>
-                        <td>{{ row.lesseeEmail }}</td>
-                        <td>{{ row.lesseePhone }}</td>
+                        <td>{{ row.customer.firstName }}</td>
+                        <td>{{ row.customer.lastName }}</td>
+                        <td>{{ row.customer.email }}</td>
+                        <td>{{ row.customer.phoneNumber }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
