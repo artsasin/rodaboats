@@ -40,7 +40,7 @@ security:
         # Secure everything except the login page.
         - { path: ^/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        
+        - { path: ^/unsubscribe, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         
         # Detailed role based authorizations.
         - { path: ^/admin, roles: ROLE_ADMIN }

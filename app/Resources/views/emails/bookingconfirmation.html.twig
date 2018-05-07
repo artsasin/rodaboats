@@ -59,4 +59,17 @@
         <h3>Information</h3>
         {{ template.content|raw }}
     {% endif %}
+    <hr />
+    <p>
+    {% if order.customer.language == 'en' %}
+        To unsubscribe from the newsletter, please click on the following link
+    {% elseif order.customer.language == 'de' %}
+        Um den Newsletter abzubestellen, klicken Sie bitte auf den folgenden Link
+    {% elseif order.customer.language == 'es' %}
+        Para darse de baja del boletín, haga clic en el siguiente enlace
+    {% elseif order.customer.language == 'fr' %}
+        Pour vous désinscrire de la newsletter, veuillez cliquer sur le lien suivant
+    {% endif %}
+        <a href="{{ url('app_email_unsubscribe', { 'email': order.customer.email }) }}">{{ url('app_email_unsubscribe', { 'email': order.customer.email }) }}</a>
+    </p>
 {% endblock %}

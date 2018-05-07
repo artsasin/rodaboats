@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\DataProvider\OrderDataProvider;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order;
 use AppBundle\Model\Calendar;
 use AppBundle\Model\OrderCalendar;
@@ -14,6 +15,7 @@ use AppBundle\Entity\Booking;
 use AppBundle\Entity\Location;
 use \DateTime;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DefaultController extends Controller
 {
@@ -56,6 +58,35 @@ class DefaultController extends Controller
             'paper_size'    => 'A4',
             'landscape'     => true,
             'orders'        => $orders
+        ]);
+    }
+
+    /**
+     * @Route(path="/unsubscribe", name="app_email_unsubscribe")
+     * @param Request $request
+     * @return Response
+     */
+    public function unsubscribeAction(Request $request)
+    {
+        $email = $request->query->get('email', null);
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_NULL_ON_FAILURE);
+
+        if ($email === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $customer = $em->getRepository(Customer::class)->findOneBy(['email' => $email]);
+
+        if (!$customer instanceof Customer) {
+            throw new NotFoundHttpException();
+        }
+
+        $customer->setRefuseEmailLetters(true);
+        $em->flush();
+
+        return $this->render('default/unsubscribe.html.twig', [
+            'customer' => $customer
         ]);
     }
 

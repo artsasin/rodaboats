@@ -77,6 +77,12 @@ class Customer
     private $orders;
 
     /**
+     * @ORM\Column(name="refuse_email_letters", type="boolean")
+     * @var boolean
+     */
+    private $refuseEmailLetters;
+
+    /**
      * @var bool
      */
     public $newEmail;
@@ -87,6 +93,7 @@ class Customer
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->refuseEmailLetters = false;
         $this->newEmail = false;
     }
 
@@ -249,6 +256,24 @@ class Customer
     public function removeOrder(Order $order)
     {
         $this->orders->removeElement($order);
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefuseEmailLetters()
+    {
+        return $this->refuseEmailLetters;
+    }
+
+    /**
+     * @param bool $refuseEmailLetters
+     * @return Customer
+     */
+    public function setRefuseEmailLetters($refuseEmailLetters)
+    {
+        $this->refuseEmailLetters = $refuseEmailLetters;
         return $this;
     }
 }
