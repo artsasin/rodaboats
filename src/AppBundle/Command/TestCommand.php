@@ -25,7 +25,7 @@ class TestCommand extends ContainerAwareCommand
     {
         $message = \Swift_Message::newInstance()
             ->setSubject("RodaBoats: test message")
-            ->setFrom("mailgun@mg.artsasin.info")
+            ->setFrom("info@rodaboats.eu")
             ->setTo(['artem-sasin@yandex.ru'])
             ->setBody('<h1>Hello from MailGun!</h1>', 'text/html');
 
