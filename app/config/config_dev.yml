@@ -45,4 +45,4 @@ assetic:
     use_controller: true
 
 swiftmailer:
-    delivery_address: art.sasin@gmail.com
+    delivery_addresses: ['art.sasin@gmail.com']

@@ -23,10 +23,19 @@ class TestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
-        /** @var Order $order */
-        $order = $em->getRepository(Order::class)->find(83);
-        $output->writeln($order->getMinutes());
-        dump($order);
+        $message = \Swift_Message::newInstance()
+            ->setSubject("RodaBoats: test message")
+            ->setFrom("mailgun@mg.artsasin.info")
+            ->setTo(['artem-sasin@yandex.ru'])
+            ->setBody('<h1>Hello from MailGun!</h1>', 'text/html');
+
+        $c = $this->getContainer();
+
+        $mailer = $c->get('mailer');
+        $mailer->send($message);
+
+        $spool = $mailer->getTransport()->getSpool();
+        $transport = $c->get('swiftmailer.mailer.default.transport.real');
+        $spool->flushQueue($transport);
     }
 }
