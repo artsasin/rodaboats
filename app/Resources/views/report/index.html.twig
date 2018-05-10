@@ -1,5 +1,14 @@
 {% extends 'base_sb.html.twig' %}
 
+{% block stylesheets %}
+    <style type="text/css">
+        table.borderless tbody tr td {
+            border: none;
+            padding: 0;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -30,86 +39,224 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <table class="table calendar">
-                <thead>
+            <div class="table-responsive">
+                <table class="table table-condensed table-bordered" style="font-size: 12px;">
+                    <thead>
+                        <tr>
+                            <th colspan="8" class="text-center active">Booking</th>
+                            <th colspan="5" class="text-center active">Financial</th>
+                            <th rowspan="2" class="text-center active" style="vertical-align: middle;">Customer</th>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <th>Date & Time</th>
+                            <th>Boat</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                            <th>Persons</th>
+                            <th>Handler</th>
+                            <th>Booked by</th>
+
+                            <th>Rent & Fuel</th>
+                            <th>Deposit</th>
+                            <th>Damage</th>
+                            <th>Commission</th>
+                            <th>Kickback</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in output %}
+                        <tr>
+                            <td>
+                                {% set status_class = 'text-success' %}
+                                {% if row.status == constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CANCELLED') %}
+                                    {% set status_class = 'text-danger' %}
+                                {% elseif row.status == constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CLOSED') %}
+                                    {% set status_class = 'text-primary' %}
+                                {% endif %}
+                                <span class="{{ status_class }}">{{ row.getStatusName }}</span>
+                                {% if row.status == constant('AppBundle\\DataProvider\\OrderDataProvider::STATUS_CANCELLED') %}
+                                    <br />
+                                    ({{ row.getCancellationName() }})
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ row.date|date('d-m-Y') }}<br />
+                                {{ row.start|date('G:i') }}&nbsp;&ndash;&nbsp;{{ row.end|date('G:i') }}&nbsp;({{ row.getHours() }}h)
+                            </td>
+                            <td>{{ row.boat is empty ? "" : row.boat.name }}</td>
+                            <td>{{ row.location is empty ? "" : row.location.name }}</td>
+                            <td>{{ row.getTypeName() }}</td>
+                            <td>{{ row.numberOfPeople }}</td>
+                            <td>{{ row.handler is empty ? "" : row.handler.username }}</td>
+                            <td>{{ row.bookedBy }}</td>
+                            <td>
+                                {% if row.rent > 0 or row.petrolCost > 0 %}
+                                <u>{{ row.paymentMethodRentName }}</u>
+                                <table class="table borderless table-condensed">
+                                    <tbody>
+                                    <tr>
+                                        <td>Rent:</td>
+                                        <td class="text-right">{{ row.rent }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Discount:</td>
+                                        <td class="text-right">{{ row.rentDiscount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fuel:</td>
+                                        <td class="text-right">{{ row.petrolCost }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.deposit > 0 %}
+                                <u>{{ row.paymentMethodDepositName }}</u>
+                                <table class="table borderless table-condensed">
+                                    <tbody>
+                                    <tr>
+                                        <td>Amount:</td>
+                                        <td class="text-right">{{ row.deposit }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.damageAmount > 0 %}
+                                <u>{{ row.paymentMethodDamageName }}</u>
+                                <table class="table borderless table-condensed">
+                                    <tbody>
+                                    <tr>
+                                        <td>Amount:</td>
+                                        <td class="text-right">{{ row.damageAmount }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.commission > 0 %}
+                                    <u>{{ row.comissionPaidTo }}</u>
+                                    <table class="table borderless table-condensed">
+                                        <tbody>
+                                        <tr>
+                                            <td>Amount:</td>
+                                            <td class="text-right">{{ row.commission }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.kickback > 0 %}
+                                    <table class="table borderless table-condensed">
+                                        <tbody>
+                                        <tr>
+                                            <td>Amount:</td>
+                                            <td class="text-right">{{ row.kickback }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ row.customer.firstName }} {{ row.customer.lastName }}<br />
+                                email: {{ row.customer.email }}<br />
+                                phone: {{ row.customer.phoneNumber }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
                     <tr>
-                        <th colspan="9">Booking</th>
-                        <th colspan="3">Location</th>
-                        <th colspan="11">Financial</th>
-                        <th colspan="4">Customer</th>
+                        <th rowspan="4" colspan="3">
+                            Total
+                        </th>
+                        <th colspan="6" class="text-center success">
+                            Card
+                        </th>
+                        <th colspan="6" class="text-center info">
+                            Cash
+                        </th>
                     </tr>
                     <tr>
-                        <th>#</th>
-                        <th>Date</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Hours</th>
-                        <th>Boat</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Cancellation</th>
-                        <th>Persons</th>
-
-                        <th>Location</th>
-                        <th>Handler</th>
-                        <th>Booked by</th>
-
-                        <th>Rent</th>
-                        <th>Rent discount</th>
-                        <th>Deposit</th>
-                        <th>Commission</th>
-                        <th>Commission paid to</th>
-                        <th>Kickback</th>
-                        <th>Petrol cost</th>
-                        <th>Damage amount</th>
-                        <th>Rent payment method</th>
-                        <th>Deposit payment method</th>
-                        <th>Damage payment method</th>
-
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th colspan="2">
+                            Rent
+                        </th>
+                        <th colspan="2">
+                            Fuel
+                        </th>
+                        <th colspan="2">
+                            Correction
+                        </th>
+                        <th colspan="2">
+                            Rent
+                        </th>
+                        <th colspan="2">
+                            Fuel
+                        </th>
+                        <th colspan="2">
+                            Correction
+                        </th>
                     </tr>
-                </thead>
-                <tbody>
-                {% for row in output %}
                     <tr>
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.date|date('Y-m-d') }}</td>
-                        <td>{{ row.start|date('G:i') }}</td>
-                        <td>{{ row.end|date('G:i') }}</td>
-                        <td>{{ row.getHours() }}</td>
-                        <td>{{ row.boat is empty ? "" : row.boat.name }}</td>
-                        <td>{{ row.getTypeName() }}</td>
-                        <td>{{ row.getStatusName }}</td>
-                        <td>{{ row.getCancellationName() }}</td>
-                        <td>{{ row.numberOfPeople }}</td>
-
-                        <td>{{ row.location is empty ? "" : row.location.name }}</td>
-                        <td>{{ row.handler is empty ? "" : row.handler.username }}</td>
-                        <td>{{ row.bookedBy }}</td>
-
-                        <td>{{ row.rent }}</td>
-                        <td>{{ row.rentDiscount }}</td>
-                        <td>{{ row.deposit }}</td>
-                        <td>{{ row.commission }}</td>
-                        <td>{{ row.commissionPaidTo }}</td>
-                        <td>{{ row.kickback }}</td>
-                        <td>{{ row.petrolCost }}</td>
-                        <td>{{ row.damageAmount }}</td>
-                        <td>{{ row.paymentMethodRentName }}</td>
-                        <td>{{ row.paymentMethodDepositName }}</td>
-                        <td>{{ row.paymentMethodDamageName }}</td>
-
-                        <td>{{ row.customer.firstName }}</td>
-                        <td>{{ row.customer.lastName }}</td>
-                        <td>{{ row.customer.email }}</td>
-                        <td>{{ row.customer.phoneNumber }}</td>
+                        <th colspan="2">
+                            {{ totals.rentCard }}
+                        </th>
+                        <th colspan="2">
+                            {{ totals.fuelCard }}
+                        </th>
+                        <th colspan="2">
+                            {{ totals.corrCard }}
+                        </th>
+                        <th colspan="2">
+                            {{ totals.rentCash }}
+                        </th>
+                        <th colspan="2">
+                            {{ totals.fuelCash }}
+                        </th>
+                        <th colspan="2">
+                            {{ totals.corrCash }}
+                        </th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    <tr>
+                        <th colspan="6">
+                            {{ totals.card }}
+                        </th>
+                        <th colspan="6">
+                            {{ totals.cash }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="3">
+                            Overall total
+                        </th>
+                        <th colspan="12">
+                            {{ totals.card + totals.cash }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="3">
+                            Comission total
+                        </th>
+                        <th colspan="12">
+                            {{ totals.commission }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="3">
+                            Kickback total
+                        </th>
+                        <th colspan="12">
+                            {{ totals.kickback }}
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
     {% endif %}
