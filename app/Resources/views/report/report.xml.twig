@@ -32,12 +32,12 @@
                 <paymentMethodDeposit>{{ row.paymentMethodDeposit }}</paymentMethodDeposit>
                 <paymentMethodDamage>{{ row.paymentMethodDamage }}</paymentMethodDamage>
 
-                <lessee>
-                    <firstName>{{ row.lesseeFirstName }}</firstName>
-                    <lastName>{{ row.lesseeLastName }}</lastName>
-                    <email>{{ row.lesseeEmail }}</email>
-                    <phone>{{ row.lesseePhone }}</phone>
-                </lessee>
+                <customer>
+                    <firstName>{{ row.customer.firstName }}</firstName>
+                    <lastName>{{ row.customer.lastName }}</lastName>
+                    <email>{{ row.customer.email }}</email>
+                    <phone>{{ row.customer.phoneNumber }}</phone>
+                </customer>
             </booking>
         {% endfor %}
     {% endif %}
