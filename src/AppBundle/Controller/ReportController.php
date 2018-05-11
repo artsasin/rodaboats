@@ -194,20 +194,59 @@ class ReportController extends Controller
     	} else {
     		$results = null;
     	}
+
+    	$totals = [
+    	    'rentCash'  => 0,
+            'fuelCash'  => 0,
+            'corrCash'  => 0,
+            'cash'      => 0,
+            'rentCard'  => 0,
+            'fuelCard'  => 0,
+            'corrCard'  => 0,
+            'card'      => 0,
+            'commission' => 0,
+            'kickback'  => 0
+        ];
+
+    	if ($results !== null) {
+    	    /** @var Order $order */
+            foreach ($results as $order) {
+    	        if ($order->getPaymentMethodRent() === OrderDataProvider::PAYMENT_METHOD_CASH) {
+    	            $totals['rentCash'] += $order->getRent();
+    	            $totals['fuelCash'] += $order->getPetrolCost();
+                } else {
+    	            $totals['rentCard'] += $order->getRent();
+    	            $totals['fuelCard'] += $order->getPetrolCost();
+                }
+
+                if ($order->getPaymentMethodDamage() === OrderDataProvider::PAYMENT_METHOD_CASH) {
+    	            $totals['corrCash'] += $order->getDamageAmount();
+                } else {
+    	            $totals['corrCard'] += $order->getDamageAmount();
+                }
+
+                $totals['commission'] += $order->getCommission();
+    	        $totals['kickback'] += $order->getKickback();
+            }
+            $totals['cash'] = $totals['rentCash'] + $totals['fuelCash'] + $totals['corrCash'];
+            $totals['card'] = $totals['rentCard'] + $totals['fuelCard'] + $totals['corrCard'];
+        }
     	
     	switch($report->output) {
     		default:
     		case 'HTML':
     			return $this->render('report/index.html.twig', array(
-    					'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
-    					'form' => $form->createView(),
-    					'output' => $results,
+    			    'base_dir'  => realpath($this->container->getParameter('kernel.root_dir').'/..'),
+                    'form'      => $form->createView(),
+                    'output'    => $results,
+                    'totals'    => $totals
     			));
     			break;
     		case 'XML':
     			$response = $this->render('report/report.xml.twig', array(
-    					'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
-    					'output' => $results,
+    			    'base_dir'  => realpath($this->container->getParameter('kernel.root_dir').'/..'),
+                    'output'    => $results,
+                    'totals'    => $totals
     			));
     			$response->headers->set('Content-Type', 'application/xml; charset=utf-8');
     			$response->headers->set('Content-Disposition', 'attachment;filename=report.xml');
