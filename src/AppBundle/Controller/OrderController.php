@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\DataProvider\CustomerDataProvider;
+use AppBundle\DataProvider\DateTimeProvider;
 use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Order;
@@ -134,10 +135,10 @@ class OrderController extends Controller
             $d = new \DateTime();
             $d->setDate(1970, 1, 1);
             $d->setTime($h, $m);
-            $order->start = $d->getTimestamp();
+            $order->start = DateTimeProvider::utcTimestamp($d);
             $end = clone $d;
             $end->modify('+1 hour');
-            $order->end = $end->getTimestamp();
+            $order->end = DateTimeProvider::utcTimestamp($end);
         }
 
         $customer = new DTO\Customer();

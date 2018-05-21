@@ -29,6 +29,10 @@ class Customer implements DTOInterface
 
     public $comment;
 
+    public $identityNumber;
+
+    public $licenseNumber;
+
     /**
      * @param \AppBundle\Entity\Customer $customer
      */
@@ -42,6 +46,8 @@ class Customer implements DTOInterface
         $this->phoneNumber = $customer->getPhoneNumber();
         $this->email = $customer->getEmail();
         $this->comment = $customer->getComment();
+        $this->identityNumber = $customer->getIdentityNumber();
+        $this->licenseNumber = $customer->getLicenseNumber();
     }
 
     public function fromJson($json)

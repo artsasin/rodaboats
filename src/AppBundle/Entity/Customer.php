@@ -83,6 +83,18 @@ class Customer
     private $refuseEmailLetters;
 
     /**
+     * @ORM\Column(name="identity_number", type="string", length=25, nullable=true)
+     * @var string
+     */
+    private $identityNumber;
+
+    /**
+     * @ORM\Column(name="license_number", type="string", length=36, nullable=true)
+     * @var string
+     */
+    private $licenseNumber;
+
+    /**
      * @var bool
      */
     public $newEmail;
@@ -274,6 +286,42 @@ class Customer
     public function setRefuseEmailLetters($refuseEmailLetters)
     {
         $this->refuseEmailLetters = $refuseEmailLetters;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentityNumber()
+    {
+        return $this->identityNumber;
+    }
+
+    /**
+     * @param string $identityNumber
+     * @return Customer
+     */
+    public function setIdentityNumber($identityNumber)
+    {
+        $this->identityNumber = $identityNumber;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLicenseNumber()
+    {
+        return $this->licenseNumber;
+    }
+
+    /**
+     * @param string $licenseNumber
+     * @return Customer
+     */
+    public function setLicenseNumber($licenseNumber)
+    {
+        $this->licenseNumber = $licenseNumber;
         return $this;
     }
 }

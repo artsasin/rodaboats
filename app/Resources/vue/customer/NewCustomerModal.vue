@@ -3,7 +3,7 @@
         <alert v-if="saveError" type="danger">
             {{ errorMessage }}
         </alert>
-        <div class="row form-group">
+        <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">First name</label>
                 <input class="form-control input-sm" type="text" v-model="customer.firstName" />
@@ -13,7 +13,7 @@
                 <input class="form-control input-sm" type="text" v-model="customer.lastName" />
             </div>
         </div>
-        <div class="row form-group">
+        <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group required">
                 <label class="control-label">Country</label>
                 <select class="form-control input-sm" v-model="customer.country">
@@ -36,9 +36,19 @@
                 <label class="control-label">Phone number</label>
                 <input class="form-control input-sm" type="text" v-model="customer.phoneNumber" />
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
                 <label>E-mail</label>
                 <input class="form-control input-sm" type="text" v-model="customer.email" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label class="control-label">ID number</label>
+                <input class="form-control input-sm" type="text" v-model="customer.identityNumber" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label>License number</label>
+                <input class="form-control input-sm" type="text" v-model="customer.licenseNumber" />
             </div>
         </div>
         <div class="row">

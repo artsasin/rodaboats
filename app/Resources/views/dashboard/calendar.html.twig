@@ -147,7 +147,7 @@
                                                 <div class="booking-header">
                                                     <div class="time pull-left">
                                                         <a href="{{ path('app_order_edit', { 'id': order.id }) }}">
-                                                            {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}&nbsp;({{ order.hours }}h)
+                                                            {{ order.startFormatted }} - {{ order.endFormatted }}&nbsp;({{ order.hours }}h)
                                                         </a>
                                                     </div>
                                                     {% if order.comments %}
@@ -210,19 +210,7 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover();
-            // $('.booking').each(function(index, el) {
-            //     var td = $(el).closest('td.slot');
-            //     var h = 0;
-            //     var w = 0;
-            //     if (td.length > 0) {
-            //         h = td[0].offsetHeight;
-            //         w = td[0].offsetWidth;
-            //     }
-            //
-            //     if (h > 0 && w > 0) {
-            //         $(el).css('height', h - 3);
-            //     }
-            // });
+
 
             $('#datetimepicker44').datetimepicker({
                 ignoreReadonly: true,

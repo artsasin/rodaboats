@@ -42,26 +42,26 @@
                         <tr>
                             <td>{{ booking.boat.name }}</td>
                             <td>{{ booking.hours }}</td>
-                            {% if booking.paymentMethodRent == 'Cash' %}
+                            {% if booking.paymentMethodRent == constant('AppBundle\\DataProvider\\OrderDataProvider::PAYMENT_METHOD_CASH') %}
                                 <td></td>
                                 <td></td>
                             {% else %}
                                 <td>{{ booking.rent }}</td>
                                 <td>{{ booking.petrolCost }}</td>
                             {% endif %}
-                            {% if booking.paymentMethodDamage == 'Cash' %}
+                            {% if booking.paymentMethodDamage == constant('AppBundle\\DataProvider\\OrderDataProvider::PAYMENT_METHOD_CASH') %}
                                 <td></td>
                             {% else %}
                                 <td>{{ booking.damageAmount }}</td>
                             {% endif %}
-                            {% if booking.paymentMethodRent != 'Cash' %}
+                            {% if booking.paymentMethodRent != constant('AppBundle\\DataProvider\\OrderDataProvider::PAYMENT_METHOD_CASH') %}
                                 <td></td>
                                 <td></td>
                             {% else %}
                                 <td>{{ booking.rent }}</td>
                                 <td>{{ booking.petrolCost }}</td>
                             {% endif %}
-                            {% if booking.paymentMethodDamage != 'Cash' %}
+                            {% if booking.paymentMethodDamage != constant('AppBundle\\DataProvider\\OrderDataProvider::PAYMENT_METHOD_CASH') %}
                                 <td></td>
                             {% else %}
                                 <td>{{ booking.damageAmount }}</td>

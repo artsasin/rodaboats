@@ -95,7 +95,7 @@ class CustomerController extends Controller
                 }
             }
             if ($format === 'plain') {
-                fwrite($handle, implode(',', $emails));
+                fwrite($handle, implode(';', $emails));
             }
             fclose($handle);
         });
@@ -187,6 +187,8 @@ class CustomerController extends Controller
                 $customer->setPhoneNumber($model->phoneNumber);
                 $customer->setEmail($model->email);
                 $customer->setComment($model->comment);
+                $customer->setIdentityNumber($model->identityNumber);
+                $customer->setLicenseNumber($model->licenseNumber);
 
                 $em->persist($customer);
                 $em->flush();

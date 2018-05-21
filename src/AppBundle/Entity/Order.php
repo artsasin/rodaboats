@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\DataProvider\DateTimeProvider;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\DataProvider\OrderDataProvider;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -240,12 +241,14 @@ class Order
 
         $this->date = clone $now;
 
-        $this->start = clone $now;
-        $this->start->setDate(1970, 1, 1);
-        $this->start->setTime(5 ,0 ,0);
+        $start = clone $now;
+        $start->setDate(1970, 1, 1);
+        $start->setTime(5 ,0 ,0);
+        $this->start = DateTimeProvider::utc($start);
 
-        $this->end = clone $this->start;
-        $this->end->modify('+1 hour');
+        $end = clone $start;
+        $end->modify('+1 hour');
+        $this->end = DateTimeProvider::utc($end);
     }
 
     /**
@@ -332,7 +335,15 @@ class Order
      */
     public function getStart()
     {
-        return $this->start;
+        return DateTimeProvider::utc($this->start);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStartFormatted()
+    {
+        return $this->getStart()->format('G:i');
     }
 
     /**
@@ -341,7 +352,7 @@ class Order
      */
     public function setStart($start)
     {
-        $this->start = $start;
+        $this->start = DateTimeProvider::utc($start);
         return $this;
     }
 
@@ -350,7 +361,12 @@ class Order
      */
     public function getEnd()
     {
-        return $this->end;
+        return DateTimeProvider::utc($this->end);
+    }
+
+    public function getEndFormatted()
+    {
+        return $this->getEnd()->format('G:i');
     }
 
     /**
@@ -359,7 +375,7 @@ class Order
      */
     public function setEnd($end)
     {
-        $this->end = $end;
+        $this->end = DateTimeProvider::utc($end);
         return $this;
     }
 
@@ -792,11 +808,11 @@ class Order
     public function getHours()
     {
         // Ensure that a duration can be calculated.
-        if ($this->start === null || $this->end === null) {
+        if ($this->getStart() === null || $this->getEnd() === null) {
             return null;
         }
 
-        $diff = $this->start->diff($this->end, true);
+        $diff = $this->getStart()->diff($this->getEnd(), true);
 
         $h = intval($diff->h);
         $m = intval($diff->i);
@@ -810,22 +826,17 @@ class Order
         return $result;
     }
 
-    public function getHoursAdjusted()
-    {
-
-    }
-
     /**
      * @return int|null
      */
     public function getMinutes()
     {
         // Ensure that a duration can be calculated.
-        if($this->start === null || $this->end === null) {
+        if($this->getStart() === null || $this->getEnd() === null) {
             return null;
         }
 
-        $diff = $this->start->diff($this->end, true);
+        $diff = $this->getStart()->diff($this->getEnd(), true);
 
         $h = intval($diff->h);
         $m = intval($diff->i);
@@ -866,12 +877,12 @@ class Order
      */
     public function getStartCalendarIndex($start = null)
     {
-        $h = $this->start->format('G');
+        $h = $this->getStart()->format('G');
         if ($start !== null && $h < $start) {
             $h = $start;
         }
 
-        $m = intval($this->start->format('i'));
+        $m = intval($this->getStart()->format('i'));
         $adjust = 0;
         if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
             $r = $m % 15;
@@ -890,8 +901,8 @@ class Order
      */
     public function getEndCalendarIndex()
     {
-        $h = $this->end->format('G');
-        $m = intval($this->end->format('i'));
+        $h = $this->getEnd()->format('G');
+        $m = intval($this->getEnd()->format('i'));
         $adjust = 0;
         if ($m !== 0 || $m !== 15 || $m !== 30 || $m !== 45) {
             $r = $m % 15;
