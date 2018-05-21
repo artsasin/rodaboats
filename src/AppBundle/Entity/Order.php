@@ -46,13 +46,13 @@ class Order
     private $date;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private $start;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private $end;
