@@ -4,6 +4,9 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h1 class="page-header">
                     <span class="header-nav" v-show="order.id !== null">
+                        <button type="button" class="btn btn-default" @click="save">
+                            <i class="fa fa-save"></i>&nbsp;Save order
+                        </button>
                         <a :href="order_log_link" class="btn btn-default">
                             <i class="fa fa-clock-o"></i> Log
                         </a>
@@ -400,7 +403,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row form-group">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
                 <button type="button" class="btn btn-lg btn-default" @click="save">
                     <i class="fa fa-save"></i>&nbsp;Save order

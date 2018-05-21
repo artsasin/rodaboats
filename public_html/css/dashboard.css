@@ -145,3 +145,7 @@
     padding: 4px;
     margin: 10px 0;
 }
+
+.alert {
+    z-index: 9999;
+}
