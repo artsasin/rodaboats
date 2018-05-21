@@ -64,7 +64,7 @@
                                         <small>{{ order.boat.location is empty ? "" : order.boat.location.name }}</small>
                                     </td>
                                     <td>{{ order.date|date('l j M Y') }}<br/>
-                                        <small>{{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}</small>
+                                        <small>{{ order.startFormatted }} - {{ order.endFormatted }}</small>
                                     </td>
                                     <td>{{ order.getTypeName }}</td>
                                 </tr>

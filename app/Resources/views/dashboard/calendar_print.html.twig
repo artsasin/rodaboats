@@ -5,67 +5,96 @@
         .order-item {
             border: 1px solid #ccc;
             height: 150px;
-            min-height: 150px;
-            max-height: 150px;
+            min-height: 100px;
+            max-height: 100px;
             overflow: hidden;
-            font-size: 13px;
+            font-size: 10px;
+            page-break-inside: avoid;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    {% set boat = null %}
-    {% set cnt = 16 %}
-    {% for order in orders %}
-        {% if order.boat != boat %}
-            {% if boat is not null %}
-                {% if cnt > 0 %}
-                    {% for i in 1..cnt %}
-                        <div class="col-md-3 order-item">
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                </div>
-                </section>
-            {% endif %}
-            {% set cnt = 16 %}
-            {% set boat = order.boat %}
-            <section class="sheet padding-10mm">
-            <div class="row">
-                <div class="col-md-12">
-                    <p style="font-size: 14px;">
-                        Date: <strong><u>{{ date | date('d-m-Y') }}</u></strong> /
-                        Location: <strong><u>{{ location.name }}</u></strong> /
-                        Boat: <strong><u>{{ order.boat.name }}</u></strong>
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-        {% endif %}
-        <div class="col-md-3 order-item">
-            <div style="margin-bottom: 3px;">{{ order.start | date('G:i') }} - {{ order.end | date('G:i') }}</div>
-            <div style="margin-bottom: 3px;">
-                {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}, {{ order.numberOfPeople }} people<br />
-                <span style="margin-left: 5px;">Tel.: {{ order.customer.phoneNumber }}</span>
-            </div>
-            <div>
-                Extras:
-                <br />
-                <span style="margin-left: 5px;">{{ order.extrasAbbrText }}</span>
-                <br />
-                Comments:
-                <br />
-                <span style="margin-left: 5px;">{{ order.comments }}</span>
+    <section class="sheet padding-10mm">
+        <div class="row">
+            <div class="col-md-12">
+                <p style="font-size: 14px;">
+                    Date: <strong><u>{{ date | date('d-m-Y') }}</u></strong> /
+                    Location: <strong><u>{{ location.name }}</u></strong>
+                </p>
             </div>
         </div>
-        {% set cnt = cnt - 1 %}
-    {% endfor %}
-    {% if cnt > 0 %}
-        {% for i in 1..cnt %}
-            <div class="col-md-3 order-item">
-            </div>
-        {% endfor %}
-    {% endif %}
-    </div>
+        <div class="row">
+            {% for order in orders %}
+                <div class="col-md-3 order-item">
+                    <div style="margin-bottom: 3px;">
+                        <strong>Boat:</strong> {{ order.boat.name }};
+                        <u>{{ order.startFormatted }} - {{ order.endFormatted }}</u>
+                    </div>
+                    <div style="margin-bottom: 3px;">
+                        {{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}, {{ order.numberOfPeople }} ppl;
+                        &nbsp;Tel.: {{ order.customer.phoneNumber }}
+                    </div>
+                    <div style="margin-bottom: 3px;">
+                        Extras:&nbsp;{{ order.extrasAbbrText }}<br />
+                    </div>
+                    <div style="margin-bottom: 3px;">
+                        Comments:{{ order.comments }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </section>
+    {#{% set boat = null %}#}
+    {#{% set cnt = 16 %}#}
+    {#{% for order in orders %}#}
+        {#{% if order.boat != boat %}#}
+            {#{% if boat is not null %}#}
+                {#{% if cnt > 0 %}#}
+                    {#{% for i in 1..cnt %}#}
+                        {#<div class="col-md-2 order-item">#}
+                        {#</div>#}
+                    {#{% endfor %}#}
+                {#{% endif %}#}
+                {#</div>#}
+                {#</section>#}
+            {#{% endif %}#}
+            {#{% set cnt = 16 %}#}
+            {#{% set boat = order.boat %}#}
+            {#<section class="sheet padding-10mm">#}
+            {#<div class="row">#}
+                {#<div class="col-md-12">#}
+                    {#<p style="font-size: 14px;">#}
+                        {#Date: <strong><u>{{ date | date('d-m-Y') }}</u></strong> /#}
+                        {#Location: <strong><u>{{ location.name }}</u></strong>#}
+                    {#</p>#}
+                {#</div>#}
+            {#</div>#}
+            {#<div class="row">#}
+        {#{% endif %}#}
+        {#<div class="col-md-2 order-item">#}
+            {#<div style="margin-bottom: 3px;">#}
+                {#{{ order.startFormatted }} - {{ order.endFormatted }}#}
+            {#</div>#}
+            {#<div style="margin-bottom: 3px;">#}
+                {#{{ order.customer.firstName }}&nbsp;{{ order.customer.lastName }}, {{ order.numberOfPeople }} ppl;#}
+                {#&nbsp;Tel.: {{ order.customer.phoneNumber }}#}
+            {#</div>#}
+            {#<div style="margin-bottom: 3px;">#}
+                {#Extras:&nbsp;{{ order.extrasAbbrText }}<br />#}
+            {#</div>#}
+            {#<div style="margin-bottom: 3px;">#}
+                {#Comments:{{ order.comments }}#}
+            {#</div>#}
+        {#</div>#}
+        {#{% set cnt = cnt - 1 %}#}
+    {#{% endfor %}#}
+    {#{% if cnt > 0 %}#}
+        {#{% for i in 1..cnt %}#}
+            {#<div class="col-md-2 order-item">#}
+            {#</div>#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
+    {#</div>#}
+    {#</section>#}
 {% endblock %}

@@ -301,15 +301,17 @@ class ReportController extends Controller
     	// Optionally apply the location filter.
     	if(!empty($data['location']))
     	{
-    		$builder->andWhere('booking.location = :location')
-    		->setParameter('location', $data['location']);
+    		$builder
+                ->andWhere('booking.location = :location')
+                ->setParameter('location', $data['location']);
     	}
     	
     	// Optionally apply the payment filter.
     	if(!empty($data['paymentMethod']))
     	{
-    		$builder->andWhere('booking.paymentMethodRent = :paymentMethod OR booking.paymentMethodDamage = :paymentMethod')
-    		->setParameter('paymentMethod', $data['paymentMethod']);
+    		$builder
+                ->andWhere('booking.paymentMethodRent = :paymentMethod OR booking.paymentMethodDamage = :paymentMethod')
+                ->setParameter('paymentMethod', $data['paymentMethod']);
     	}
     	
     	// Only select confirmed bookings
@@ -334,7 +336,7 @@ class ReportController extends Controller
 
     	/** @var Order $booking */
         foreach($bookings as $booking) {
-    		if($booking->getPaymentMethodRent() == 'Cash') {
+    		if($booking->getPaymentMethodRent() === OrderDataProvider::PAYMENT_METHOD_CASH) {
     			$total['rentCash'] += $booking->getRent();
     			$total['petrolCash'] += $booking->getPetrolCost();
     		} else {
@@ -342,11 +344,10 @@ class ReportController extends Controller
     			$total['petrolCard'] += $booking->getPetrolCost();
     		}
     		switch($booking->getPaymentMethodDamage()) {
-    			case 'Cash':
+    			case OrderDataProvider::PAYMENT_METHOD_CASH:
     				$total['damageCash'] += $booking->getDamageAmount();
     				break;
-    			case 'CreditCard':
-    			case 'DebitCard':
+    			default:
     				$total['damageCard'] += $booking->getDamageAmount();
     				break;
     		}
@@ -429,7 +430,7 @@ class ReportController extends Controller
 
     	/** @var Order $booking */
         foreach($bookings as $booking) {
-    		if($booking->getPaymentMethodRent() == 'Cash') {
+    		if($booking->getPaymentMethodRent() == OrderDataProvider::PAYMENT_METHOD_CASH) {
     			$total['rentCash'] += $booking->getRent();
     			$total['petrolCash'] += $booking->getPetrolCost();
     		} else {
@@ -438,11 +439,10 @@ class ReportController extends Controller
     		}
     		switch($booking->getPaymentMethodDamage())
     		{
-    			case 'Cash':
+    			case OrderDataProvider::PAYMENT_METHOD_CASH:
     				$total['damageCash'] += $booking->getDamageAmount();
     				break;
-    			case 'CreditCard':
-    			case 'DebitCard':
+    			default:
     				$total['damageCard'] += $booking->getDamageAmount();
     				break;
     		}

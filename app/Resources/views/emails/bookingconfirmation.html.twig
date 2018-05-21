@@ -13,7 +13,7 @@
     <div class="form-group">
         <label class="col-sm-5 control-label">Date and time</label>
         <div class="col-sm-7">
-            <p class="form-control-static">{{ order.date|date('l j M Y') }} {{ order.start|date('G:i') }} - {{ order.end|date('G:i') }}</p>
+            <p class="form-control-static">{{ order.date|date('l j M Y') }} {{ order.startFormatted }} - {{ order.endFormatted }}</p>
         </div>
     </div>
     <div class="form-group">

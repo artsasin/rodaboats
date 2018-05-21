@@ -9,6 +9,7 @@
 namespace AppBundle\Command;
 
 
+use AppBundle\DataProvider\DateTimeProvider;
 use AppBundle\Entity\Order;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,19 +24,20 @@ class TestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject("RodaBoats: test message")
-            ->setFrom("info@rodaboats.eu")
-            ->setTo(['artem-sasin@yandex.ru'])
-            ->setBody('<h1>Hello from MailGun!</h1>', 'text/html');
+//        $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+//        $order = $em->getRepository(Order::class)->find(1);
 
-        $c = $this->getContainer();
+        /** @var \DateTime $s */
+//        $s = $order->getStart();
+//        $start = clone $s;
+//        $start->setTimezone(new \DateTimeZone('UTC'));
+//        $start->setTime(intval($s->format('G')), intval($s->format('i')), intval($s->format('s')));
+//        dump($s);
+//        dump($start);
 
-        $mailer = $c->get('mailer');
-        $mailer->send($message);
-
-        $spool = $mailer->getTransport()->getSpool();
-        $transport = $c->get('swiftmailer.mailer.default.transport.real');
-        $spool->flushQueue($transport);
+        $s = new \DateTime();
+        $d = DateTimeProvider::utc($s);
+        $d->setTimestamp(36000);
+        dump($d);
     }
 }

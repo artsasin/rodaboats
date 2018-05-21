@@ -8,6 +8,7 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\DataProvider\DateTimeProvider;
 use AppBundle\DataProvider\OrderDataProvider;
 use AppBundle\Entity\Boat;
 use AppBundle\Entity\Customer;
@@ -156,10 +157,11 @@ class DataManager
             }
 
             $order->setDate(new \DateTime($model->date));
-            $start = new \DateTime();
+            $start = DateTimeProvider::utc(new \DateTime());
             $start->setTimestamp($model->start);
             $order->setStart($start);
-            $end = new \DateTime();
+
+            $end = DateTimeProvider::utc(new \DateTime());
             $end->setTimestamp($model->end);
             $order->setEnd($end);
 
@@ -212,14 +214,14 @@ class DataManager
         }
 
         try {
-            $start = new \DateTime();
+            $start = DateTimeProvider::utc(new \DateTime());
             $start->setTimestamp($order->start);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order start has incorrect value');
         }
 
         try {
-            $end = new \DateTime();
+            $end = DateTimeProvider::utc(new \DateTime());
             $end->setTimestamp($order->end);
         } catch (\Exception $e) {
             throw new RodaboatsException('Order end has incorrect value');

@@ -82,7 +82,7 @@
                             </td>
                             <td>
                                 {{ row.date|date('d-m-Y') }}<br />
-                                {{ row.start|date('G:i') }}&nbsp;&ndash;&nbsp;{{ row.end|date('G:i') }}&nbsp;({{ row.getHours() }}h)
+                                {{ row.startFormatted }}&nbsp;&ndash;&nbsp;{{ row.endFormatted }}&nbsp;({{ row.getHours() }}h)
                             </td>
                             <td>{{ row.boat is empty ? "" : row.boat.name }}</td>
                             <td>{{ row.location is empty ? "" : row.location.name }}</td>

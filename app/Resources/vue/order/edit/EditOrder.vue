@@ -31,7 +31,7 @@
         </div>
         <div class="row">
             <!-- customer block -->
-            <div class="col-sm-12 col-xs-12" :class="block_customer_class">
+            <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <!-- booking data block -->
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
                 <div class="panel" :class="{'panel-default': !validation.isConflicts, 'panel-danger': validation.isConflicts }">
                     <div class="panel-heading">
                         <h3 class="panel-title" v-html="booking_data_title"></h3>
@@ -204,7 +204,7 @@
                         </div>
                         <div class="row form-group">
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                <label class="control-label">Number of people</label>
+                                <label class="control-label">Peoples</label>
                                 <div class="input-group">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" @click="decrementPeopleCount()" :disabled="!allowEdit">
@@ -259,7 +259,9 @@
                 </div>
             </div>
             <!-- price block -->
-            <div class="col-sm-12 col-xs-12" :class="block_price_class">
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default">
@@ -269,7 +271,7 @@
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <button v-if="order.id === null" class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
+                                <button class="btn btn-default btn-sm" style="position: absolute; top: 5px; right: 25px;" :disabled="order.boatId === null" @click="suggestPrice">
                                     <i class="fa fa-refresh"></i>&nbsp;suggest
                                 </button>
                                 <div class="row form-group">
@@ -277,21 +279,21 @@
                                         <label class="control-label">Rent</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="tel" v-model.lazy="order_rent" :disabled="!allowEdit" />
+                                            <input class="form-control" type="tel" v-model.lazy="order_rent" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent discount</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_rent_discount" :disabled="!allowEdit" />
+                                            <input class="form-control" type="text" v-model.lazy="order_rent_discount" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Rent payment method</label>
-                                        <select class="form-control" v-model="order['paymentMethodRent']" :disabled="!allowEdit">
+                                        <select class="form-control" v-model="order['paymentMethodRent']">
                                             <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                             0                                    </select>
@@ -302,7 +304,7 @@
                                         <label class="control-label">Petrol cost</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_petrol_cost" :disabled="!allowEdit" />
+                                            <input class="form-control" type="text" v-model.lazy="order_petrol_cost" />
                                         </div>
                                     </div>
                                 </div>
@@ -311,14 +313,14 @@
                                         <label class="control-label">Deposit</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input class="form-control" type="text" v-model.lazy="order_deposit" :disabled="!allowEdit" />
+                                            <input class="form-control" type="text" v-model.lazy="order_deposit" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Deposit payment method</label>
-                                        <select class="form-control" v-model="order['paymentMethodDeposit']" :disabled="!allowEdit">
+                                        <select class="form-control" v-model="order['paymentMethodDeposit']">
                                             <option value="" disabled="disabled">...</option>
                                             <option v-for="pm in paymentMethods" :value="pm.code">{{ pm.text }}</option>
                                         </select>
@@ -329,7 +331,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" v-if="order.id !== null">
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default">
@@ -344,20 +346,20 @@
                                         <label class="control-label">Commission</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input type="text" class="form-control" :value="commission_amount" readonly="readonly" />
+                                            <input type="text" class="form-control" v-model.lazy="commission_amount" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Commission paid to</label>
-                                        <input type="text" class="form-control" :value="order.commissionPaidTo" readonly="readonly" />
+                                        <input type="text" class="form-control" v-model="order.commissionPaidTo" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Damage</label>
-                                        <input type="text" class="form-control" :value="order.damage" readonly="readonly" />
+                                        <input type="text" class="form-control" v-model="order.damage" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -365,14 +367,17 @@
                                         <label class="control-label">Damage/correction amount</label>
                                         <div class="input-group">
                                             <span class="input-group-addon">&euro;</span>
-                                            <input type="text" class="form-control" :value="damage_amount" readonly="readonly" />
+                                            <input type="text" class="form-control" v-model.lazy="damage_amount" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <label class="control-label">Damage payment method</label>
-                                        <input type="text" class="form-control" :value="damage_payment_method" readonly="readonly" />
+                                        <select class="form-control" v-model="order.paymentMethodDamage">
+                                            <option value="" disabled="disabled">...</option>
+                                            <option v-for="method in paymentMethods" :value="method.code">{{ method.text }}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -397,7 +402,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-                <button type="button" class="btn btn-lg btn-default" @click="save" :disabled="!allowEdit">
+                <button type="button" class="btn btn-lg btn-default" @click="save">
                     <i class="fa fa-save"></i>&nbsp;Save order
                 </button>
             </div>
@@ -410,68 +415,6 @@
                     ref="customerDatatable"
                     @row-click="customer_dt_row_click"
             />
-        </modal>
-        <modal v-model="closeOrderModalOpened" title="Close booking">
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Commission</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">&euro;</span>
-                            <input type="text" class="form-control" v-model.lazy="commission_amount" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Commission paid to</label>
-                        <input type="text" class="form-control" v-model="order.commissionPaidTo" />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Kickback</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">&euro;</span>
-                            <input type="text" class="form-control" v-model.lazy="kickback_amount" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Damage</label>
-                        <textarea class="form-control" v-model="order.damage"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Damage (corr.) amount</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">&euro;</span>
-                            <input type="text" class="form-control" v-model.lazy="damage_amount" />
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label">Damage (corr.) payment method</label>
-                        <select class="form-control" v-model="order.paymentMethodDamage">
-                            <option value="" disabled="disabled">...</option>
-                            <option v-for="method in paymentMethods" :value="method.code">{{ method.text }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div slot="footer">
-                <btn @click="closeOrderModalOpened=false">Cancel</btn>
-                <btn type="primary" @click="closeOrder">Ok</btn>
-            </div>
         </modal>
         <modal v-model="cancelOrderModalOpened" title="Cancel booking">
             <div class="row" v-if="cancelOrderError">
@@ -858,7 +801,9 @@
             },
             'order.start': function() {
                 let start = moment.unix(this.order.start);
+                start.utc();
                 let end = moment.unix(this.order.end);
+                end.utc();
 
                 if (this.duration !== '') {
                     let h = parseInt(this.duration);
@@ -951,12 +896,6 @@
                 }
 
                 return result;
-            },
-            block_customer_class () {
-                return (this.order.id !== null) ? { 'col-lg-3': true, 'col-md-3': true } : { 'col-lg-4': true, 'col-md-4': true };
-            },
-            block_price_class () {
-                return (this.order.id !== null) ? { 'col-lg-3': true, 'col-md-3': true } : { 'col-lg-4': true, 'col-md-4': true };
             },
             page_title () {
                 return (this.order.id !== null) ? 'Edit order' : 'Add order';
@@ -1155,12 +1094,14 @@
             startHour: {
                 get () {
                     let dt = moment.unix(this.order.start);
+                    dt.utc();
                     let h = dt.hour();
                     return (h > 9) ? h.toString() : '0' + h.toString();
                 },
                 set (hour) {
                     let h = parseInt(hour);
                     let dt = moment.unix(this.order.start);
+                    dt.utc();
                     dt.hour(h);
                     this.order.start = dt.unix();
                 }
@@ -1168,12 +1109,14 @@
             startMinute: {
                 get () {
                     let dt = moment.unix(this.order.start);
+                    dt.utc();
                     let m = dt.minute();
                     return (m > 9) ? m.toString() : '0' + m.toString();
                 },
                 set (minute) {
                     let m = parseInt(minute);
                     let dt = moment.unix(this.order.start);
+                    dt.utc();
                     dt.minute(m);
                     this.order.start = dt.unix();
                 }
@@ -1181,12 +1124,14 @@
             endHour: {
                 get () {
                     let dt = moment.unix(this.order.end);
+                    dt.utc();
                     let h = dt.hour();
                     return (h > 9) ? h.toString() : '0' + h.toString();
                 },
                 set (hour) {
                     let h = parseInt(hour);
                     let dt = moment.unix(this.order.end);
+                    dt.utc();
                     dt.hour(h);
                     this.order.end = dt.unix();
                 }
@@ -1194,12 +1139,14 @@
             endMinute: {
                 get () {
                     let dt = moment.unix(this.order.end);
+                    dt.utc();
                     let m = dt.minute();
                     return (m > 9) ? m.toString() : '0' + m.toString();
                 },
                 set (minute) {
                     let m = parseInt(minute);
                     let dt = moment.unix(this.order.end);
+                    dt.utc();
                     dt.minute(m);
                     this.order.end = dt.unix();
                 }

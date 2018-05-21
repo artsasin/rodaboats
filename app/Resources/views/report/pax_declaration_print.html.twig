@@ -69,9 +69,9 @@
                         {% for order in orders %}
                             <tr>
                                 <td class="text-right">{{ order.date | date('d-m-Y') }}</td>
-                                <td class="text-right">{{ order.start | date('G:i') }}</td>
+                                <td class="text-right">{{ order.startFormatted }}</td>
                                 <td class="text-right">{{ order.numberOfPeople }}</td>
-                                <td class="text-right">{{ order.end | date('G:i') }}</td>
+                                <td class="text-right">{{ order.endFormatted }}</td>
                                 <td class="text-right">{{ order.numberOfPeople }}</td>
                             </tr>
                             {% set rows = rows + 1 %}
