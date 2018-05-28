@@ -1221,4 +1221,8 @@
     .dropdown-menu {
         z-index: 9999;
     }
+
+    input.form-control {
+        z-index: 1;
+    }
 </style>
