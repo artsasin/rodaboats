@@ -1217,4 +1217,8 @@
     .loading-overlay {
         z-index: 10000;
     }
+
+    .dropdown-menu {
+        z-index: 9999;
+    }
 </style>
