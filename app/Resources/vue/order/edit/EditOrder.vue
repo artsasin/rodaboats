@@ -239,6 +239,7 @@
                                                 menu-right
                                                 v-model="extras_dropdown_opened"
                                                 class="dropdown-form"
+                                                id="order-extras-dropdown"
                                         >
                                             <btn type="default" class="dropdown-toggle" :disabled="!allowEdit">
                                                 <i class="fa fa-check-square"></i>
@@ -1218,7 +1219,7 @@
         z-index: 10000;
     }
 
-    .dropdown-form {
+    #order-extras-dropdown {
         z-index: 9999;
     }
 </style>
