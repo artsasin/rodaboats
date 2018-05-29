@@ -280,13 +280,37 @@ class BookingController extends Controller
 	
 		return $form;
 	}
+
+    /**
+     * @Route(path="/old-bookings-not-imported", name="app_bookings_old_not_imported")
+     * @param Request $request
+     * @return Response
+     */
+	public function oldBookingsNotImportedAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Booking::class);
+        $qb = $repo->createQueryBuilder('b');
+        $qb->where($qb->expr()->eq('b.imported', ':imported'));
+        $qb->setParameter('imported', false);
+        $qb->orderBy('b.date', 'DESC');
+        $page = $request->query->getInt('page', 1);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($qb, $page,25);
+
+        return $this->render('booking/old_not_imported.html.twig', [
+            'pagination' => $pagination
+        ]);
+    }
 	
 	/**
 	 * @Route("/booking", name="booking")
 	 */
 	public function indexAction(Request $request)
 	{
-		$repo = $this->getDoctrine()->getRepository('AppBundle:Booking');
+	    return $this->redirectToRoute('app_order_index');
+
+	    $repo = $this->getDoctrine()->getRepository('AppBundle:Booking');
         $qb = $repo->getPaginationQueryBuilder($request->query->get('filter'));
         $page = $request->query->getInt('page', 1);
 
@@ -303,6 +327,7 @@ class BookingController extends Controller
 	 */
 	public function addBooking(Request $request)
 	{
+	    return $this->redirectToRoute('app_order_index');
 		return $this->addBookingBoat($request, null, null);
 	}
 	
@@ -311,7 +336,7 @@ class BookingController extends Controller
 	 */
 	public function addBookingBoat(Request $request, $boat = null, $date = null)
 	{
-		
+        return $this->redirectToRoute('app_order_index');
 		// Build the form around a fresh boat object.
 		$booking = new Booking();
 		

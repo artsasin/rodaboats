@@ -46,6 +46,8 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/report, roles: ROLE_ADMIN }
         - { path: ^/booking/[\d]*/log, roles: ROLE_ADMIN }
+        - { path: ^/orders/log, roles: ROLE_ADMIN }
+        - { path: ^/old-bookings-not-imported, roles: ROLE_ADMIN }
 
         # Secure everything else.
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

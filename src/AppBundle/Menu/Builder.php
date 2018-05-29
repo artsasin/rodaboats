@@ -121,9 +121,13 @@ class Builder implements ContainerAwareInterface
             )
         ));
 
-        $admin = $menu->addChild('Daily report', array('route' => 'admin'));
+        $admin = $menu->addChild('Admin_Area', array('route' => 'admin'));
         $admin->setLabel('<i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;Admin');
         $admin->setExtra('safe_label', true);
+
+        $oldOrders = $menu->addChild('Not_Imported_Bookings', array('route' => 'app_bookings_old_not_imported'));
+        $oldOrders->setLabel('Not imported bookings');
+        $oldOrders->setExtra('safe_label', true);
 
         return $menu;
     }
