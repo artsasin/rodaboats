@@ -30,6 +30,8 @@ class Order implements DTOInterface
 
     public $extra;
 
+    public $handler;
+
     public $comments;
 
     public $customerId;
@@ -89,6 +91,7 @@ class Order implements DTOInterface
         $this->bookedBy = $entity->getBookedBy();
         $this->extra = $entity->getExtra();
         $this->comments = $entity->getComments();
+        $this->handler = ($entity->getHandler() !== null) ? $entity->getHandler()->getUsername() : '';
 
         $customer = $entity->getCustomer();
         if ($customer !== null) {

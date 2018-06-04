@@ -69,13 +69,11 @@
                             </dropdown>
                         </div>
                         <div class="row form-group">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <label class="control-label">Language</label>
                                 <input class="form-control" type="text" readonly="readonly" :value="customer_language">
                             </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <label class="control-label">Country</label>
                                 <input class="form-control" type="text" readonly="readonly" :value="customer_country">
                             </div>
@@ -97,6 +95,18 @@
                                         </btn>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                                <label class="control-label">License #</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_license_number">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Identity #</label>
+                                <input class="form-control" type="text" readonly="readonly" :value="customer_identity_number">
                             </div>
                         </div>
                     </div>
@@ -257,6 +267,12 @@
                                         </dropdown>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label class="control-label">Handler</label>
+                                <input class="form-control" type="text" v-model="order['handler']" disabled />
                             </div>
                         </div>
                     </div>
@@ -1048,6 +1064,12 @@
             },
             customer_phoneNumber () {
                 return (this.customer !== null) ? this.customer.phoneNumber : '';
+            },
+            customer_license_number () {
+                return (this.customer !== null) ? this.customer.licenseNumber : '';
+            },
+            customer_identity_number () {
+                return (this.customer !== null) ? this.customer.identityNumber : '';
             },
             customer_email () {
                 return (this.customer !== null) ? this.customer.email : '';

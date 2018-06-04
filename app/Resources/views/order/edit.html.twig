@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('vue/order/order-edit.css') }}" rel="stylesheet">
+    <link href="{{ asset('vue/order/order-edit.css?v1.2') }}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -30,5 +30,5 @@
             }
         };
     </script>
-    <script src="{{ asset('vue/order/order-edit.js') }}"></script>
+    <script src="{{ asset('vue/order/order-edit.js?v1.2') }}"></script>
 {% endblock %}
